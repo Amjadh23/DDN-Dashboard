@@ -1,0 +1,12 @@
+BEGIN;
+ALTER TABLE core.action ADD COLUMN evidence_by text;
+ALTER TABLE core.action ADD CHECK(status<>'closed' OR (evidence_by IS NOT NULL AND verified_by<>evidence_by));
+CREATE TABLE core.access_revision(id text PRIMARY KEY,actor text NOT NULL,organisation text NOT NULL,geographies text[] NOT NULL,teras int[] NOT NULL,created_by text NOT NULL,effective_from timestamptz NOT NULL DEFAULT now(),reason text NOT NULL CHECK(length(reason)>=3));
+CREATE TABLE core.reference_revision(id text PRIMARY KEY,kind text NOT NULL CHECK(kind IN ('organisation','programme','facility','partner','forum')),code text NOT NULL,organisation text NOT NULL,name_bm text NOT NULL,effective_from date NOT NULL,created_by text NOT NULL,created_at timestamptz NOT NULL DEFAULT now(),reason text NOT NULL,classification text NOT NULL DEFAULT 'demo' CHECK(classification='demo'),responsibility_status text NOT NULL DEFAULT 'requires stakeholder validation' CHECK(responsibility_status='requires stakeholder validation'));
+CREATE TRIGGER immutable_access BEFORE UPDATE OR DELETE ON core.access_revision FOR EACH ROW EXECUTE FUNCTION core.prevent_mutation();
+CREATE TRIGGER immutable_reference BEFORE UPDATE OR DELETE ON core.reference_revision FOR EACH ROW EXECUTE FUNCTION core.prevent_mutation();
+CREATE TRIGGER immutable_note BEFORE UPDATE OR DELETE ON core.note FOR EACH ROW EXECUTE FUNCTION core.prevent_mutation();
+CREATE TRIGGER immutable_saved BEFORE UPDATE OR DELETE ON core.saved_view FOR EACH ROW EXECUTE FUNCTION core.prevent_mutation();
+CREATE TRIGGER immutable_export BEFORE UPDATE OR DELETE ON core.export FOR EACH ROW EXECUTE FUNCTION core.prevent_mutation();
+GRANT SELECT,INSERT ON core.access_revision,core.reference_revision TO dashboard_app;
+COMMIT;

@@ -1,0 +1,464 @@
+{
+  "schemaVersion": "1.0.0",
+  "datasetId": "aadk-weekly-2026-08-09-supplied",
+  "title": "Statistik Mingguan AADK - Laporan 9 Ogos 2026",
+  "asOfDate": "2026-08-09",
+  "evidenceStatus": "Available",
+  "dataKind": "supplied_aggregate_snapshot",
+  "source": {
+    "path": "data/Data_STATISTIK MINGGUAN AADK-LAPORAN 9 OGOS 2026.pdf",
+    "sha256": "5c7d9dbc0ed71bc666d03b4a3749367d8c90683d8f51761a24e90c98f78844d3",
+    "pageCount": 15,
+    "inspectionMethod": "Visual inspection of Poppler-rendered pages; text extraction was not used as authority."
+  },
+  "semanticCaveats": [
+    "This is an aggregate operational snapshot as at the report date, not a population prevalence estimate.",
+    "Berulang is retained as the source's repeat status and must not be relabelled as relapse.",
+    "Tangkapan of Orang Yang Disyaki is not proof of guilt, conviction, or community prevalence.",
+    "Counts must not be converted to rates until an approved population denominator and geography version are supplied.",
+    "W. Persekutuan is a combined source label and is not disaggregated into Kuala Lumpur, Putrajaya, and Labuan.",
+    "The private rehabilitation centre snapshot is separate from the displayed 47,084 AADK client total and must not be added without overlap and scope confirmation."
+  ],
+  "headline": [
+    {
+      "code": "aadk_clients_total",
+      "label": "KESELURUHAN AADK: 47,084 Klien",
+      "value": 47084,
+      "unit": "clients",
+      "sourcePage": 2
+    },
+    {
+      "code": "aadk_clients_mandatory",
+      "label": "Mandatori: 44,906",
+      "value": 44906,
+      "unit": "clients",
+      "sourcePage": 2
+    },
+    {
+      "code": "aadk_clients_voluntary",
+      "label": "Sukarela: 2,178",
+      "value": 2178,
+      "unit": "clients",
+      "sourcePage": 2
+    },
+    {
+      "code": "rpdi_clients",
+      "label": "RAWATAN DAN PEMULIHAN DALAM INSTITUSI (RPDI) - Jumlah: 5,260",
+      "value": 5260,
+      "unit": "clients",
+      "sourcePage": 2
+    },
+    {
+      "code": "rpdk_clients",
+      "label": "RAWATAN DAN PEMULIHAN DALAM KOMUNITI (RPDK) - Jumlah: 41,824",
+      "value": 41824,
+      "unit": "clients",
+      "sourcePage": 2
+    },
+    {
+      "code": "ppp_clients",
+      "label": "PUSAT PEMULIHAN PERSENDIRIAN (PPP) - Jumlah: 1,391",
+      "value": 1391,
+      "unit": "clients",
+      "sourcePage": 2
+    },
+    {
+      "code": "complaints_cumulative",
+      "label": "JUMLAH ADUAN - Keseluruhan: 5,208",
+      "value": 5208,
+      "unit": "complaints",
+      "sourcePage": 2
+    },
+    {
+      "code": "complaints_weekly",
+      "label": "JUMLAH ADUAN - Mingguan: 172",
+      "value": 172,
+      "unit": "complaints",
+      "sourcePage": 2
+    },
+    {
+      "code": "pspd_occupants",
+      "label": "PUSAT SARINGAN PENILAIAN DADAH (PSPD) - Jumlah OKT: 303",
+      "value": 303,
+      "unit": "OKT",
+      "sourcePage": 2
+    },
+    {
+      "code": "suspected_person_arrests",
+      "label": "ORANG YANG DISYAKI (OYDS) - Tangkapan: 24,947",
+      "value": 24947,
+      "unit": "source_count",
+      "sourcePage": 2
+    }
+  ],
+  "treatmentSettings": [
+    {
+      "code": "rpdi",
+      "label": "RAWATAN DAN PEMULIHAN DALAM INSTITUSI (RPDI)",
+      "sourcePage": 2,
+      "facilityCount": {
+        "label": "30 PUSPEN",
+        "value": 30,
+        "unit": "facilities",
+        "sourcePage": 2
+      },
+      "clientCount": {
+        "label": "Jumlah: 5,260",
+        "value": 5260,
+        "unit": "clients",
+        "sourcePage": 2
+      },
+      "pathwayCounts": [
+        {
+          "key": "mandatory",
+          "label": "Mandatori: 4,518",
+          "value": 4518,
+          "unit": "clients",
+          "sourcePage": 2
+        },
+        {
+          "key": "voluntary",
+          "label": "Sukarela: 742",
+          "value": 742,
+          "unit": "clients",
+          "sourcePage": 2
+        }
+      ]
+    },
+    {
+      "code": "rpdk",
+      "label": "RAWATAN DAN PEMULIHAN DALAM KOMUNITI (RPDK)",
+      "sourcePage": 2,
+      "facilityCount": {
+        "label": "108 Daerah",
+        "value": 108,
+        "unit": "districts",
+        "sourcePage": 2
+      },
+      "clientCount": {
+        "label": "Jumlah: 41,824",
+        "value": 41824,
+        "unit": "clients",
+        "sourcePage": 2
+      },
+      "pathwayCounts": [
+        {
+          "key": "mandatory",
+          "label": "Mandatori: 40,388",
+          "value": 40388,
+          "unit": "clients",
+          "sourcePage": 2
+        },
+        {
+          "key": "voluntary",
+          "label": "Sukarela: 1,436",
+          "value": 1436,
+          "unit": "clients",
+          "sourcePage": 2
+        }
+      ]
+    },
+    {
+      "code": "ppp",
+      "label": "PUSAT PEMULIHAN PERSENDIRIAN (PPP)",
+      "sourcePage": 2,
+      "scopeNote": "Separate source snapshot; overlap with AADK client total is not established.",
+      "facilityCount": {
+        "label": "47 Pusat",
+        "value": 47,
+        "unit": "facilities",
+        "sourcePage": 2
+      },
+      "clientCount": {
+        "label": "Jumlah: 1,391",
+        "value": 1391,
+        "unit": "clients",
+        "sourcePage": 2
+      }
+    }
+  ],
+  "demographics": {
+    "aadkOverall": {
+      "label": "PROFILING KLIEN AADK - JUMLAH: 47,084",
+      "sourcePage": 4,
+      "total": 47084,
+      "sex": [
+        { "key": "male", "label": "Jantina & Umur - ikon lelaki biru", "value": 44756, "unit": "clients", "sourcePage": 4 },
+        { "key": "female", "label": "Jantina & Umur - ikon perempuan merah jambu", "value": 2328, "unit": "clients", "sourcePage": 4 }
+      ],
+      "age": [
+        { "key": "age_0_14", "label": "Kanak-kanak (<=14 thn)", "value": 6, "unit": "clients", "sourcePage": 4 },
+        { "key": "age_15_30", "label": "Belia (15-30 thn)", "value": 13953, "unit": "clients", "sourcePage": 4 },
+        { "key": "age_31_59", "label": "Dewasa (31-59 tahun)", "value": 32252, "unit": "clients", "sourcePage": 4 },
+        { "key": "age_60_plus", "label": "Warga Emas (>=60 tahun)", "value": 873, "unit": "clients", "sourcePage": 4 }
+      ],
+      "ethnicity": [
+        { "key": "melayu", "label": "Melayu", "value": 38131, "unit": "clients", "sourcePage": 4 },
+        { "key": "india", "label": "India", "value": 2644, "unit": "clients", "sourcePage": 4 },
+        { "key": "cina", "label": "Cina", "value": 2082, "unit": "clients", "sourcePage": 4 },
+        { "key": "pribumi_sabah", "label": "Pribumi Sabah", "value": 1443, "unit": "clients", "sourcePage": 4 },
+        { "key": "pribumi_sarawak", "label": "Pribumi Sarawak", "value": 1376, "unit": "clients", "sourcePage": 4 },
+        { "key": "lain_lain", "label": "Lain-lain", "value": 1408, "unit": "clients", "sourcePage": 4 }
+      ],
+      "education": [
+        { "key": "no_formal_education", "label": "Tiada Pendidikan Formal", "value": 1791, "unit": "clients", "sourcePage": 4 },
+        { "key": "primary_school", "label": "Sekolah Rendah", "value": 4830, "unit": "clients", "sourcePage": 4 },
+        { "key": "secondary_school", "label": "Sekolah Menengah", "value": 36497, "unit": "clients", "sourcePage": 4 },
+        { "key": "university", "label": "Universiti", "value": 1893, "unit": "clients", "sourcePage": 4 },
+        { "key": "skills_training", "label": "Kemahiran", "value": 2073, "unit": "clients", "sourcePage": 4 }
+      ],
+      "occupationAtRegistration": [
+        { "key": "private_sector", "label": "Swasta", "value": 20940, "unit": "clients", "sourcePage": 4 },
+        { "key": "general_labour", "label": "Buruh Am", "value": 12684, "unit": "clients", "sourcePage": 4 },
+        { "key": "no_employment", "label": "Tiada Pekerjaan", "value": 4344, "unit": "clients", "sourcePage": 4 },
+        { "key": "self_employed", "label": "Bekerja Sendiri", "value": 3397, "unit": "clients", "sourcePage": 4 },
+        { "key": "unemployed", "label": "Penganggur", "value": 3422, "unit": "clients", "sourcePage": 4 },
+        { "key": "misc_part_time", "label": "Rencam/Sambilan", "value": 1650, "unit": "clients", "sourcePage": 4 },
+        { "key": "government", "label": "Kerajaan", "value": 367, "unit": "clients", "sourcePage": 4 },
+        { "key": "student", "label": "Penuntut", "value": 188, "unit": "clients", "sourcePage": 4 },
+        { "key": "retired", "label": "Pesara", "value": 92, "unit": "clients", "sourcePage": 4 }
+      ]
+    },
+    "rpdi": {
+      "label": "PROFILING KLIEN RPDI (SAMB.) - Jumlah: 5,260",
+      "sourcePage": 6,
+      "total": 5260,
+      "sex": [
+        { "key": "male", "label": "Jantina & Umur - ikon lelaki biru", "value": 5017, "unit": "clients", "sourcePage": 6 },
+        { "key": "female", "label": "Jantina & Umur - ikon perempuan merah jambu", "value": 243, "unit": "clients", "sourcePage": 6 }
+      ],
+      "age": [
+        { "key": "age_0_14", "label": "Kanak-kanak (<=14 thn)", "value": 4, "unit": "clients", "sourcePage": 6 },
+        { "key": "age_15_30", "label": "Belia(15-30 thn)", "value": 1586, "unit": "clients", "sourcePage": 6 },
+        { "key": "age_31_59", "label": "Dewasa (31-59 thn)", "value": 3662, "unit": "clients", "sourcePage": 6 },
+        { "key": "age_60_plus", "label": "Warga Emas(>=60 thn)", "value": 8, "unit": "clients", "sourcePage": 6 }
+      ],
+      "sourceStatus": [
+        { "key": "new", "label": "Baharu", "value": 2793, "unit": "clients", "sourcePage": 6 },
+        { "key": "repeat", "label": "Berulang", "value": 2467, "unit": "clients", "sourcePage": 6, "semanticNote": "Repeat source status; not relapse." }
+      ],
+      "ethnicity": [
+        { "key": "melayu", "label": "Melayu", "value": 4431, "unit": "clients", "sourcePage": 6 },
+        { "key": "india", "label": "India", "value": 232, "unit": "clients", "sourcePage": 6 },
+        { "key": "lain_lain", "label": "Lain-lain", "value": 189, "unit": "clients", "sourcePage": 6 },
+        { "key": "pribumi_sabah", "label": "Pribumi Sabah", "value": 185, "unit": "clients", "sourcePage": 6 },
+        { "key": "pribumi_sarawak", "label": "Pribumi Sarawak", "value": 151, "unit": "clients", "sourcePage": 6 },
+        { "key": "cina", "label": "Cina", "value": 72, "unit": "clients", "sourcePage": 6 }
+      ],
+      "education": [
+        { "key": "no_formal_education", "label": "Tiada Pendidikan Formal", "value": 135, "unit": "clients", "sourcePage": 6 },
+        { "key": "primary_school", "label": "Sekolah Rendah", "value": 526, "unit": "clients", "sourcePage": 6 },
+        { "key": "secondary_school", "label": "Sekolah Menengah", "value": 4162, "unit": "clients", "sourcePage": 6 },
+        { "key": "university", "label": "Universiti", "value": 198, "unit": "clients", "sourcePage": 6 },
+        { "key": "skills_training", "label": "Kemahiran", "value": 239, "unit": "clients", "sourcePage": 6 }
+      ]
+    },
+    "rpdk": {
+      "label": "PROFILING KLIEN RPDK (SAMB.) - Jumlah: 41,824",
+      "sourcePage": 8,
+      "total": 41824,
+      "sex": [
+        { "key": "male", "label": "Jantina & Umur - ikon lelaki biru", "value": 39739, "unit": "clients", "sourcePage": 8 },
+        { "key": "female", "label": "Jantina & Umur - ikon perempuan merah jambu", "value": 2085, "unit": "clients", "sourcePage": 8 }
+      ],
+      "age": [
+        { "key": "age_0_14", "label": "Kanak-kanak (<=14 thn)", "value": 2, "unit": "clients", "sourcePage": 8 },
+        { "key": "age_15_30", "label": "Belia (15-30 thn)", "value": 12367, "unit": "clients", "sourcePage": 8 },
+        { "key": "age_31_59", "label": "Dewasa (31-59 tahun)", "value": 28590, "unit": "clients", "sourcePage": 8 },
+        { "key": "age_60_plus", "label": "Warga Emas(>=60 tahun)", "value": 865, "unit": "clients", "sourcePage": 8 }
+      ],
+      "sourceStatus": [
+        { "key": "new", "label": "Baharu", "value": 25743, "unit": "clients", "sourcePage": 8 },
+        { "key": "repeat", "label": "Berulang", "value": 16081, "unit": "clients", "sourcePage": 8, "semanticNote": "Repeat source status; not relapse." }
+      ],
+      "ethnicity": [
+        { "key": "melayu", "label": "Melayu", "value": 33700, "unit": "clients", "sourcePage": 8 },
+        { "key": "india", "label": "India", "value": 2412, "unit": "clients", "sourcePage": 8 },
+        { "key": "cina", "label": "Cina", "value": 2010, "unit": "clients", "sourcePage": 8 },
+        { "key": "pribumi_sabah", "label": "Pribumi Sabah", "value": 1258, "unit": "clients", "sourcePage": 8 },
+        { "key": "pribumi_sarawak", "label": "Pribumi Sarawak", "value": 1225, "unit": "clients", "sourcePage": 8 },
+        { "key": "lain_lain", "label": "Lain-lain", "value": 1219, "unit": "clients", "sourcePage": 8 }
+      ],
+      "education": [
+        { "key": "no_formal_education", "label": "Tiada Pendidikan Formal", "value": 1656, "unit": "clients", "sourcePage": 8 },
+        { "key": "primary_school", "label": "Sekolah Rendah", "value": 4304, "unit": "clients", "sourcePage": 8 },
+        { "key": "secondary_school", "label": "Sekolah Menengah", "value": 32335, "unit": "clients", "sourcePage": 8 },
+        { "key": "university", "label": "Universiti", "value": 1695, "unit": "clients", "sourcePage": 8 },
+        { "key": "skills_training", "label": "Kemahiran", "value": 1834, "unit": "clients", "sourcePage": 8 }
+      ],
+      "occupationAtRegistration": [
+        { "key": "private_sector", "label": "Swasta", "value": 18929, "unit": "clients", "sourcePage": 8 },
+        { "key": "general_labour", "label": "Buruh Am", "value": 11138, "unit": "clients", "sourcePage": 8 },
+        { "key": "no_employment", "label": "Tiada Pekerjaan", "value": 3762, "unit": "clients", "sourcePage": 8 },
+        { "key": "self_employed", "label": "Bekerja Sendiri", "value": 3046, "unit": "clients", "sourcePage": 8 },
+        { "key": "unemployed", "label": "Penganggur", "value": 2836, "unit": "clients", "sourcePage": 8 },
+        { "key": "misc_part_time", "label": "Rencam/Sambilan", "value": 1517, "unit": "clients", "sourcePage": 8 },
+        { "key": "government", "label": "Kerajaan", "value": 354, "unit": "clients", "sourcePage": 8 },
+        { "key": "student", "label": "Penuntut", "value": 156, "unit": "clients", "sourcePage": 8 },
+        { "key": "retired", "label": "Pesara", "value": 86, "unit": "clients", "sourcePage": 8 }
+      ]
+    },
+    "ppp": {
+      "label": "PROFILING KLIEN PPP (SAMB.) - Jumlah: 1,391",
+      "sourcePage": 10,
+      "total": 1391,
+      "scopeNote": "Separate private rehabilitation centre profile; do not add to AADK total without scope and overlap confirmation.",
+      "sex": [
+        { "key": "male", "label": "Jantina & Umur - ikon lelaki biru", "value": 1368, "unit": "clients", "sourcePage": 10 },
+        { "key": "female", "label": "Jantina & Umur - ikon perempuan merah jambu", "value": 23, "unit": "clients", "sourcePage": 10 }
+      ],
+      "age": [
+        { "key": "age_0_14", "label": "Kanak-kanak (<=14 thn)", "value": 7, "unit": "clients", "sourcePage": 10 },
+        { "key": "age_15_30", "label": "Belia (15-30 thn)", "value": 565, "unit": "clients", "sourcePage": 10 },
+        { "key": "age_31_59", "label": "Dewasa (31-59 thn)", "value": 801, "unit": "clients", "sourcePage": 10 },
+        { "key": "age_60_plus", "label": "Dewasa (>=60 thn)", "value": 18, "unit": "clients", "sourcePage": 10, "semanticNote": "The source repeats the label Dewasa for the 60-plus category; retained verbatim." }
+      ],
+      "ethnicity": [
+        { "key": "melayu", "label": "Melayu", "value": 1092, "unit": "clients", "sourcePage": 10 },
+        { "key": "cina", "label": "Cina", "value": 239, "unit": "clients", "sourcePage": 10 },
+        { "key": "india", "label": "India", "value": 30, "unit": "clients", "sourcePage": 10 },
+        { "key": "lain_lain", "label": "Lain-lain", "value": 25, "unit": "clients", "sourcePage": 10 },
+        { "key": "pribumi_sabah", "label": "Pribumi Sabah", "value": 3, "unit": "clients", "sourcePage": 10 },
+        { "key": "pribumi_sarawak", "label": "Pribumi Sarawak", "value": 2, "unit": "clients", "sourcePage": 10 }
+      ],
+      "education": [
+        { "key": "no_formal_education", "label": "Tiada Pendidikan Formal", "value": 207, "unit": "clients", "sourcePage": 10 },
+        { "key": "primary_school", "label": "Sekolah Rendah", "value": 95, "unit": "clients", "sourcePage": 10 },
+        { "key": "secondary_school", "label": "Sekolah Menengah", "value": 974, "unit": "clients", "sourcePage": 10 },
+        { "key": "university", "label": "Universiti", "value": 62, "unit": "clients", "sourcePage": 10 },
+        { "key": "skills_training", "label": "Kemahiran", "value": 53, "unit": "clients", "sourcePage": 10 }
+      ],
+      "occupationAtRegistration": [
+        { "key": "private_sector", "label": "Swasta", "value": 352, "unit": "clients", "sourcePage": 10 },
+        { "key": "self_employed", "label": "Bekerja Sendiri", "value": 70, "unit": "clients", "sourcePage": 10 },
+        { "key": "government", "label": "Kerajaan", "value": 8, "unit": "clients", "sourcePage": 10 },
+        { "key": "general_labour", "label": "Buruh Am", "value": 228, "unit": "clients", "sourcePage": 10 },
+        { "key": "unemployed", "label": "Penganggur", "value": 183, "unit": "clients", "sourcePage": 10 },
+        { "key": "student", "label": "Penuntut", "value": 5, "unit": "clients", "sourcePage": 10 },
+        { "key": "no_employment", "label": "Tiada Pekerjaan", "value": 186, "unit": "clients", "sourcePage": 10 },
+        { "key": "misc_part_time", "label": "Rencam/Sambilan", "value": 357, "unit": "clients", "sourcePage": 10 },
+        { "key": "retired", "label": "Pesara", "value": 2, "unit": "clients", "sourcePage": 10 }
+      ]
+    }
+  },
+  "rpdkStateCounts": {
+    "label": "Taburan Klien Mengikut Negeri",
+    "sourcePage": 7,
+    "total": 41824,
+    "geographyCaveat": "W. Persekutuan is retained as a combined source geography.",
+    "rows": [
+      { "label": "Johor", "mandatory": 5196, "voluntary": 101, "total": 5297, "unit": "clients", "sourcePage": 7 },
+      { "label": "Kedah", "mandatory": 4968, "voluntary": 148, "total": 5116, "unit": "clients", "sourcePage": 7 },
+      { "label": "Selangor", "mandatory": 4746, "voluntary": 253, "total": 4999, "unit": "clients", "sourcePage": 7 },
+      { "label": "Kelantan", "mandatory": 4138, "voluntary": 164, "total": 4302, "unit": "clients", "sourcePage": 7 },
+      { "label": "Terengganu", "mandatory": 3735, "voluntary": 46, "total": 3781, "unit": "clients", "sourcePage": 7 },
+      { "label": "Perak", "mandatory": 3319, "voluntary": 114, "total": 3433, "unit": "clients", "sourcePage": 7 },
+      { "label": "Pulau Pinang", "mandatory": 3054, "voluntary": 84, "total": 3138, "unit": "clients", "sourcePage": 7 },
+      { "label": "Pahang", "mandatory": 3018, "voluntary": 97, "total": 3115, "unit": "clients", "sourcePage": 7 },
+      { "label": "Sarawak", "mandatory": 2596, "voluntary": 180, "total": 2776, "unit": "clients", "sourcePage": 7 },
+      { "label": "W. Persekutuan", "mandatory": 1487, "voluntary": 74, "total": 1561, "unit": "clients", "sourcePage": 7 },
+      { "label": "N. Sembilan", "mandatory": 1312, "voluntary": 33, "total": 1345, "unit": "clients", "sourcePage": 7 },
+      { "label": "Sabah", "mandatory": 1152, "voluntary": 85, "total": 1237, "unit": "clients", "sourcePage": 7 },
+      { "label": "Melaka", "mandatory": 931, "voluntary": 44, "total": 975, "unit": "clients", "sourcePage": 7 },
+      { "label": "Perlis", "mandatory": 736, "voluntary": 13, "total": 749, "unit": "clients", "sourcePage": 7 }
+    ]
+  },
+  "rpdkLegalBasisCounts": {
+    "label": "Profiling Klien Rawatan dan Pemulihan dalam RPDK per Individu",
+    "sourcePage": 7,
+    "mandatory": [
+      { "label": "Sek. 38B (Denda) ADB 1952", "value": 14634, "unit": "clients", "sourcePage": 7 },
+      { "label": "Sek. 38B (Penjara) ADB 1952", "value": 5085, "unit": "clients", "sourcePage": 7 },
+      { "label": "Sek. 6(1)(a) APD (R&P) 1983", "value": 7888, "unit": "clients", "sourcePage": 7 },
+      { "label": "Sek. 6(1)(b) APD (R&P) 1983", "value": 7890, "unit": "clients", "sourcePage": 7 },
+      { "label": "Sek. 6(2)(a) APD (R&P) 1983", "value": 10, "unit": "clients", "sourcePage": 7 },
+      { "label": "Sek. 6(2)(b) APD (R&P) 1983", "value": 4256, "unit": "clients", "sourcePage": 7 },
+      { "label": "Sek. 6A(2)(a) APD (R&P) 1983", "value": 625, "unit": "clients", "sourcePage": 7 }
+    ],
+    "voluntary": [
+      { "label": "Sek. 9(2)(b) APD (R&P) 1983", "value": 30, "unit": "clients", "sourcePage": 7 },
+      { "label": "Sek. 8(3)(b) APD (R&P) 1983", "value": 632, "unit": "clients", "sourcePage": 7 },
+      { "label": "Sek. 8(3)(a) APD (R&P) 1983", "value": 774, "unit": "clients", "sourcePage": 7 }
+    ]
+  },
+  "complaintsByState": {
+    "label": "TABURAN ADUAN MENGIKUT NEGERI (TERKUMPUL/MINGGUAN)",
+    "sourcePage": 11,
+    "cumulativeTotal": 5208,
+    "weeklyTotal": 172,
+    "rows": [
+      { "label": "Selangor", "cumulative": 919, "weekly": 32, "unit": "complaints", "sourcePage": 11 },
+      { "label": "Johor", "cumulative": 749, "weekly": 18, "unit": "complaints", "sourcePage": 11 },
+      { "label": "Kedah", "cumulative": 680, "weekly": 23, "unit": "complaints", "sourcePage": 11 },
+      { "label": "Sabah", "cumulative": 595, "weekly": 12, "unit": "complaints", "sourcePage": 11 },
+      { "label": "Perak", "cumulative": 498, "weekly": 25, "unit": "complaints", "sourcePage": 11 },
+      { "label": "Sarawak", "cumulative": 444, "weekly": 25, "unit": "complaints", "sourcePage": 11 },
+      { "label": "Kelantan", "cumulative": 247, "weekly": 6, "unit": "complaints", "sourcePage": 11 },
+      { "label": "W. Persekutuan", "cumulative": 230, "weekly": 4, "unit": "complaints", "sourcePage": 11 },
+      { "label": "Pahang", "cumulative": 205, "weekly": 10, "unit": "complaints", "sourcePage": 11 },
+      { "label": "Terengganu", "cumulative": 192, "weekly": 1, "unit": "complaints", "sourcePage": 11 },
+      { "label": "P. Pinang", "cumulative": 174, "weekly": 6, "unit": "complaints", "sourcePage": 11 },
+      { "label": "Melaka", "cumulative": 117, "weekly": 2, "unit": "complaints", "sourcePage": 11 },
+      { "label": "N. Sembilan", "cumulative": 103, "weekly": 3, "unit": "complaints", "sourcePage": 11 },
+      { "label": "Perlis", "cumulative": 55, "weekly": 5, "unit": "complaints", "sourcePage": 11 }
+    ],
+    "unresolvedPrintedLabel": {
+      "label": "Ibu Pejabat",
+      "sourcePage": 11,
+      "status": "no_displayed_value",
+      "note": "No number is visibly printed beside this label; it is not treated as zero. The 14 numbered geography rows already reconcile to both displayed totals."
+    }
+  },
+  "suspectedPersonArrestsByState": {
+    "label": "TABURAN ORANG YANG DISYAKI (OYDS) sehingga 09 Ogos 2026 - Tangkapan: 24,947",
+    "sourcePage": 13,
+    "total": 24947,
+    "legalStatusCaveat": "These source-labelled suspected-person arrest counts do not establish guilt, conviction, or prevalence.",
+    "rows": [
+      { "label": "Perak", "value": 3012, "unit": "source_count", "sourcePage": 13 },
+      { "label": "Kedah", "value": 3003, "unit": "source_count", "sourcePage": 13 },
+      { "label": "Selangor", "value": 2839, "unit": "source_count", "sourcePage": 13 },
+      { "label": "Johor", "value": 2697, "unit": "source_count", "sourcePage": 13 },
+      { "label": "Pahang", "value": 2222, "unit": "source_count", "sourcePage": 13 },
+      { "label": "Kelantan", "value": 2008, "unit": "source_count", "sourcePage": 13 },
+      { "label": "Wilayah Persekutuan", "value": 1742, "unit": "source_count", "sourcePage": 13 },
+      { "label": "Pulau Pinang", "value": 1701, "unit": "source_count", "sourcePage": 13 },
+      { "label": "Terengganu", "value": 1445, "unit": "source_count", "sourcePage": 13 },
+      { "label": "Sarawak", "value": 1411, "unit": "source_count", "sourcePage": 13 },
+      { "label": "Sabah", "value": 924, "unit": "source_count", "sourcePage": 13 },
+      { "label": "Negeri Sembilan", "value": 734, "unit": "source_count", "sourcePage": 13 },
+      { "label": "Melaka", "value": 624, "unit": "source_count", "sourcePage": 13 },
+      { "label": "Perlis", "value": 585, "unit": "source_count", "sourcePage": 13 }
+    ]
+  },
+  "pspdSummary": {
+    "label": "STATISTIK PUSAT SARINGAN PENILAIAN DADAH (PSPD)",
+    "sourcePage": 12,
+    "occupants": { "label": "Jumlah OKT: 303", "value": 303, "unit": "OKT", "sourcePage": 12 },
+    "centres": { "label": "Jumlah Pusat: 18", "value": 18, "unit": "centres", "sourcePage": 12 },
+    "centreTypes": [
+      { "label": "15 PSPD", "value": 15, "unit": "centres", "sourcePage": 12 },
+      { "label": "3 Lokap", "value": 3, "unit": "centres", "sourcePage": 12 }
+    ],
+    "sourceAmbiguity": "The red headline clearly states 15 PSPD and 3 Lokap. The footer note is visually unclear and should not override the headline without source-owner confirmation."
+  },
+  "reconciliation": [
+    { "check": "AADK mandatory plus voluntary", "calculated": 47084, "expected": 47084, "status": "pass" },
+    { "check": "RPDI plus RPDK clients", "calculated": 47084, "expected": 47084, "status": "pass" },
+    { "check": "Overall age categories", "calculated": 47084, "expected": 47084, "status": "pass" },
+    { "check": "Overall ethnicity categories", "calculated": 47084, "expected": 47084, "status": "pass" },
+    { "check": "Overall education categories", "calculated": 47084, "expected": 47084, "status": "pass" },
+    { "check": "Overall occupation categories", "calculated": 47084, "expected": 47084, "status": "pass" },
+    { "check": "RPDI demographics and source status", "calculated": 5260, "expected": 5260, "status": "pass" },
+    { "check": "RPDK state totals", "calculated": 41824, "expected": 41824, "status": "pass" },
+    { "check": "RPDK mandatory state totals", "calculated": 40388, "expected": 40388, "status": "pass" },
+    { "check": "RPDK voluntary state totals", "calculated": 1436, "expected": 1436, "status": "pass" },
+    { "check": "RPDK mandatory legal-basis totals", "calculated": 40388, "expected": 40388, "status": "pass" },
+    { "check": "RPDK voluntary legal-basis totals", "calculated": 1436, "expected": 1436, "status": "pass" },
+    { "check": "RPDK demographics and source status", "calculated": 41824, "expected": 41824, "status": "pass" },
+    { "check": "PPP demographics", "calculated": 1391, "expected": 1391, "status": "pass" },
+    { "check": "Complaint cumulative state totals", "calculated": 5208, "expected": 5208, "status": "pass" },
+    { "check": "Complaint weekly state totals", "calculated": 172, "expected": 172, "status": "pass" },
+    { "check": "OYDS arrest state totals", "calculated": 24947, "expected": 24947, "status": "pass" }
+  ]
+}

@@ -1,0 +1,11 @@
+BEGIN;
+ALTER TABLE core.submission ADD COLUMN format text NOT NULL DEFAULT 'csv' CHECK(format IN ('csv','xlsx'));
+ALTER TABLE core.submission ADD COLUMN upload_expires timestamptz;
+ALTER TABLE core.submission ADD COLUMN uploaded_by text;
+ALTER TABLE core.submission ADD COLUMN publication_id text REFERENCES core.publication(id);
+CREATE UNIQUE INDEX submission_content_once ON core.submission(organisation,checksum,COALESCE(predecessor,'')) WHERE checksum IS NOT NULL;
+CREATE UNIQUE INDEX one_revision_per_publication ON core.publication(predecessor) WHERE predecessor IS NOT NULL;
+CREATE INDEX submission_queue ON core.submission(state,created_at);
+CREATE INDEX observation_latest ON demo.observation(code,period,geography,created_at DESC);
+CREATE INDEX job_pending ON core.job(state,created_at);
+COMMIT;

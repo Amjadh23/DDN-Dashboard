@@ -1,0 +1,15 @@
+node_modules/
+.next/
+.runtime/
+.env*
+!.env.example
+artifacts/source-review/
+artifacts/test-results/
+artifacts/screenshots/
+artifacts/print/
+test-results/
+playwright-report/
+tmp/
+__pycache__/
+*.pyc
+*.tsbuildinfo
