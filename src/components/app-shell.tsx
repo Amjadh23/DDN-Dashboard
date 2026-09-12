@@ -163,7 +163,7 @@ export function AppShell({
             >
               <Menu size={22} />
             </button>
-            <span className="country-tag">MY</span>
+            <span className="country-tag">Malaysia</span>
             <span>Ruang strategik kebangsaan</span>
             <span className="topbar-divider" />
             <span className="muted topbar-extra">Dasar Dadah Negara 2017</span>

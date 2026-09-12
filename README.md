@@ -6,7 +6,7 @@ A governed, collaborative dashboard concept for monitoring Malaysia's five Natio
 
 The **V1 local stakeholder prototype is implemented and passes its automated validation**, with acceptance evidence and remaining limitations recorded in `docs/VALIDATION.md` and `PLANS.md`. Full contract acceptance remains open, including manual screen-reader review and the explicitly partial requirements in `docs/REQUIREMENT_STATUS.md`. It runs on Next.js 16.3.4, React 19.2.8, strict TypeScript and PostgreSQL17/PostGIS3.6.2.
 
-The overview, five Teras, map, registry, catalogue, upload/review/publication workflow, actions, saved reports and scoped demo administration are available. Production identity and governance are deliberately unconfigured. This workspace has no Git history; all existing source documents are preserved.
+The overview, five Teras, map, registry, catalogue, upload/review/publication workflow, actions, saved reports and scoped demo administration are available. The stakeholder refinement introduces compact disclosure, current-work views and isolated regression databases. Production identity and governance remain unconfigured. The workspace is Git-backed; source documents are preserved.
 
 ## Product Goal
 
@@ -161,17 +161,14 @@ Existing local configuration is in ignored `.env.local`; do not replace it with 
 
 ```powershell
 npm ci
-npm run db:migrate
-npm run db:seed
+npm run demo:prepare
 npm run dev
-# In a separate terminal:
-npm run worker
 ```
 
-Open http://127.0.0.1:3000. Choose a fictional profile in the header. For a workflow demonstration: contributor uploads, steward attests, independent reviewer approves and secretariat publishes. Only generated aggregate demonstration files are accepted. Keep the isolated worker running for scanning and validation.
+Open http://127.0.0.1:3000. The app wrapper starts its demo validation worker automatically. Choose a fictional profile in the header. For a workflow demonstration: contributor uploads, steward attests, independent reviewer approves and secretariat publishes. Only generated aggregate demonstration files are accepted. The original database is retained; the curated demonstration runs in a separate database.
 
 For the production-compiled local prototype: `npm run build`, then `npm run start`. This does not grant approval to deploy the system or ingest sensitive data.
 
 ## Validation
 
-Run `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm run test:unit`, `npm run test:db`, `npm run test:e2e`, and `npm run build`. Browser tests require the app on port3000 and Microsoft Edge. `npm run qa:visual` captures all13 major routes at1440,390 and320 CSS pixels. The supplied source reconciliation is in `docs/source-reconciliation.md`; final results and limitations are in `docs/VALIDATION.md`.
+Run `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm run test:unit`, and `npm run build`, then `npm run test:db` / `npm run test:e2e`. Database and browser tests provision disposable databases; browser tests launch their own server on3100 and require Microsoft Edge. They must not run directly against the demonstration on3000. `npm run qa:visual` captures the demo's13 major routes at1440,390 and320 CSS pixels. Reconciliation is in `docs/source-reconciliation.md`; refinement evidence is in `docs/DEMO_REFINEMENT.md` and formal acceptance limitations remain in `docs/VALIDATION.md`.

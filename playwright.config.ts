@@ -1,4 +1,11 @@
 import { defineConfig } from '@playwright/test';
+if (
+  process.env.DASHBOARD_E2E !== '1' ||
+  process.env.E2E_BASE_URL !== 'http://127.0.0.1:3100' ||
+  !new URL(process.env.DATABASE_URL!).pathname.startsWith('/dashboard_e2e_')
+) {
+  throw new Error('Use npm run test:e2e: browser tests require an isolated database and server.');
+}
 export default defineConfig({
   testDir: 'tests/e2e',
   timeout: 45000,
@@ -9,7 +16,7 @@ export default defineConfig({
     ['html', { outputFolder: 'artifacts/test-results/playwright', open: 'never' }],
   ],
   use: {
-    baseURL: 'http://127.0.0.1:3000',
+    baseURL: process.env.E2E_BASE_URL,
     browserName: 'chromium',
     channel: 'msedge',
     headless: true,

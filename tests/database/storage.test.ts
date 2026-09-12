@@ -1,6 +1,12 @@
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
 import pg from 'pg';
+if (
+  process.env.DASHBOARD_E2E !== '1' ||
+  !new URL(process.env.DATABASE_ADMIN_URL!).pathname.startsWith('/dashboard_e2e_')
+) {
+  throw new Error('Run npm run test:db to keep database tests isolated from the demonstration.');
+}
 const pool = new pg.Pool({ connectionString: process.env.DATABASE_ADMIN_URL });
 after(async () => {
   await pool.end();

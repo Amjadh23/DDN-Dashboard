@@ -4,6 +4,8 @@ import { Badge, DemoBadge, PageHeading, Panel } from '@/components/ui';
 import type { MetricDefinition, Origin } from '@/lib/domain/types';
 import { getSession } from '@/lib/server/auth';
 import { getRegistry } from '@/lib/server/dal';
+import { displayLabel } from '@/lib/domain/display';
+import { Disclosure } from '@/components/disclosure';
 
 interface CatalogueDataset {
   id: Origin;
@@ -93,46 +95,57 @@ export default async function DataCatalogue() {
                   {isDemo ? <FlaskConical size={20} /> : <FileText size={20} />}
                   <p>{entry.publication}</p>
                 </div>
-                <div className="table-scroll">
-                  <table>
-                    <tbody>
-                      <tr>
-                        <th scope="row">Pemilik</th>
-                        <td>{owners.join(' · ')}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Status pemilik</th>
-                        <td>{unique(entry.definitions.map((d) => d.ownerStatus)).join(' · ')}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Kesegaran</th>
-                        <td>{freshness.join(' · ')}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Sumber</th>
-                        <td>{entry.source}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Medan metadata</th>
-                        <td>{entry.fields}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Jejak data</th>
-                        <td>{entry.lineage}</td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Liputan daftar</th>
-                        <td>
-                          {entry.definitions.length} indikator · Teras {teras}
-                        </td>
-                      </tr>
-                      <tr>
-                        <th scope="row">Kod indikator</th>
-                        <td>{entry.definitions.map((definition) => definition.code).join(', ')}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                <Disclosure
+                  title="Pemilik, kesegaran & jejak data"
+                  meta={`${entry.definitions.length} indikator · Teras ${teras}`}
+                >
+                  <div className="table-scroll registry-definition">
+                    <table>
+                      <tbody>
+                        <tr>
+                          <th scope="row">Pemilik</th>
+                          <td>{owners.join(' · ')}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Status pemilik</th>
+                          <td>
+                            {unique(entry.definitions.map((d) => displayLabel(d.ownerStatus))).join(
+                              ' · ',
+                            )}
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Kesegaran</th>
+                          <td>{freshness.join(' · ')}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Sumber</th>
+                          <td>{entry.source}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Medan metadata</th>
+                          <td>{entry.fields}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Jejak data</th>
+                          <td>{entry.lineage}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Liputan daftar</th>
+                          <td>
+                            {entry.definitions.length} indikator · Teras {teras}
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Kod indikator</th>
+                          <td>
+                            {entry.definitions.map((definition) => definition.code).join(', ')}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </Disclosure>
                 <Link
                   className="text-link"
                   href={

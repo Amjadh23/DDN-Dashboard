@@ -1,6 +1,6 @@
 import { expect, test, type APIRequestContext } from '@playwright/test';
 
-const origin = 'http://127.0.0.1:3000';
+const origin = process.env.E2E_BASE_URL!;
 const headers = { origin };
 
 async function profile(api: APIRequestContext, role: string) {

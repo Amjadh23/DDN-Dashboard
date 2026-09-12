@@ -336,14 +336,14 @@ export function DemoMetric({
           : formatNumber(value, 1)}
         <span>{unit}</span>
       </div>
-      <p>{description}</p>
+      {value === null && <p>{description}</p>}
       <details className="metric-details">
         <summary>Takrif & konteks</summary>
         <p>
-          {code} · Proposed · versi demo v1 · {scope} · petikan senario {dateBM(period)} · segar
-          semula 7 September 2026. Sumber: penjana senario rekaan; pemilik: Pasukan Demo A (requires
-          stakeholder validation). Keyakinan rasmi dan sasaran belum disahkan. Nilai contoh ini
-          bukan statistik rasmi.
+          {code} · Cadangan · versi demo v1 · {scope} · petikan senario {dateBM(period)} · dikemas
+          kini 7 September 2026. Sumber: penjana senario rekaan; pemilik: Pasukan Demo A (perlu
+          pengesahan pihak berkepentingan). Keyakinan rasmi dan sasaran belum disahkan. Nilai contoh
+          ini bukan statistik rasmi.
         </p>
         <p>{description}</p>
         <p>
@@ -359,7 +359,7 @@ export function DemoSource({ children }: { children?: React.ReactNode }) {
   return (
     <SourceNote demo>
       {children ??
-        'Proposed · Senario v1 · Tempoh dan skop mengikut penapis halaman. Pemilik, definisi operasi dan sasaran rasmi memerlukan pengesahan.'}
+        'Cadangan · Tempoh dan skop mengikut penapis. Pemilik, definisi operasi dan sasaran rasmi perlu pengesahan.'}
     </SourceNote>
   );
 }

@@ -9,6 +9,9 @@ import { stateNames } from '@/lib/domain/demo-identities';
 import { formatNumber, dateBM } from '@/lib/domain/types';
 import type { SubmissionDTO } from '@/lib/server/workflow';
 import { Panel, DemoBadge, Badge, EmptyState } from './ui';
+import { Disclosure } from './disclosure';
+import { RecordList } from './record-list';
+import { actorName, geographyName, organisationName } from '@/lib/domain/display';
 function download(content: string, name: string) {
   const a = document.createElement('a'),
     url = URL.createObjectURL(new Blob([content], { type: 'text/csv;charset=utf-8' }));
@@ -20,7 +23,6 @@ function download(content: string, name: string) {
 export function UploadWorkspace({
   submissions,
   canUpload,
-  role,
 }: {
   submissions: SubmissionDTO[];
   canUpload: boolean;
@@ -36,11 +38,21 @@ export function UploadWorkspace({
     [synthetic, setSynthetic] = useState(false),
     [message, setMessage] = useState(''),
     [error, setError] = useState(false),
-    [selected, setSelected] = useState(submissions[0]?.id ?? ''),
+    [selected, setSelected] = useState(
+      submissions.find((s) => !['published', 'rejected'].includes(s.state))?.id ??
+        submissions[0]?.id ??
+        '',
+    ),
     [reason, setReason] = useState(''),
     [attestation, setAttestation] = useState(false),
-    [predecessor, setPredecessor] = useState('');
+    [predecessor, setPredecessor] = useState(''),
+    [view, setView] = useState('current');
   const active = submissions.find((s) => s.id === selected) ?? submissions[0];
+  const current = submissions.filter((s) => !['published', 'rejected'].includes(s.state));
+  const shown =
+    view === 'history'
+      ? submissions.filter((s) => ['published', 'rejected'].includes(s.state))
+      : current;
   const busy = submissions.some((s) => ['quarantined', 'validating'].includes(s.state));
   useEffect(() => {
     if (!busy) return;
@@ -141,199 +153,29 @@ export function UploadWorkspace({
           {message}
         </div>
       )}
-      <div className="workflow-steps">
-        {[
-          'Templat',
-          'Kuarantin & imbasan',
-          'Validasi',
-          'Pengesahan penjaga',
-          'Semakan bebas',
-          'Penerbitan',
-        ].map((s, i) => (
-          <div key={s}>
-            <span>{String(i + 1).padStart(2, '0')}</span>
-            <strong>{s}</strong>
-          </div>
-        ))}
-      </div>
-      <div className="upload-layout">
-        <Panel
-          title={predecessor ? 'Semakan penerbitan' : 'Sediakan penyerahan'}
-          kicker="DATA REKAAN SAHAJA"
-          demo
-        >
-          <div className="panel-body" id="upload-form">
-            <div className="form-grid">
-              <label>
-                Templat domain
-                <select
-                  value={template}
-                  onChange={(e) => {
-                    setTemplate(e.target.value as TemplateId);
-                    const t = templates.find((t) => t.id === e.target.value);
-                    if (t?.teras) setTeras(t.teras);
-                  }}
-                >
-                  {templates.map((t) => (
-                    <option value={t.id} key={t.id}>
-                      {t.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Teras
-                <select
-                  value={teras}
-                  disabled={template !== 'aggregate'}
-                  onChange={(e) => setTeras(Number(e.target.value))}
-                >
-                  {[1, 2, 3, 4, 5].map((n) => (
-                    <option key={n} value={n}>
-                      Teras {n}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Geografi
-                <select value={geography} onChange={(e) => setGeography(e.target.value)}>
-                  <option value="MY">Malaysia (agregat kebangsaan)</option>
-                  {Object.entries(stateNames).map(([id, name]) => (
-                    <option key={id} value={id}>
-                      {name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <label>
-                Tempoh
-                <select value={period} onChange={(e) => setPeriod(e.target.value)}>
-                  <option value="2026-08-09">9 Ogos 2026</option>
-                  <option value="2026-08-02">2 Ogos 2026</option>
-                </select>
-              </label>
+      <Disclosure
+        title="Aliran semakan & penerbitan"
+        meta="Penghantar, penjaga data, penyemak bebas dan sekretariat"
+      >
+        <div className="workflow-steps">
+          {[
+            'Templat',
+            'Kuarantin & imbasan',
+            'Validasi',
+            'Pengesahan penjaga',
+            'Semakan bebas',
+            'Penerbitan',
+          ].map((s, i) => (
+            <div key={s}>
+              <span>{String(i + 1).padStart(2, '0')}</span>
+              <strong>{s}</strong>
             </div>
-            <div className="template-meta">
-              <span>Skema 1.0</span>
-              <span>Pasukan Demo A · pemilik perlu pengesahan</span>
-              <span>Tarikh tutup rasmi belum ditetapkan</span>
-            </div>
-            <div className="button-row">
-              <button
-                className="button button-secondary"
-                onClick={() =>
-                  download(
-                    templateCSV(template, { teras, geography, period, organisation: 'demo-a' }),
-                    `demo-${template}-v1.csv`,
-                  )
-                }
-              >
-                <Download size={14} />
-                Contoh CSV
-              </button>
-              <a
-                className="button button-secondary"
-                href={`/api/v1/templates?template=${template}&teras=${teras}&geography=${geography}&period=${period}&format=xlsx`}
-              >
-                <Download size={14} />
-                Contoh XLSX
-              </a>
-            </div>
-            <p className="chart-caveat">
-              Contoh boleh dimuat turun dan disunting sebagai data rekaan. Jangan muat naik nama,
-              nombor pengenalan, naratif kes atau data peribadi. Maksimum 2 MB / 1,000 baris.
-            </p>
-            {canUpload ? (
-              <>
-                <label className="upload-drop">
-                  <UploadCloud size={30} />
-                  <strong>Pilih fail untuk kuarantin</strong>
-                  <span>CSV atau XLSX · tanpa formula atau makro</span>
-                  <input
-                    type="file"
-                    accept=".csv,.xlsx"
-                    onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-                  />
-                </label>
-                <label className="checkbox-label">
-                  <input
-                    type="checkbox"
-                    checked={synthetic}
-                    onChange={(e) => setSynthetic(e.target.checked)}
-                  />
-                  Saya sahkan fail ini hanya mengandungi DEMO / SYNTHETIC dan tiada data peribadi.
-                </label>
-                {predecessor && (
-                  <>
-                    <p className="chart-caveat">Versi terdahulu: {predecessor}</p>
-                    <label>
-                      Sebab semakan
-                      <textarea
-                        value={reason}
-                        maxLength={500}
-                        onChange={(e) => setReason(e.target.value)}
-                      />
-                    </label>
-                  </>
-                )}
-                <div className="form-actions">
-                  {predecessor && (
-                    <button className="button button-secondary" onClick={() => setPredecessor('')}>
-                      Batal semakan
-                    </button>
-                  )}
-                  <button
-                    className="button button-primary"
-                    disabled={pending || !file || !synthetic}
-                    onClick={submit}
-                  >
-                    {pending ? 'Memproses…' : 'Muat naik & kuarantin'}
-                    <ArrowUpRight size={14} />
-                  </button>
-                </div>
-              </>
-            ) : (
-              <div className="muted-note">
-                Peranan {role} tidak mempunyai kebenaran muat naik. Gunakan profil Penyumbang atau
-                Penjaga data untuk perjalanan demonstrasi ini.
-              </div>
-            )}
-          </div>
-        </Panel>
-        <Panel title="Kontrak & kawalan" kicker="SUMBER → KEPUTUSAN">
-          <div className="panel-body">
-            <FileCheck2 size={28} className="teal-text" />
-            <h3>Setiap versi mempunyai jejak</h3>
-            <p className="body-copy">
-              Fail disimpan secara peribadi dan disulitkan. Imbasan malware serta pembacaan berlaku
-              dalam pekerja berasingan. Ralat menghalang penyerahan; penjaga data mengesahkan
-              sumber, liputan dan kualiti.
-            </p>
-            <p className="body-copy">
-              Penyemak bebas memerlukan sebab bagi kelulusan atau penolakan. Sekretariat menerbitkan
-              versi diluluskan. Data demo tidak boleh menjadi penerbitan rasmi.
-            </p>
-            <details className="dictionary">
-              <summary>Kamus data & nilai terkawal</summary>
-              {uploadDictionary.map((d) => (
-                <p key={d.column}>
-                  <code>{d.column}</code>
-                  <br />
-                  {d.instruction}
-                </p>
-              ))}
-            </details>
-            <div className="muted-note">
-              Tiada padanan individu atau pautan identiti. Definisi, pemilik, populasi dan peraturan
-              rasmi masih memerlukan pengesahan.
-            </div>
-          </div>
-        </Panel>
-      </div>
+          ))}
+        </div>
+      </Disclosure>
       <Panel
         title="Penyerahan & sejarah versi"
-        kicker="100 REKOD TERKINI DALAM SKOP"
+        kicker="KERJA SEMASA & REKOD TERDAHULU"
         action={
           <button className="button button-secondary" onClick={() => router.refresh()}>
             <RefreshCw size={13} />
@@ -341,90 +183,115 @@ export function UploadWorkspace({
           </button>
         }
       >
-        {submissions.length ? (
-          <div className="table-scroll">
-            <table>
-              <caption className="sr-only">Penyerahan DEMO / SYNTHETIC mengikut kebenaran</caption>
-              <thead>
-                <tr>
-                  <th>Penyerahan</th>
-                  <th>Skop / tempoh</th>
-                  <th>Keadaan</th>
-                  <th>Imbasan</th>
-                  <th>Versi kerja</th>
-                </tr>
-              </thead>
-              <tbody>
-                {submissions.map((s) => (
-                  <tr key={s.id} className={active?.id === s.id ? 'selected-row' : ''}>
-                    <td>
-                      <button className="text-link" onClick={() => setSelected(s.id)}>
-                        {templates.find((t) => t.id === s.template)?.name ?? s.template} ·{' '}
-                        {s.id.slice(0, 8)}
-                      </button>
-                      <br />
-                      <DemoBadge />
-                    </td>
-                    <td>
-                      {stateNames[s.geography] ?? s.geography} · T{s.teras}
-                      <br />
-                      {dateBM(s.period)}
-                    </td>
-                    <td>
-                      <Badge
-                        tone={
-                          s.state === 'invalid' || s.state === 'rejected'
-                            ? 'warning'
-                            : s.state === 'published'
-                              ? 'source'
-                              : 'neutral'
-                        }
-                      >
-                        {workflowLabels[s.state]}
-                      </Badge>
-                    </td>
-                    <td>
-                      {s.scanStatus === 'clean'
-                        ? 'Bersih'
-                        : s.scanStatus === 'failed'
-                          ? 'Gagal tertutup'
-                          : 'Menunggu'}
-                    </td>
-                    <td>r{s.revision}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <div className="panel-body">
+          <label className="compact-select">
+            Paparan penyerahan
+            <select value={view} onChange={(e) => setView(e.target.value)}>
+              <option value="current">Perlu tindakan ({current.length})</option>
+              <option value="history">
+                Sejarah penerbitan & penolakan ({submissions.length - current.length})
+              </option>
+            </select>
+          </label>
+        </div>
+        {shown.length ? (
+          <RecordList key={view} label="penyerahan" size={4} className="submission-list">
+            {shown.map((s) => (
+              <button
+                key={s.id}
+                className={`submission-row ${active?.id === s.id ? 'selected-row' : ''}`}
+                aria-pressed={active?.id === s.id}
+                onClick={() => setSelected(s.id)}
+              >
+                <span>
+                  <strong>{templates.find((t) => t.id === s.template)?.name ?? s.template}</strong>
+                  <small>
+                    {geographyName(s.geography)} · Teras {s.teras} · {dateBM(s.period)}
+                  </small>
+                </span>
+                <span>
+                  <Badge
+                    tone={
+                      s.state === 'invalid' || s.state === 'rejected'
+                        ? 'warning'
+                        : s.state === 'published'
+                          ? 'source'
+                          : 'neutral'
+                    }
+                  >
+                    {workflowLabels[s.state]}
+                  </Badge>
+                  <DemoBadge />
+                </span>
+              </button>
+            ))}
+          </RecordList>
         ) : (
           <EmptyState
-            title="Tiada penyerahan dalam skop ini"
-            description="Muat naik contoh daripada profil penyumbang untuk memulakan aliran yang boleh diaudit. Paparan eksekutif hanya menunjukkan penerbitan."
+            title={
+              view === 'history'
+                ? 'Belum ada sejarah penyerahan'
+                : 'Tiada penyerahan menunggu tindakan'
+            }
+            description={
+              view === 'history'
+                ? 'Versi diterbitkan dan penolakan akan kekal di sini.'
+                : 'Sediakan penyerahan baharu atau buka sejarah untuk melihat versi terdahulu.'
+            }
           />
         )}
       </Panel>
       {active && (
-        <Panel
-          title={`Semakan penyerahan · ${active.id.slice(0, 8)}`}
-          kicker={`${workflowLabels[active.state]} · r${active.revision}`}
-          demo
-        >
+        <Panel title="Semakan penyerahan dipilih" kicker={workflowLabels[active.state]} demo>
           <div className="panel-body stack">
-            <div className="metadata-grid">
-              <div>
-                <strong>Sumber & pemilik demo</strong>
-                <p>
-                  {active.organisation} · {active.submitter}
-                </p>
+            <p className="next-step">
+              <strong>Seterusnya:</strong>{' '}
+              {
+                {
+                  draft: 'Penyumbang melengkapkan muat naik fail.',
+                  quarantined: 'Tunggu keputusan imbasan dan semakan fail.',
+                  validating:
+                    'Semakan fail sedang dijalankan. Paparan dikemas kini secara automatik.',
+                  invalid: 'Penyumbang membetulkan ralat yang disenaraikan.',
+                  validated: 'Penjaga data mengesahkan sumber, liputan dan kualiti.',
+                  submitted: 'Penyemak bebas meluluskan atau menolak dengan sebab.',
+                  approved: 'Sekretariat menerbitkan versi yang diluluskan.',
+                  published:
+                    'Versi tersedia untuk analisis. Pembetulan menggunakan semakan baharu.',
+                  rejected: 'Semak sebab penolakan dan sediakan penyerahan pembetulan.',
+                }[active.state]
+              }
+            </p>
+            <Disclosure
+              title="Pemilik, sumber & jejak versi"
+              meta={`${organisationName(active.organisation)} · Dikemas kini ${dateBM(active.updatedAt)}`}
+            >
+              <div className="metadata-grid">
+                <div>
+                  <strong>Sumber & pemilik demo</strong>
+                  <p>
+                    {organisationName(active.organisation)} · {actorName(active.submitter)}
+                  </p>
+                </div>
+                <div>
+                  <strong>Jejak versi</strong>
+                  <p>
+                    Semakan kerja {active.revision} · {active.publication ?? 'Belum diterbitkan'}
+                    {active.predecessor && <> · Semakan {active.predecessor}</>}
+                  </p>
+                </div>
+                <div>
+                  <strong>Imbasan fail</strong>
+                  <p>
+                    {active.scanStatus === 'clean'
+                      ? 'Bersih'
+                      : active.scanStatus === 'failed'
+                        ? 'Gagal — penerbitan dihalang'
+                        : 'Menunggu'}
+                  </p>
+                </div>
               </div>
-              <div>
-                <strong>Jejak versi</strong>
-                <p>
-                  {active.publication ?? 'Belum diterbitkan'}
-                  {active.predecessor && <> · Semakan {active.predecessor}</>}
-                </p>
-              </div>
-            </div>
+            </Disclosure>
             {active.errors.length > 0 && (
               <>
                 <div className="notice notice-error" role="status">
@@ -605,6 +472,193 @@ export function UploadWorkspace({
           </div>
         </Panel>
       )}
+      <Disclosure
+        title={predecessor ? 'Muat naik semakan baharu' : 'Sediakan penyerahan baharu'}
+        open={canUpload && (submissions.length === 0 || Boolean(predecessor))}
+      >
+        <div className="upload-layout">
+          <Panel
+            title={predecessor ? 'Semakan penerbitan' : 'Sediakan penyerahan'}
+            kicker="DATA REKAAN SAHAJA"
+            demo
+          >
+            <div className="panel-body" id="upload-form">
+              <div className="form-grid">
+                <label>
+                  Templat domain
+                  <select
+                    value={template}
+                    onChange={(e) => {
+                      setTemplate(e.target.value as TemplateId);
+                      const t = templates.find((t) => t.id === e.target.value);
+                      if (t?.teras) setTeras(t.teras);
+                    }}
+                  >
+                    {templates.map((t) => (
+                      <option value={t.id} key={t.id}>
+                        {t.name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Teras
+                  <select
+                    value={teras}
+                    disabled={template !== 'aggregate'}
+                    onChange={(e) => setTeras(Number(e.target.value))}
+                  >
+                    {[1, 2, 3, 4, 5].map((n) => (
+                      <option key={n} value={n}>
+                        Teras {n}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Geografi
+                  <select value={geography} onChange={(e) => setGeography(e.target.value)}>
+                    <option value="MY">Malaysia (agregat kebangsaan)</option>
+                    {Object.entries(stateNames).map(([id, name]) => (
+                      <option key={id} value={id}>
+                        {name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Tempoh
+                  <select value={period} onChange={(e) => setPeriod(e.target.value)}>
+                    <option value="2026-08-09">9 Ogos 2026</option>
+                    <option value="2026-08-02">2 Ogos 2026</option>
+                  </select>
+                </label>
+              </div>
+              <div className="template-meta">
+                <span>Skema 1.0</span>
+                <span>Pasukan Demo A · pemilik perlu pengesahan</span>
+                <span>Tarikh tutup rasmi belum ditetapkan</span>
+              </div>
+              <div className="button-row">
+                <button
+                  className="button button-secondary"
+                  onClick={() =>
+                    download(
+                      templateCSV(template, { teras, geography, period, organisation: 'demo-a' }),
+                      `demo-${template}-v1.csv`,
+                    )
+                  }
+                >
+                  <Download size={14} />
+                  Contoh CSV
+                </button>
+                <a
+                  className="button button-secondary"
+                  href={`/api/v1/templates?template=${template}&teras=${teras}&geography=${geography}&period=${period}&format=xlsx`}
+                >
+                  <Download size={14} />
+                  Contoh XLSX
+                </a>
+              </div>
+              <p className="chart-caveat">
+                Contoh boleh dimuat turun dan disunting sebagai data rekaan. Jangan muat naik nama,
+                nombor pengenalan, naratif kes atau data peribadi. Maksimum 2 MB / 1,000 baris.
+              </p>
+              {canUpload ? (
+                <>
+                  <label className="upload-drop">
+                    <UploadCloud size={30} />
+                    <strong>Pilih fail untuk kuarantin</strong>
+                    <span>CSV atau XLSX · tanpa formula atau makro</span>
+                    <span className="button button-secondary">Pilih fail</span>
+                    <span aria-live="polite">{file?.name ?? 'Belum ada fail dipilih'}</span>
+                    <input
+                      className="file-input-overlay"
+                      aria-label="Pilih fail CSV atau XLSX"
+                      type="file"
+                      accept=".csv,.xlsx"
+                      onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                    />
+                  </label>
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={synthetic}
+                      onChange={(e) => setSynthetic(e.target.checked)}
+                    />
+                    Saya sahkan fail ini hanya mengandungi DEMO / SYNTHETIC dan tiada data peribadi.
+                  </label>
+                  {predecessor && (
+                    <>
+                      <p className="chart-caveat">Versi terdahulu: {predecessor}</p>
+                      <label>
+                        Sebab semakan
+                        <textarea
+                          value={reason}
+                          maxLength={500}
+                          onChange={(e) => setReason(e.target.value)}
+                        />
+                      </label>
+                    </>
+                  )}
+                  <div className="form-actions">
+                    {predecessor && (
+                      <button
+                        className="button button-secondary"
+                        onClick={() => setPredecessor('')}
+                      >
+                        Batal semakan
+                      </button>
+                    )}
+                    <button
+                      className="button button-primary"
+                      disabled={pending || !file || !synthetic}
+                      onClick={submit}
+                    >
+                      {pending ? 'Memproses…' : 'Muat naik & kuarantin'}
+                      <ArrowUpRight size={14} />
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="muted-note">
+                  Profil semasa tidak mempunyai kebenaran muat naik. Gunakan profil Penyumbang atau
+                  Penjaga data untuk perjalanan demonstrasi ini.
+                </div>
+              )}
+            </div>
+          </Panel>
+          <Panel title="Kontrak & kawalan" kicker="SUMBER → KEPUTUSAN">
+            <div className="panel-body">
+              <FileCheck2 size={28} className="teal-text" />
+              <h3>Setiap versi mempunyai jejak</h3>
+              <p className="body-copy">
+                Fail disimpan secara peribadi dan disulitkan. Imbasan malware serta pembacaan
+                berlaku dalam pekerja berasingan. Ralat menghalang penyerahan; penjaga data
+                mengesahkan sumber, liputan dan kualiti.
+              </p>
+              <p className="body-copy">
+                Penyemak bebas memerlukan sebab bagi kelulusan atau penolakan. Sekretariat
+                menerbitkan versi diluluskan. Data demo tidak boleh menjadi penerbitan rasmi.
+              </p>
+              <details className="dictionary">
+                <summary>Kamus data & nilai terkawal</summary>
+                {uploadDictionary.map((d) => (
+                  <p key={d.column}>
+                    <code>{d.column}</code>
+                    <br />
+                    {d.instruction}
+                  </p>
+                ))}
+              </details>
+              <div className="muted-note">
+                Tiada padanan individu atau pautan identiti. Definisi, pemilik, populasi dan
+                peraturan rasmi masih memerlukan pengesahan.
+              </div>
+            </div>
+          </Panel>
+        </div>
+      </Disclosure>
     </div>
   );
 }

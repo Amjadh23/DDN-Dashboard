@@ -73,7 +73,7 @@ export function TerasContent({
             value={null}
             unit="—"
             code={`D-T${teras}-OUTCOMECOST`}
-            description="Validation required — takrif hasil dan kaedah pengagihan kos belum diluluskan."
+            description="Perlu pengesahan — takrif hasil dan kaedah pengagihan kos belum diluluskan."
           />
         </div>
         <div className="grid-2">
@@ -489,7 +489,7 @@ export function TerasContent({
                   <div key={name}>
                     <CheckCircle2 size={16} />
                     <h3>{name}</h3>
-                    <p>Proposed · Instrumen, kohort, horizon dan pemilik perlu disahkan.</p>
+                    <p>Cadangan · Instrumen, kohort, tempoh susulan dan pemilik perlu disahkan.</p>
                   </div>
                 ))}
               </div>
@@ -664,7 +664,7 @@ export function TerasContent({
                 value={null}
                 unit="—"
                 code="D-T4-DEATHS"
-                description="Validation required — definisi kematian dan perkaitan dadah belum diluluskan."
+                description="Perlu pengesahan — definisi kematian dan perkaitan dadah belum diluluskan."
               />
               <DemoMetric
                 period={s.period}
@@ -750,7 +750,7 @@ export function TerasContent({
                   <div key={x}>
                     <h3>{x}</h3>
                     <p>
-                      Proposed · Definisi, skop klinikal, pemilik dan denominator memerlukan
+                      Cadangan · Definisi, skop klinikal, pemilik dan penyebut memerlukan
                       pengesahan.
                     </p>
                   </div>

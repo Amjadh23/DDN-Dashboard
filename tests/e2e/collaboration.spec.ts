@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-const headers = { origin: 'http://127.0.0.1:3000' };
+const headers = { origin: process.env.E2E_BASE_URL! };
 test('action evidence requires an independent verifier and preserves revision checks', async ({
   request,
   page,
@@ -52,5 +52,6 @@ test('governance denies business roles and records effective-dated demo referenc
   const response = await request.post('/api/v1/governance', { headers, data });
   expect(response.ok(), await response.text()).toBeTruthy();
   await page.goto('/admin/governance');
+  await page.getByText('Urus skop profil & rujukan demo', { exact: true }).click();
   await expect(page.getByRole('heading', { name: 'Skop profil demonstrasi' })).toBeVisible();
 });

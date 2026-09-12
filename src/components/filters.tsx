@@ -64,7 +64,7 @@ export function FilterBar({
               aria-expanded={expanded}
               onClick={() => setExpanded(!expanded)}
             >
-              Lagi <ChevronDown size={14} />
+              Sumber & organisasi <ChevronDown size={14} />
             </button>
           </>
         )}
@@ -110,21 +110,6 @@ export function FilterBar({
               <option value="complete">100% medan demo</option>
             </select>
           </label>
-          {[
-            'Program / intervensi',
-            'Fasiliti',
-            'Bahan',
-            'Demografi',
-            'Laluan',
-            'Peratus populasi',
-          ].map((name) => (
-            <label key={name}>
-              {name}
-              <select disabled aria-describedby="filter-limits">
-                <option>Tidak tersedia untuk paparan ini</option>
-              </select>
-            </label>
-          ))}
           <div className="unavailable-filters" id="filter-limits">
             <p>
               Dimensi petikan ini tidak menyokong penapisan silang. Demografi dan laluan yang

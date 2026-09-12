@@ -8,6 +8,8 @@ import type { SavedReportDTO, ReportExportDTO } from '@/lib/server/reports';
 import { FilterBar } from './filters';
 import { dateBM } from '@/lib/domain/types';
 import { stateNames } from '@/lib/domain/demo-identities';
+import { RecordList } from './record-list';
+import { geographyName } from '@/lib/domain/display';
 export function ReportsWorkspace({
   saved,
   exports,
@@ -46,7 +48,7 @@ export function ReportsWorkspace({
           {message}
         </p>
       )}
-      <Panel title="Simpan paparan semasa" kicker="SNAPSHOT PERIBADI">
+      <Panel title="Simpan paparan semasa" kicker="PETIKAN PERIBADI">
         <div className="panel-body stack">
           <p>
             {dateBM(filters.period)} · {stateNames[filters.geography] ?? 'Seluruh Malaysia'} ·{' '}
@@ -75,7 +77,7 @@ export function ReportsWorkspace({
               disabled={pending || title.trim().length < 3}
               onClick={() => send('/api/v1/reports', { title, filters })}
             >
-              Simpan snapshot
+              Simpan paparan
             </button>
             <Link className="button button-secondary" href={`/map?${filterQuery(filters)}`}>
               Semak penapis pada peta
@@ -90,13 +92,18 @@ export function ReportsWorkspace({
       </Panel>
       <div className="grid-2">
         <Panel title="Paparan tersimpan" kicker="VERSI BEKU">
-          <div className="panel-body stack report-history">
+          <RecordList
+            label="paparan tersimpan"
+            className="panel-body stack report-history"
+            size={3}
+          >
             {!saved.length && <p>Belum ada paparan tersimpan untuk profil ini.</p>}
             {saved.map((v) => (
               <article className="action-record" key={v.id}>
                 <h3>{v.title}</h3>
                 <p className="chart-caveat">
-                  {v.classification} · {v.filters.period} · {v.filters.geography}
+                  {v.classification} · {dateBM(v.filters.period)} ·{' '}
+                  {geographyName(v.filters.geography)}
                 </p>
                 <details>
                   <summary>Versi & sumber</summary>
@@ -124,10 +131,10 @@ export function ReportsWorkspace({
                 </div>
               </article>
             ))}
-          </div>
+          </RecordList>
         </Panel>
         <Panel title="Fail eksport" kicker="PAUTAN PERIBADI · 15 MINIT">
-          <div className="panel-body stack report-history">
+          <RecordList label="fail eksport" className="panel-body stack report-history" size={3}>
             {!exports.length && <p>Jana eksport daripada paparan tersimpan.</p>}
             {exports.map((v) => (
               <article key={v.id} className="action-record">
@@ -140,7 +147,7 @@ export function ReportsWorkspace({
                 </a>
               </article>
             ))}
-          </div>
+          </RecordList>
         </Panel>
       </div>
     </div>

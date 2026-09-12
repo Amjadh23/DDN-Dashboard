@@ -7,6 +7,7 @@ import {
   type SourceTableDTO,
 } from '@/lib/server/source-snapshot';
 import { Badge, EmptyState, Panel, SourceNote } from './ui';
+import { displayLabel } from '@/lib/domain/display';
 
 export interface SourceEvidenceProps {
   session: Session;
@@ -205,8 +206,8 @@ export function SourceEvidence({
 
         <SourceNote>
           Sumber: {snapshot.sourceTitle} · hlm. {snapshot.sourcePages.join(', ') || 'tiada pecahan'}{' '}
-          · status {snapshot.publicationState} · klasifikasi {snapshot.sensitivity}. SHA-256{' '}
-          {snapshot.sourceHash}.
+          · status {displayLabel(snapshot.publicationState)} · klasifikasi{' '}
+          {displayLabel(snapshot.sensitivity)}. SHA-256 {snapshot.sourceHash}.
         </SourceNote>
       </div>
     </Panel>

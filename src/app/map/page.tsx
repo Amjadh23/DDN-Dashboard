@@ -29,11 +29,14 @@ export default async function MapPage({
       <div className="map-safeguards">
         <p>
           <strong>Komposit nasional</strong>
-          <span>Dinyahaktifkan — komponen, wajaran dan ambang belum diluluskan.</span>
+          <span>Belum diluluskan. Warna menunjukkan nilai lapisan, bukan skor ancaman rasmi.</span>
         </p>
         <p>
           <strong>Peringkat daerah</strong>
-          <span>Dinyahaktifkan — fakta, populasi dan sempadan sah belum tersedia.</span>
+          <span>
+            Data belum tersedia / belum disahkan. Paparan negeri digunakan sehingga data, populasi
+            dan sempadan daerah sah tersedia.
+          </span>
         </p>
         <p>
           <strong>Jadual setara</strong>

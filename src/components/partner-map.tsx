@@ -151,7 +151,7 @@ export function PartnerMap({ shapes }: { shapes: { name: string; path: string }[
           {p.due}
         </p>
         <h4>Pemilik komitmen</h4>
-        <p>Sekretariat Demo · requires stakeholder validation</p>
+        <p>Sekretariat Demo · pemilik perlu pengesahan</p>
         <Link
           href="/actions?teras=5&geography=MY&publication=demo-t5-2026-08-09-v1"
           className="text-link"

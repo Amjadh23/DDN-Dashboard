@@ -8,10 +8,12 @@ test('indicator registry filters on the server and keeps versioned caveats visib
   await expect(page.getByRole('heading', { name: 'Daftar indikator', exact: true })).toBeVisible();
   const suppliedIndicator = page.locator('#T2-CLIENTS');
   await expect(suppliedIndicator).toContainText('Jumlah klien AADK');
-  await expect(suppliedIndicator).toContainText('Available');
+  await expect(suppliedIndicator).toContainText('Data dibekalkan');
+  await suppliedIndicator.locator('summary').first().click();
   await expect(suppliedIndicator).toContainText('Versi definisi');
   await expect(suppliedIndicator).toContainText('v1');
   await expect(suppliedIndicator).toContainText('Kiraan klien bukan ukuran pemulihan berkekalan');
+  await page.getByText('Keyakinan data diasingkan daripada risiko', { exact: true }).click();
   await expect(page.getByText('Formula dan wajaran keyakinan belum diluluskan')).toBeVisible();
 
   await page.getByLabel('Cari indikator').fill('komitmen');
@@ -33,7 +35,7 @@ test('data catalogue separates supplied and synthetic lineage without exposing r
   const supplied = page
     .getByRole('heading', { name: 'Petikan Statistik Mingguan AADK', exact: true })
     .locator('xpath=ancestor::section');
-  await expect(supplied).toContainText('Available');
+  await expect(supplied).toContainText('Data dibekalkan');
   await expect(supplied).toContainText('Pemilik');
   await expect(supplied).toContainText('Kesegaran');
   await expect(supplied).toContainText('Medan metadata');

@@ -8,7 +8,7 @@ test('all demo roles render scoped routes without browser errors', async ({ page
     expect(
       (
         await page.request.post('/api/v1/session', {
-          headers: { origin: 'http://127.0.0.1:3000' },
+          headers: { origin: process.env.E2E_BASE_URL! },
           data: { role },
         })
       ).ok(),

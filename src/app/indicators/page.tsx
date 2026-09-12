@@ -4,6 +4,9 @@ import { EmptyState, Badge, DemoBadge, PageHeading, Panel } from '@/components/u
 import { dateBM, type MetricDefinition } from '@/lib/domain/types';
 import { getSession } from '@/lib/server/auth';
 import { getRegistry } from '@/lib/server/dal';
+import { Disclosure } from '@/components/disclosure';
+import { displayLabel } from '@/lib/domain/display';
+import { RecordList } from '@/components/record-list';
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
@@ -60,7 +63,7 @@ export default async function IndicatorRegistry({
         </Link>
       </PageHeading>
 
-      <Panel title="Cari definisi" kicker="PENAPIS PELAYAN">
+      <Panel title="Cari definisi">
         <form
           action="/indicators"
           method="get"
@@ -98,12 +101,7 @@ export default async function IndicatorRegistry({
         </form>
       </Panel>
 
-      <Panel
-        title="Keyakinan data diasingkan daripada risiko"
-        kicker="KAEDAH BELUM DIMUKTAMADKAN"
-        className="section-space"
-        action={<Badge tone="warning">Validation required</Badge>}
-      >
+      <Disclosure title="Keyakinan data diasingkan daripada risiko" meta="Kaedah belum diluluskan">
         <div className="panel-body stack">
           <p>
             Keyakinan perlu menilai kelengkapan, ketepatan masa, kesahan, liputan geografi, kualiti
@@ -114,7 +112,7 @@ export default async function IndicatorRegistry({
             diterbitkan. Indikator demo D-CONFIDENCE hanya menunjukkan kelengkapan medan rekaan.
           </div>
         </div>
-      </Panel>
+      </Disclosure>
 
       <div className="section-mini-heading">
         <span>DEFINISI DALAM SKOP AKSES</span>
@@ -122,105 +120,111 @@ export default async function IndicatorRegistry({
       </div>
 
       {definitions.length ? (
-        <div className="stack">
+        <RecordList
+          key={`${requestedTeras}-${query}`}
+          label="indikator"
+          size={8}
+          className="registry-list"
+          hashPaging
+        >
           {definitions.map((definition) => (
-            <div id={definition.code} key={definition.code}>
-              <Panel
-                title={`${definition.code} · ${definition.name}`}
-                kicker={`TERAS ${definition.teras}`}
-                action={
-                  <>
-                    {definition.origin === 'synthetic' && <DemoBadge />}
-                    <Badge tone={evidenceTone(definition)}>{definition.evidence}</Badge>
-                  </>
-                }
-              >
-                <div className="panel-body stack">
-                  <p>
-                    {definition.purpose} <span lang="en">{definition.nameEn}</span>
-                  </p>
-                  <details className="registry-definition" open={definitions.length === 1}>
-                    <summary>Formula, pemilik & definisi lengkap · {definition.version}</summary>
-                    <div className="table-scroll">
-                      <table>
-                        <tbody>
-                          <tr>
-                            <th scope="row">Numerator</th>
-                            <td>{definition.numerator}</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Denominator</th>
-                            <td>{definition.denominator}</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Formula</th>
-                            <td>{definition.formula}</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Unit</th>
-                            <td>{definition.unit}</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Arah tafsiran</th>
-                            <td>{definition.direction}</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Dimensi</th>
-                            <td>{definition.dimensions.join(' · ')}</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Kekerapan</th>
-                            <td>{definition.cadence}</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Jangkaan kesegaran</th>
-                            <td>{definition.freshness}</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Sumber</th>
-                            <td>
-                              {definition.source}
-                              {definition.sourcePage ? ` · halaman ${definition.sourcePage}` : ''}
-                            </td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Pemilik</th>
-                            <td>
-                              {definition.owner} · {definition.ownerStatus}
-                            </td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Peraturan kualiti</th>
-                            <td>{definition.qualityRules}</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Status sasaran</th>
-                            <td>{definition.target}</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Peraturan penyekatan</th>
-                            <td>{definition.suppression}</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Tafsiran & batasan</th>
-                            <td>{definition.interpretation}</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Versi definisi</th>
-                            <td>
-                              {definition.version} · berkuat kuasa{' '}
-                              {dateBM(definition.effectiveFrom)}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </details>
+            <Disclosure
+              key={definition.code}
+              id={definition.code}
+              title={definition.name}
+              open={definitions.length === 1}
+              meta={
+                <>
+                  <span>
+                    Teras {definition.teras} · {definition.unit}
+                  </span>
+                  {definition.origin === 'synthetic' && <DemoBadge />}
+                  <Badge tone={evidenceTone(definition)}>{definition.evidence}</Badge>
+                </>
+              }
+            >
+              <div className="panel-body stack">
+                <p>{definition.purpose}</p>
+                <div className="registry-definition">
+                  <div className="table-scroll">
+                    <table>
+                      <tbody>
+                        <tr>
+                          <th scope="row">Pengangka</th>
+                          <td>{definition.numerator}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Penyebut</th>
+                          <td>{definition.denominator}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Formula</th>
+                          <td>{definition.formula}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Unit</th>
+                          <td>{definition.unit}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Arah tafsiran</th>
+                          <td>{definition.direction}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Dimensi</th>
+                          <td>{definition.dimensions.join(' · ')}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Kekerapan</th>
+                          <td>{definition.cadence}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Jangkaan kesegaran</th>
+                          <td>{definition.freshness}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Sumber</th>
+                          <td>
+                            {definition.source}
+                            {definition.sourcePage ? ` · halaman ${definition.sourcePage}` : ''}
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Pemilik</th>
+                          <td>
+                            {definition.owner} · {displayLabel(definition.ownerStatus)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Peraturan kualiti</th>
+                          <td>{definition.qualityRules}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Status sasaran</th>
+                          <td>{definition.target}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Peraturan penyekatan</th>
+                          <td>{definition.suppression}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Tafsiran & batasan</th>
+                          <td>{definition.interpretation}</td>
+                        </tr>
+                        <tr>
+                          <th scope="row">Versi definisi</th>
+                          <td>
+                            {definition.code} · {definition.version} · berkuat kuasa{' '}
+                            {dateBM(definition.effectiveFrom)}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
-              </Panel>
-            </div>
+              </div>
+            </Disclosure>
           ))}
-        </div>
+        </RecordList>
       ) : (
         <Panel title="Tiada definisi sepadan" className="section-space">
           <EmptyState

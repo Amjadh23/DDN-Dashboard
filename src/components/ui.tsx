@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowUpRight, Info, CalendarDays, FileText } from 'lucide-react';
 import { dateBM, DEMO_LABEL, formatNumber, type MetricDTO } from '@/lib/domain/types';
+import { displayLabel } from '@/lib/domain/display';
 
 export function Badge({
   children,
@@ -9,7 +10,11 @@ export function Badge({
   children: React.ReactNode;
   tone?: string;
 }) {
-  return <span className={`badge badge-${tone}`}>{children}</span>;
+  return (
+    <span className={`badge badge-${tone}`}>
+      {typeof children === 'string' ? displayLabel(children) : children}
+    </span>
+  );
 }
 export function DemoBadge() {
   return <Badge tone="demo">{DEMO_LABEL}</Badge>;
@@ -119,10 +124,10 @@ export function MetricCard({
               <b>Sasaran:</b> Belum diluluskan.
             </p>
             <p>
-              <b>Segar semula:</b> {dateBM(metric.refreshed)} · {metric.publication}
+              <b>Dikemas kini:</b> {dateBM(metric.refreshed)}
             </p>
             <p>
-              {metric.definition.owner} · {metric.definition.ownerStatus}
+              {metric.definition.owner} · {displayLabel(metric.definition.ownerStatus)}
             </p>
             <Link href={`/indicators#${metric.definition.code}`}>Buka definisi penuh</Link>
           </div>

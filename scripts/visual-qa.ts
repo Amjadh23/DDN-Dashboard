@@ -65,6 +65,7 @@ for (const viewport of [
     const overflow = await page.evaluate(() => ({
       viewport: innerWidth,
       width: document.documentElement.scrollWidth,
+      height: document.documentElement.scrollHeight,
     }));
     results.push({ route, viewport: viewport.name, status: r?.status(), overflow, errors });
     console.log(

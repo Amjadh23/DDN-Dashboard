@@ -7,20 +7,21 @@
     "node": ">=20.9.0"
   },
   "scripts": {
-    "dev": "next dev --hostname 127.0.0.1",
+    "dev": "tsx --env-file=.env.local scripts/demo.ts --dev",
     "build": "next build --webpack",
-    "start": "next start --hostname 127.0.0.1",
+    "start": "tsx --env-file=.env.local scripts/demo.ts",
+    "demo:prepare": "tsx --env-file=.env.local scripts/demo.ts --prepare",
     "lint": "eslint src tests scripts --max-warnings 0",
     "format": "prettier --write src tests scripts database package.json tsconfig.json next.config.ts eslint.config.mjs",
     "format:check": "prettier --check src tests scripts database package.json tsconfig.json next.config.ts eslint.config.mjs",
     "typecheck": "tsc --noEmit",
     "test:unit": "tsx --test tests/unit/*.test.ts",
-    "test:db": "tsx --env-file=.env.local --test tests/database/*.test.ts",
-    "test:e2e": "playwright test",
+    "test:db": "tsx --env-file=.env.local scripts/e2e.ts --database-only",
+    "test:e2e": "tsx --env-file=.env.local scripts/e2e.ts",
     "db:migrate": "tsx --env-file=.env.local scripts/migrate.ts",
     "db:seed": "tsx --env-file=.env.local scripts/seed.ts",
-    "worker": "tsx --conditions=react-server --env-file=.env.local src/worker/run.ts",
-    "worker:once": "tsx --conditions=react-server --env-file=.env.local src/worker/run.ts --once",
+    "worker": "tsx --env-file=.env.local scripts/demo.ts --worker",
+    "worker:once": "tsx --env-file=.env.local scripts/demo.ts --worker --once",
     "qa:visual": "tsx scripts/visual-qa.ts"
   },
   "overrides": {

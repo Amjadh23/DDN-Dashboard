@@ -9,6 +9,9 @@ import type { NoteDTO, DecisionContext } from '@/lib/server/collaboration';
 import { demoIdentities, stateNames } from '@/lib/domain/demo-identities';
 import { actionLabels } from '@/lib/domain/actions';
 import { dateBM } from '@/lib/domain/types';
+import { actorName, geographyName } from '@/lib/domain/display';
+import { Disclosure } from './disclosure';
+import { RecordList } from './record-list';
 export function ActionWorkspace({
   actions,
   notes,
@@ -33,6 +36,7 @@ export function ActionWorkspace({
     [priority, setPriority] = useState('normal'),
     [message, setMessage] = useState(''),
     [error, setError] = useState(false),
+    [view, setView] = useState('current'),
     [evidence, setEvidence] = useState<Record<string, string>>({});
   function request(url: string, data: unknown) {
     start(async () => {
@@ -74,7 +78,168 @@ export function ActionWorkspace({
           </div>
         ))}
       </div>
-      <div className="upload-layout">
+      <Panel
+        title="Tindakan dalam skop"
+        demo
+        action={
+          <label className="compact-select">
+            Paparan tindakan
+            <select value={view} onChange={(e) => setView(e.target.value)}>
+              <option value="current">
+                Belum selesai ({actions.filter((a) => a.status !== 'closed').length})
+              </option>
+              <option value="closed">
+                Selesai ({actions.filter((a) => a.status === 'closed').length})
+              </option>
+            </select>
+          </label>
+        }
+      >
+        {actions.some((a) => (a.status === 'closed') === (view === 'closed')) ? (
+          <RecordList key={view} label="tindakan" className="action-list" size={4}>
+            {actions
+              .filter((a) => (a.status === 'closed') === (view === 'closed'))
+              .map((a) => (
+                <article key={a.id} className={`action-record action-${a.status}`}>
+                  <div className="action-record-heading">
+                    <div>
+                      <Badge tone={a.priority === 'urgent' ? 'warning' : 'neutral'}>
+                        {a.priority === 'normal'
+                          ? 'Biasa'
+                          : a.priority === 'high'
+                            ? 'Keutamaan tinggi'
+                            : 'Segera'}
+                      </Badge>
+                      <h3>{a.title}</h3>
+                    </div>
+                    <Badge tone={a.status === 'closed' ? 'source' : 'neutral'}>
+                      {actionLabels[a.status]}
+                    </Badge>
+                  </div>
+                  <div className="action-meta">
+                    <span>{actorName(a.owner)}</span>
+                    <span>
+                      <CalendarClock size={13} />
+                      {dateBM(a.dueDate)}
+                      {a.status !== 'closed' &&
+                        a.dueDate.slice(0, 10) < new Date().toISOString().slice(0, 10) && (
+                          <Badge tone="warning">Lewat</Badge>
+                        )}
+                    </span>
+                    <span>{stateNames[a.geography] ?? a.geography}</span>
+                    <span>Teras {a.teras}</span>
+                  </div>
+                  <details className="chart-details">
+                    <summary>Konteks, bukti & versi</summary>
+                    <p>
+                      DEMO / SYNTHETIC · Semakan {a.revision} · {a.context.period} ·{' '}
+                      {a.context.publication ?? 'Konteks Teras/geografi'} · definisi{' '}
+                      {a.context.definition ?? 'v1'}.
+                    </p>
+                    <p>{a.evidence ?? 'Bukti belum disertakan.'}</p>
+                    {a.verifiedBy && <p>Penutupan disahkan oleh {a.verifiedBy}.</p>}
+                    <Link
+                      className="text-link"
+                      href={`/map?geography=${a.geography}&period=${a.context.period ?? '2026-08-09'}`}
+                    >
+                      Buka konteks peta
+                      <ArrowUpRight size={13} />
+                    </Link>
+                  </details>
+                  {canAct && a.status !== 'closed' && (
+                    <Disclosure title="Kemas kini tindakan">
+                      <div className="action-controls">
+                        {a.status === 'in-progress' && (
+                          <label>
+                            Bukti pelaksanaan
+                            <textarea
+                              maxLength={2000}
+                              value={evidence[a.id] ?? ''}
+                              onChange={(e) => setEvidence({ ...evidence, [a.id]: e.target.value })}
+                              placeholder="Rujukan bukti demo dan hasil tindakan yang boleh disemak."
+                            />
+                          </label>
+                        )}
+                        <div className="button-row">
+                          {a.status === 'open' && (
+                            <button
+                              disabled={pending}
+                              className="button button-secondary"
+                              onClick={() =>
+                                request(`/api/v1/actions/${a.id}`, {
+                                  status: 'in-progress',
+                                  revision: a.revision,
+                                })
+                              }
+                            >
+                              Mulakan tindakan
+                            </button>
+                          )}
+                          {a.status === 'in-progress' && (
+                            <button
+                              disabled={pending || (evidence[a.id]?.trim().length ?? 0) < 3}
+                              className="button button-secondary"
+                              onClick={() =>
+                                request(`/api/v1/actions/${a.id}`, {
+                                  status: 'review',
+                                  revision: a.revision,
+                                  evidence: evidence[a.id],
+                                })
+                              }
+                            >
+                              Hantar bukti untuk pengesahan
+                            </button>
+                          )}
+                          {a.status === 'review' && (
+                            <>
+                              <button
+                                className="button button-secondary"
+                                disabled={pending}
+                                onClick={() =>
+                                  request(`/api/v1/actions/${a.id}`, {
+                                    status: 'in-progress',
+                                    revision: a.revision,
+                                  })
+                                }
+                              >
+                                Kembalikan untuk tindakan
+                              </button>
+                              <button
+                                className="button button-primary"
+                                disabled={pending || actor === a.owner || actor === a.evidenceBy}
+                                onClick={() =>
+                                  request(`/api/v1/actions/${a.id}`, {
+                                    status: 'closed',
+                                    revision: a.revision,
+                                  })
+                                }
+                              >
+                                <CheckCircle2 size={14} />
+                                Sahkan penutupan
+                              </button>
+                              <span className="chart-caveat">
+                                Pengesah mesti berasingan daripada pemilik dan penulis bukti.
+                              </span>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </Disclosure>
+                  )}
+                </article>
+              ))}
+          </RecordList>
+        ) : (
+          <EmptyState
+            title={view === 'closed' ? 'Belum ada tindakan selesai' : 'Tiada tindakan terbuka'}
+            description="Gunakan ruangan catatan untuk merekod keputusan dan tindakan dalam konteks ini."
+          />
+        )}
+      </Panel>
+      <Disclosure
+        title="Catat nota, keputusan atau tindakan"
+        meta="Konteks semasa disertakan secara automatik"
+      >
         <Panel
           title="Keputusan seterusnya"
           kicker={`${stateNames[context.geography] ?? 'Malaysia'} · TERAS ${context.teras}`}
@@ -83,8 +248,8 @@ export function ActionWorkspace({
           <div className="panel-body stack">
             <p className="body-copy">
               Konteks: {dateBM(context.period)} ·{' '}
-              {context.publication ?? 'Ruang kerja geografi / Teras'} · definisi v1. Nota tidak
-              mengubah data; pembetulan menggunakan semakan penyerahan.
+              {context.publication ? 'Penerbitan dipilih' : 'Ruang kerja geografi / Teras'}. Nota
+              tidak mengubah data; pembetulan menggunakan semakan penyerahan.
             </p>
             {canComment ? (
               <>
@@ -165,9 +330,11 @@ export function ActionWorkspace({
             )}
           </div>
         </Panel>
+      </Disclosure>
+      <Disclosure title="Nota & keputusan dalam konteks" meta={`${notes.length} catatan`}>
         <Panel title="Nota & keputusan dalam konteks" kicker="REKOD KEKAL" demo>
           {notes.length ? (
-            <div className="panel-body note-stream">
+            <RecordList label="catatan" className="panel-body note-stream" size={3}>
               {notes.map((n) => (
                 <article key={n.id}>
                   <div className="note-meta">
@@ -177,11 +344,12 @@ export function ActionWorkspace({
                   </div>
                   <p>{n.body}</p>
                   <small>
-                    {n.author} · T{n.context.teras} · {n.context.geography}
+                    {actorName(n.author)} · Teras {n.context.teras} ·{' '}
+                    {geographyName(n.context.geography)}
                   </small>
                 </article>
               ))}
-            </div>
+            </RecordList>
           ) : (
             <EmptyState
               title="Belum ada catatan"
@@ -189,144 +357,7 @@ export function ActionWorkspace({
             />
           )}
         </Panel>
-      </div>
-      <Panel title="Tindakan dalam skop" kicker="PEMILIK · TEMPOH · BUKTI · PENGESAH" demo>
-        {actions.length ? (
-          <div className="action-list">
-            {actions.map((a) => (
-              <article key={a.id} className={`action-record action-${a.status}`}>
-                <div className="action-record-heading">
-                  <div>
-                    <Badge tone={a.priority === 'urgent' ? 'warning' : 'neutral'}>
-                      {a.priority === 'normal'
-                        ? 'Biasa'
-                        : a.priority === 'high'
-                          ? 'Keutamaan tinggi'
-                          : 'Segera'}
-                    </Badge>
-                    <h3>{a.title}</h3>
-                  </div>
-                  <Badge tone={a.status === 'closed' ? 'source' : 'neutral'}>
-                    {actionLabels[a.status]}
-                  </Badge>
-                </div>
-                <div className="action-meta">
-                  <span>{a.owner}</span>
-                  <span>
-                    <CalendarClock size={13} />
-                    {dateBM(a.dueDate)}
-                  </span>
-                  <span>{stateNames[a.geography] ?? a.geography}</span>
-                  <span>
-                    T{a.teras} · r{a.revision}
-                  </span>
-                  <span>Umur {a.ageDays} hari</span>
-                </div>
-                <details className="chart-details">
-                  <summary>Konteks, bukti & versi</summary>
-                  <p>
-                    DEMO / SYNTHETIC · {a.context.period} ·{' '}
-                    {a.context.publication ?? 'Konteks Teras/geografi'} · definisi{' '}
-                    {a.context.definition ?? 'v1'}.
-                  </p>
-                  <p>{a.evidence ?? 'Bukti belum disertakan.'}</p>
-                  {a.verifiedBy && <p>Penutupan disahkan oleh {a.verifiedBy}.</p>}
-                  <Link
-                    className="text-link"
-                    href={`/map?geography=${a.geography}&period=${a.context.period ?? '2026-08-09'}`}
-                  >
-                    Buka konteks peta
-                    <ArrowUpRight size={13} />
-                  </Link>
-                </details>
-                {canAct && a.status !== 'closed' && (
-                  <div className="action-controls">
-                    {a.status === 'in-progress' && (
-                      <label>
-                        Bukti pelaksanaan
-                        <textarea
-                          maxLength={2000}
-                          value={evidence[a.id] ?? ''}
-                          onChange={(e) => setEvidence({ ...evidence, [a.id]: e.target.value })}
-                          placeholder="Rujukan bukti demo dan hasil tindakan yang boleh disemak."
-                        />
-                      </label>
-                    )}
-                    <div className="button-row">
-                      {a.status === 'open' && (
-                        <button
-                          disabled={pending}
-                          className="button button-secondary"
-                          onClick={() =>
-                            request(`/api/v1/actions/${a.id}`, {
-                              status: 'in-progress',
-                              revision: a.revision,
-                            })
-                          }
-                        >
-                          Mulakan tindakan
-                        </button>
-                      )}
-                      {a.status === 'in-progress' && (
-                        <button
-                          disabled={pending || (evidence[a.id]?.trim().length ?? 0) < 3}
-                          className="button button-secondary"
-                          onClick={() =>
-                            request(`/api/v1/actions/${a.id}`, {
-                              status: 'review',
-                              revision: a.revision,
-                              evidence: evidence[a.id],
-                            })
-                          }
-                        >
-                          Hantar bukti untuk pengesahan
-                        </button>
-                      )}
-                      {a.status === 'review' && (
-                        <>
-                          <button
-                            className="button button-secondary"
-                            disabled={pending}
-                            onClick={() =>
-                              request(`/api/v1/actions/${a.id}`, {
-                                status: 'in-progress',
-                                revision: a.revision,
-                              })
-                            }
-                          >
-                            Kembalikan untuk tindakan
-                          </button>
-                          <button
-                            className="button button-primary"
-                            disabled={pending || actor === a.owner || actor === a.evidenceBy}
-                            onClick={() =>
-                              request(`/api/v1/actions/${a.id}`, {
-                                status: 'closed',
-                                revision: a.revision,
-                              })
-                            }
-                          >
-                            <CheckCircle2 size={14} />
-                            Sahkan penutupan
-                          </button>
-                          <span className="chart-caveat">
-                            Pengesah mesti berasingan daripada pemilik dan penulis bukti.
-                          </span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </article>
-            ))}
-          </div>
-        ) : (
-          <EmptyState
-            title="Tiada tindakan dalam penapis ini"
-            description="Cipta tindakan pertama dengan pemilik, tarikh siap dan konteks yang jelas."
-          />
-        )}
-      </Panel>
+      </Disclosure>
     </div>
   );
 }

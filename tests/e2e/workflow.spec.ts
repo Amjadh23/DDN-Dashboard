@@ -2,7 +2,7 @@ import { test, expect, type APIRequestContext } from '@playwright/test';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 const run = promisify(execFile),
-  origin = 'http://127.0.0.1:3000';
+  origin = process.env.E2E_BASE_URL!;
 const headers = { origin };
 async function profile(api: APIRequestContext, role: string) {
   expect((await api.post('/api/v1/session', { headers, data: { role } })).ok()).toBeTruthy();
@@ -127,6 +127,7 @@ test('controlled upload validates, attests, independently approves, publishes an
   await expect(
     page.getByRole('heading', { name: 'Daripada sumber kepada penerbitan' }),
   ).toBeVisible();
+  await page.getByLabel('Paparan penyerahan').selectOption('history');
   await expect(page.getByText('Diterbitkan', { exact: true }).first()).toBeVisible();
 });
 test('upload boundary rejects viewer and cross-origin mutations', async ({ request }) => {
@@ -154,6 +155,7 @@ test('contributor can download XLSX instructions and upload through the browser 
 }) => {
   await profile(page.request, 'contributor');
   await page.goto('/data/uploads');
+  await page.getByText('Sediakan penyerahan baharu', { exact: true }).click();
   const template = await page.request.get(
     '/api/v1/templates?template=aggregate&teras=2&geography=MY-01&period=2026-08-09&format=xlsx',
   );
