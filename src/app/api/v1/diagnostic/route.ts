@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import pg from 'pg';
 import { isAllowedHost } from '@/lib/domain/request-origin';
+import { getStateShapes } from '@/lib/server/geometry';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -25,6 +26,12 @@ export async function GET() {
     connectionString: process.env.DATABASE_URL,
     connectionTimeoutMillis: 10000,
   });
+  let geometry: unknown;
+  try {
+    geometry = { shapes: (await getStateShapes()).length };
+  } catch (error) {
+    geometry = { error: error instanceof Error ? error.message : String(error) };
+  }
   const started = Date.now();
   try {
     await client.connect();
@@ -32,6 +39,7 @@ export async function GET() {
     const count = await client.query('SELECT count(*)::int AS c FROM core.geography');
     return NextResponse.json({
       configured,
+      geometry,
       database: 'ok',
       role: who.rows[0].role,
       geographies: count.rows[0].c,
@@ -41,6 +49,7 @@ export async function GET() {
     return NextResponse.json(
       {
         configured,
+        geometry,
         database: 'failed',
         error: error instanceof Error ? error.message : String(error),
         ms: Date.now() - started,
