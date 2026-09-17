@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
+import { headers } from 'next/headers';
 import pg from 'pg';
+import { isAllowedHost } from '@/lib/domain/request-origin';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -7,7 +9,11 @@ export const dynamic = 'force-dynamic';
 // Temporary deployment check. Reports whether configuration is present and whether
 // the database answers. It never returns a configuration value.
 export async function GET() {
+  const host = (await headers()).get('host');
   const configured = {
+    host,
+    PUBLIC_DEMO_HOST: process.env.PUBLIC_DEMO_HOST ?? null,
+    hostAllowed: isAllowedHost(host),
     DATABASE_URL: Boolean(process.env.DATABASE_URL),
     SESSION_SECRET: Boolean(process.env.SESSION_SECRET),
     DASHBOARD_MODE: process.env.DASHBOARD_MODE ?? null,
