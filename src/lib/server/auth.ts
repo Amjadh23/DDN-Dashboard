@@ -5,7 +5,7 @@ import { demoIdentities } from '../domain/demo-identities';
 import type { Session, Permission, Resource } from '../domain/policy';
 import { allowed } from '../domain/policy';
 import { withScope } from './db';
-import { isLocalSameOrigin } from '../domain/request-origin';
+import { isAllowedHost, isAllowedSameOrigin } from '../domain/request-origin';
 
 function signature(value: string) {
   if (!process.env.SESSION_SECRET) throw new Error('Sesi belum dikonfigurasi.');
@@ -39,9 +39,8 @@ export async function getSession(): Promise<Session> {
   if (process.env.DASHBOARD_MODE !== 'demo')
     throw new Error('Identiti pengeluaran belum diluluskan. Akses ditutup.');
   const h = await headers();
-  const host = h.get('host')?.split(':')[0];
-  if (!['127.0.0.1', 'localhost', '[::1]'].includes(host ?? ''))
-    throw new Error('Demonstrasi hanya tersedia secara setempat.');
+  if (!isAllowedHost(h.get('host')))
+    throw new Error('Demonstrasi hanya tersedia secara setempat atau pada hos yang dibenarkan.');
   const token = (await cookies()).get('dashboard-session')?.value;
   if (!token) return effectiveScope({ ...demoIdentities.executive, expires: Date.now() + 3600000 });
   try {
@@ -82,5 +81,5 @@ export function requirePermission(session: Session, permission: Permission, reso
     throw new Error('Akses ditolak untuk peranan atau skop ini.');
 }
 export async function requireSameOrigin(request: Request) {
-  if (!isLocalSameOrigin(request)) throw new Error('Asal permintaan tidak sah.');
+  if (!isAllowedSameOrigin(request)) throw new Error('Asal permintaan tidak sah.');
 }
