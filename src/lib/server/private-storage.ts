@@ -2,7 +2,10 @@ import 'server-only';
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'node:crypto';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-const root = path.resolve(process.env.PRIVATE_STORAGE_ROOT ?? '.runtime/private');
+const root = path.resolve(
+  process.env.PRIVATE_STORAGE_ROOT ??
+    (process.env.VERCEL ? '/tmp/ddn-private' : '.runtime/private'),
+);
 function storagePath(id: string) {
   if (!/^[a-z0-9-]{1,100}$/.test(id)) throw new Error('Kunci objek tidak sah.');
   return path.join(root, `${id}.enc`);

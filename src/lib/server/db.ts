@@ -9,7 +9,7 @@ function pool(): pg.Pool {
     connectionString: process.env.DATABASE_URL,
     max: 8,
     statement_timeout: 5000,
-    connectionTimeoutMillis: 3000,
+    connectionTimeoutMillis: Number(process.env.DATABASE_CONNECT_TIMEOUT_MS ?? 3000),
   }));
 }
 export async function withScope<T>(
