@@ -13,7 +13,8 @@ export async function GET() {
     DASHBOARD_MODE: process.env.DASHBOARD_MODE ?? null,
     DATABASE_CONNECT_TIMEOUT_MS: process.env.DATABASE_CONNECT_TIMEOUT_MS ?? null,
   };
-  if (!process.env.DATABASE_URL) return NextResponse.json({ configured, database: 'not attempted' });
+  if (!process.env.DATABASE_URL)
+    return NextResponse.json({ configured, database: 'not attempted' });
   const client = new pg.Client({
     connectionString: process.env.DATABASE_URL,
     connectionTimeoutMillis: 10000,
