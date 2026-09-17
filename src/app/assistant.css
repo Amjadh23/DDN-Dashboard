@@ -163,11 +163,22 @@
   border-radius: 12px;
   display: flex;
   align-items: center;
+  gap: 8px;
   background: #0e172a;
+}
+/* The focus ring sits on the whole field: the input's own offset outline would
+   otherwise run underneath the send button. */
+.assistant-compose:focus-within {
+  border-color: #9db6f2;
+  box-shadow: 0 0 0 3px #7c9cfc66;
+}
+.assistant-compose input:focus-visible {
+  outline: none;
 }
 .assistant-compose input {
   flex: 1;
   min-width: 0;
+  padding: 0 2px 0 7px;
   border: 0;
   background: transparent;
   color: #fff;
