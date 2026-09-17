@@ -101,7 +101,7 @@ export function ThreatMap({
     if (z.state === 'not-applicable') return '#27303a';
     if (z.count === 0) return '#122535';
     if (filters.mode === 'count') return '#172d3c';
-    return `hsl(193 ${35 + ((z.rate ?? 0) / max) * 26}% ${19 + ((z.rate ?? 0) / max) * 23}%)`;
+    return `hsl(225 ${45 + ((z.rate ?? 0) / max) * 35}% ${26 + ((z.rate ?? 0) / max) * 34}%)`;
   }
   const unit = filters.layer === 'confidence' ? '% medan sah' : 'per 100,000 populasi demo';
   return (
@@ -289,7 +289,7 @@ export function ThreatMap({
                         d={s.path}
                         fill={fill(z)}
                         fillRule="evenodd"
-                        stroke={s.id === active ? '#abeee0' : '#5b7c8b'}
+                        stroke={s.id === active ? '#eff4ff' : '#7895d1'}
                         strokeWidth={s.id === active ? 2.6 : 0.85}
                         vectorEffect="non-scaling-stroke"
                         tabIndex={0}
@@ -338,14 +338,14 @@ export function ThreatMap({
                       </text>
                     ))}
                   {shape && (
-                    <g pointerEvents="none">
-                      <circle cx={shape.cx} cy={shape.cy - 19} r="4" fill="#d4fff5" />
+                    <g pointerEvents="none" className="map-selection-marker">
+                      <circle cx={shape.cx} cy={shape.cy - 19} r="4" fill="#ffffff" />
                       <circle
                         cx={shape.cx}
                         cy={shape.cy - 19}
                         r="9"
                         fill="none"
-                        stroke="#b0e9dc"
+                        stroke="#c5d4ff"
                         opacity=".45"
                       />
                     </g>

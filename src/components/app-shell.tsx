@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import {
@@ -19,7 +20,6 @@ import {
   Menu,
   X,
   ArrowUpRight,
-  Shield,
   Layers3,
 } from 'lucide-react';
 import { roleLabels } from '@/lib/domain/demo-identities';
@@ -81,10 +81,14 @@ export function AppShell({
       )}
       <aside className={`sidebar ${open ? 'is-open' : ''}`} aria-label="Navigasi utama">
         <div className="brand">
-          <div className="brand-mark">
-            <Shield size={24} strokeWidth={1.6} />
-            <span />
-          </div>
+          <Image
+            className="brand-emblem"
+            src="/aadk-logo.png"
+            alt="Agensi Antidadah Kebangsaan"
+            width={56}
+            height={56}
+            priority
+          />
           <div>
             <strong>
               DDN<span className="brand-dot">.</span>
@@ -100,6 +104,17 @@ export function AppShell({
           </button>
         </div>
         <div className="brand-subtitle">DASAR DADAH NEGARA</div>
+        <Link className="brand-mission" href="/map" onClick={() => setOpen(false)}>
+          <span className="mission-kicker">BUKTI MENJADI TINDAKAN</span>
+          <strong>
+            Lima teras.
+            <br />
+            Satu hala tuju.
+          </strong>
+          <span className="mission-link">
+            Terokai peta strategik <ArrowUpRight size={15} />
+          </span>
+        </Link>
         <div className="nav-section-label">PUSAT STRATEGIK</div>
         <nav>
           {navigation.map((item, i) => (

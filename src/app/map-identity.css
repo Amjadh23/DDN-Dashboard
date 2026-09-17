@@ -1,0 +1,168 @@
+/* Continuous blue value scale; the red brand accent does not encode map severity. */
+.legend-ramp {
+  background: linear-gradient(90deg, hsl(225 45% 26%), hsl(225 80% 60%));
+}
+@media screen {
+  .map-main {
+    background:
+      radial-gradient(ellipse at 30% 45%, #426cdb18, transparent 55%),
+      radial-gradient(ellipse at 95% 75%, #335de621, transparent 50%), #0c142c;
+  }
+  .malaysia-map path[role='button'][aria-pressed='true'] {
+    filter: drop-shadow(0 0 6px #92adffaa);
+  }
+  .malaysia-map path[role='button']:hover {
+    stroke: #e5edff;
+    filter: brightness(1.14) drop-shadow(0 0 4px #739bff88);
+  }
+  .malaysia-map path[role='button']:focus-visible {
+    stroke: #fff;
+    stroke-width: 3px;
+    filter: drop-shadow(0 0 6px #b2c7ff);
+  }
+  .map-selection-marker {
+    filter: drop-shadow(0 0 6px #8fabff);
+  }
+  .state-map-label {
+    fill: #fff;
+    paint-order: stroke;
+    stroke: #152654;
+    stroke-width: 1.8px;
+    stroke-linejoin: round;
+    text-shadow: none;
+  }
+  .ocean-label {
+    fill: #91a2c7;
+    letter-spacing: 4px;
+  }
+  .region-label {
+    fill: #a4b3d3;
+  }
+  .map-meta .map-layer-caption,
+  .map-meta .text-button,
+  .map-compass {
+    color: #afc2e8;
+  }
+  .map-search {
+    background: #172445e8;
+    border-color: #718cc96b;
+    border-radius: 9px;
+    color: #b4caff;
+    box-shadow: 0 8px 22px #0002;
+  }
+  .map-search input::placeholder {
+    color: #a8bada;
+  }
+  .search-results {
+    background: #19264d;
+    border-color: #7893ce;
+    border-radius: 9px;
+  }
+  .search-results button {
+    color: #eaf1ff;
+  }
+  .search-results button:hover {
+    background: #314d8b;
+  }
+  .map-zoom {
+    background: #1d305be8;
+    border-color: #6986c866;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .map-zoom .icon-button {
+    color: #bacef6;
+  }
+  .map-zoom .icon-button:hover {
+    background: #36559b;
+    color: #fff;
+  }
+  .map-legend {
+    background: #0c142c99;
+    border-color: #5474b544;
+  }
+  .threat-panel .rate-legend,
+  .threat-panel .legend-values,
+  .threat-panel .legend-states > span {
+    color: #b9c8e5;
+  }
+  .legend-ramp {
+    height: 7px;
+    border-radius: 5px;
+  }
+  .workload-circle {
+    fill: #628aff55;
+    stroke: #c6d5ff;
+  }
+  .zone-detail {
+    position: relative;
+    background:
+      radial-gradient(ellipse at 100% 0%, #c2304e2b, transparent 52%),
+      linear-gradient(165deg, #1c2d60, #141e3a 65%);
+    border-color: #6b8bce55;
+  }
+  .zone-detail::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 20px;
+    right: 20px;
+    height: 2px;
+    background: linear-gradient(90deg, #ca3c58, #648cff, transparent);
+  }
+  .threat-panel .zone-detail-label {
+    color: #adbfed;
+  }
+  .zone-detail h3 {
+    color: #f5f7ff;
+  }
+  .threat-panel .zone-value {
+    color: #c6d7ff;
+    font-weight: 800;
+    text-shadow: 0 4px 25px #658dff33;
+  }
+  .zone-detail .zone-value small,
+  .zone-comparison,
+  .zone-facts span {
+    color: #adbedc;
+  }
+  .threat-panel .zone-facts strong {
+    color: #dfebff;
+  }
+  .zone-facts,
+  .confidence-block {
+    border-color: #7390c533;
+  }
+  .threat-panel .confidence-block > div:first-child {
+    color: #c8d7f0;
+  }
+  .confidence-block p,
+  .zone-context p {
+    color: #acbddc;
+  }
+  .zone-context h4,
+  .zone-teras-link,
+  .zone-detail .metric-details summary {
+    color: #c5d6f6;
+  }
+  .zone-detail .meter {
+    background: #728cb144;
+  }
+  .zone-detail .meter > span {
+    background: linear-gradient(90deg, #8094ba, #c8d5ec);
+  }
+  .map-bottom-note {
+    background: #121c36;
+    color: #b9c7df;
+  }
+  .map-method,
+  .map-table-wrap {
+    background: #172343;
+  }
+  .map-method b {
+    color: #d6e3ff;
+  }
+  .map-table-wrap .selected-row {
+    background: #486cd233;
+  }
+}

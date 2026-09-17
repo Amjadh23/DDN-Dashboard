@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" width="128" height="128">
+  <defs>
+    <linearGradient id="aida-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2b4ba3" />
+      <stop offset="1" stop-color="#141f3f" />
+    </linearGradient>
+    <linearGradient id="aida-suit" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f7ff" />
+      <stop offset="1" stop-color="#d4defa" />
+    </linearGradient>
+    <clipPath id="aida-clip">
+      <circle cx="64" cy="64" r="64" />
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#aida-clip)">
+    <circle cx="64" cy="64" r="64" fill="url(#aida-bg)" />
+    <circle cx="64" cy="70" r="46" fill="#ffffff" opacity=".06" />
+
+    <!-- hair, back layer -->
+    <path d="M32 62c0-21 13-34 32-34s32 13 32 34c0 13-2 22-4 32H36c-2-10-4-19-4-32Z" fill="#161d33" />
+
+    <!-- shoulders -->
+    <path d="M22 128c3-17 14-26 27-30l15 8 15-8c13 4 24 13 27 30Z" fill="url(#aida-suit)" />
+    <path d="M56 96h16l-8 12Z" fill="#223e89" />
+    <path d="M64 108c6 0 11 4 12 10v10H52v-10c1-6 6-10 12-10Z" fill="#223e89" opacity=".18" />
+
+    <!-- neck -->
+    <path d="M56 82h16v14c0 4-16 4-16 0Z" fill="#e0a883" />
+
+    <!-- face -->
+    <path d="M42 56c0-13 10-22 22-22s22 9 22 22v8c0 13-10 23-22 23s-22-10-22-23Z" fill="#f2c6a0" />
+
+    <!-- fringe -->
+    <path d="M40 60c-1-18 9-28 24-28s25 10 24 28c-3-6-6-10-10-13-7 5-21 7-30 2-3 3-6 6-8 11Z" fill="#161d33" />
+
+    <!-- hair, side strands -->
+    <path d="M40 54c-4 12-4 24-2 36-5-2-7-6-7-12 0-10 3-19 9-24Z" fill="#1d263f" />
+    <path d="M88 54c4 12 4 24 2 36 5-2 7-6 7-12 0-10-3-19-9-24Z" fill="#1d263f" />
+
+    <!-- eyes and smile -->
+    <path d="M52 62a4 4 0 0 1 8 0" fill="none" stroke="#1b2138" stroke-width="3" stroke-linecap="round" />
+    <path d="M68 62a4 4 0 0 1 8 0" fill="none" stroke="#1b2138" stroke-width="3" stroke-linecap="round" />
+    <path d="M58 73c4 3 8 3 12 0" fill="none" stroke="#b5654a" stroke-width="3" stroke-linecap="round" />
+
+    <!-- headset -->
+    <path d="M38 58a26 26 0 0 1 52 0" fill="none" stroke="#8fb0f5" stroke-width="5" stroke-linecap="round" />
+    <rect x="31" y="53" width="10" height="16" rx="5" fill="#8fb0f5" />
+    <rect x="87" y="53" width="10" height="16" rx="5" fill="#8fb0f5" />
+    <path d="M36 69v6c0 5 5 9 11 9" fill="none" stroke="#8fb0f5" stroke-width="3" stroke-linecap="round" />
+    <circle cx="49" cy="84" r="3.5" fill="#8fb0f5" />
+  </g>
+</svg>

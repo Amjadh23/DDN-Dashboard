@@ -1,5 +1,20 @@
 # V1 Dashboard Implementation Plan
 
+## 2026-09-17 — Guided assistant demo
+
+- ACTIVE (explicit user request): right-side local rule-based assistant, guided questions, navigation suggestions and custom generated red/blue character. Clear demo disclosure; no API keys, network chat, row data access, mutations or persistent message storage. Test rule routing/fallback, keyboard dialog behaviour, mobile layout and accessibility; then build/type/lint checks. This is a presentation-only navigation guide, not production AI or a source of policy/clinical conclusions.
+
+## 2026-09-17 — AADK red/blue identity correction
+
+- ACTIVE: user supplied official logo reference supersedes orange direction. Use the actual AADK website logo; blue surfaces/continuous map scale, red focal accents, cool-white evidence cards. Preserve statistics, disclosure and interactions. Verify build, lint, formatting, types, browser accessibility/reflow and map controls.
+
+## 2026-09-17 — Orange identity refresh (user authorised)
+
+- V1 COMPLETE: custom five-pillar SVG brand and favicon; charcoal/orange atmosphere, ivory metric surfaces, gradient focal cards, shared navigation/filter/button polish. Source labels, data meanings, permissions and map classifications preserved. requirements.md remains absent.
+- V2 COMPLETE: formatting, lint, typecheck and production build passed; 39 browser route/viewport checks passed at 1440/390/320, all HTTP 200, no page errors, horizontal overflow or axe violations. Expanded KPI/source panels passed axe at all three widths; mobile navigation passed at 390/320. Keyboard skip link, visible focus, Enter disclosure and reduced-motion checks passed. Visual review corrected a compressed sidebar card and funnel fill. Screenshots and machine report: artifacts/identity. Report: docs/IDENTITY_REFRESH.md.
+- Scope limits: upload end-to-end retains its existing Windows Defender/macOS limitation; no backend changes or database mutations beyond demo profile sessions. Existing full V1 human/screen-reader acceptance remains open. Next: user visual review.
+- Trace: FR-001/003/009/010, VIS-002, NFR-020/021/022/023, ACC-007/010; presentation improvement only, no new data acceptance claims.
+
 ## 2026-09-09 — Stakeholder demonstration refinement (explicitly authorised)
 
 The attached refinement brief and completed QA are the design baseline. Same capabilities, less default interface; no new policy thresholds or production infrastructure. Existing contract inputs remain unchanged; `requirements.md` is still missing.
