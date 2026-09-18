@@ -26,7 +26,7 @@ import type { Role } from '@/lib/domain/policy';
 
 const navigation = [
   { href: '/', label: 'Gambaran nasional', icon: LayoutDashboard },
-  { href: '/teras/1', label: 'Pendidikan pencegahan', icon: GraduationCap, n: '01' },
+  { href: '/#pendidikan-pencegahan', label: 'Pendidikan pencegahan', icon: GraduationCap, n: '01' },
   { href: '/teras/2', label: 'Rawatan & pemulihan', icon: HeartPulse, n: '02' },
   { href: '/teras/3', label: 'Penguatkuasaan', icon: ShieldCheck, n: '03' },
   { href: '/teras/4', label: 'Pengurangan kemudaratan', icon: HandHeart, n: '04' },
