@@ -5,7 +5,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import {
   LayoutDashboard,
-  Map,
   GraduationCap,
   HeartPulse,
   ShieldCheck,
@@ -27,7 +26,6 @@ import type { Role } from '@/lib/domain/policy';
 
 const navigation = [
   { href: '/', label: 'Gambaran nasional', icon: LayoutDashboard },
-  { href: '/map', label: 'Peta strategik', icon: Map },
   { href: '/teras/1', label: 'Pendidikan pencegahan', icon: GraduationCap, n: '01' },
   { href: '/teras/2', label: 'Rawatan & pemulihan', icon: HeartPulse, n: '02' },
   { href: '/teras/3', label: 'Penguatkuasaan', icon: ShieldCheck, n: '03' },
@@ -104,7 +102,7 @@ export function AppShell({
           </button>
         </div>
         <div className="brand-subtitle">DASAR DADAH NEGARA</div>
-        <Link className="brand-mission" href="/map" onClick={() => setOpen(false)}>
+        <Link className="brand-mission" href="/" onClick={() => setOpen(false)}>
           <span className="mission-kicker">BUKTI MENJADI TINDAKAN</span>
           <strong>
             Lima teras.

@@ -18,7 +18,6 @@ The greeting changes with the route the visitor is on:
 
 | Route | Opening line |
 | --- | --- |
-| `/map` | Notes that the visitor is on the strategic map; offers layers or state selection. |
 | `/teras/*` | Notes that the visitor is on one of the five Teras; offers indicators, sources or next steps. |
 | Anywhere else | "Saya AIDA, pembantu digital Dasar Dadah Negara. Apa yang anda mahu terokai hari ini?" |
 

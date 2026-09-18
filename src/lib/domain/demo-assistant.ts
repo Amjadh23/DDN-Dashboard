@@ -7,11 +7,9 @@ export type AssistantAnswer = {
 export const starterChoices = ['Mulakan lawatan', 'Terangkan peta', 'Sumber data'];
 
 export function assistantWelcome(path: string): AssistantAnswer {
-  const context = path.startsWith('/map')
-    ? 'Anda sedang meneroka peta strategik. Mahu saya terangkan lapisan atau cara memilih negeri?'
-    : path.startsWith('/teras/')
-      ? 'Anda sedang melihat salah satu daripada lima Teras DDN. Mahu memahami indikator, sumber data atau langkah seterusnya?'
-      : 'Saya AIDA, pembantu digital Dasar Dadah Negara. Apa yang anda mahu terokai hari ini?';
+  const context = path.startsWith('/teras/')
+    ? 'Anda sedang melihat salah satu daripada lima Teras DDN. Mahu memahami indikator, sumber data atau langkah seterusnya?'
+    : 'Saya AIDA, pembantu digital Dasar Dadah Negara. Apa yang anda mahu terokai hari ini?';
   return { text: context, choices: starterChoices };
 }
 

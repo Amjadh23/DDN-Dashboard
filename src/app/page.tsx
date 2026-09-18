@@ -49,9 +49,9 @@ export default async function Overview({
       <PageHeading
         eyebrow="PUSAT STRATEGIK KEBANGSAAN"
         title="Gambaran nasional"
-        description="Ringkasan klien AADK dan aduan, diikuti senario peta negeri."
+        description="Ringkasan klien AADK dan aduan, dengan ruang analisis geografi penuh pada halaman yang sama."
       />
-      <FilterBar filters={filters} variant="overview" />
+      <FilterBar filters={filters} />
       {otherFilters && (
         <p className="overview-filter-note">
           Penapis tambahan daripada pautan masih digunakan.{' '}
@@ -180,7 +180,24 @@ export default async function Overview({
           atas.
         </p>
       </div>
-      <ThreatMap zones={zones} shapes={shapes} filters={filters} variant="overview" />
+      <ThreatMap zones={zones} shapes={shapes} filters={filters} full />
+      <div className="map-safeguards">
+        <p>
+          <strong>Komposit nasional</strong>
+          <span>Belum diluluskan. Warna menunjukkan nilai lapisan, bukan skor ancaman rasmi.</span>
+        </p>
+        <p>
+          <strong>Peringkat daerah</strong>
+          <span>
+            Data belum tersedia / belum disahkan. Paparan negeri digunakan sehingga data, populasi
+            dan sempadan daerah sah tersedia.
+          </span>
+        </p>
+        <p>
+          <strong>Jadual setara</strong>
+          <span>Semua nilai yang boleh didedahkan tersedia melalui butang paparan jadual.</span>
+        </p>
+      </div>
       <section className="overview-teras" aria-labelledby="overview-teras-heading">
         <div className="overview-section-heading">
           <h2 id="overview-teras-heading">Teroka lima teras</h2>
