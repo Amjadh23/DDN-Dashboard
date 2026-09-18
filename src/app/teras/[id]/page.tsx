@@ -2,15 +2,14 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowUpRight } from 'lucide-react';
 import { getSession } from '@/lib/server/auth';
-import { getMetrics, getMapZones, getActions } from '@/lib/server/dal';
-import { getStateShapes } from '@/lib/server/geometry';
+import { getMetrics, getActions } from '@/lib/server/dal';
 import { getWorldShapes } from '@/lib/server/world-geometry';
 import { getScenario } from '@/lib/server/teras-scenario';
 import { terasInfo } from '@/lib/domain/teras';
 import { parseFilters, filterQuery } from '@/lib/domain/filters';
 import { PageHeading, Panel, MetricCard, SourceNote, Badge, EmptyState } from '@/components/ui';
 import { FilterBar } from '@/components/filters';
-import { ThreatMap } from '@/components/threat-map';
+import { layerLabels } from '@/lib/domain/display';
 import { PartnerMap } from '@/components/partner-map';
 import { Funnel } from '@/components/charts';
 import { TerasContent, perspectives } from '@/components/teras-content';
@@ -47,12 +46,7 @@ export default async function TerasPage({
     : 'needs';
   const scenario = getScenario(session, teras, filters),
     cohort = p.cohort === '2025-q4' ? '2025-q4' : '2026-q1';
-  const [metrics, zones, shapes, actions] = await Promise.all([
-    getMetrics(session, filters),
-    teras === 5 ? Promise.resolve([]) : getMapZones(session, filters),
-    teras === 5 ? Promise.resolve([]) : getStateShapes(),
-    getActions(session),
-  ]);
+  const [metrics, actions] = await Promise.all([getMetrics(session, filters), getActions(session)]);
   const cards = metrics.filter((m) => m.definition.teras === teras).slice(0, 4);
   const scale = scenario?.value ?? ((n: number) => n),
     eligible = cohort === '2025-q4' ? 640 : 800,
@@ -173,7 +167,20 @@ export default async function TerasPage({
             )}
           </Panel>
         ) : (
-          <ThreatMap zones={zones} shapes={shapes} filters={filters} variant="overview" />
+          <Panel
+            title="Sebaran negeri pada peta strategik"
+            kicker={`LAPISAN · ${layerLabels[filters.layer].toUpperCase()}`}
+            demo
+          >
+            <p className="teras-map-pointer">
+              Peta strategik tunggal memaparkan lapisan ini mengikut penapis semasa, termasuk carian
+              negeri, mod kadar atau bilangan dan jadual setara.
+            </p>
+            <Link href={`/?${query}#peta-strategik`} className="button button-secondary">
+              Lihat pada peta strategik
+              <ArrowUpRight size={15} />
+            </Link>
+          </Panel>
         ))}
       <div className="policy-caveat">{info.caveat}</div>
 

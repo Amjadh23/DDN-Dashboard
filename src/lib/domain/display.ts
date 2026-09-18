@@ -1,4 +1,13 @@
 import { demoIdentities, stateNames } from './demo-identities';
+import type { Layer } from './types';
+
+export const layerLabels: Record<Layer, string> = {
+  burden: 'Beban / permintaan',
+  supply: 'Bekalan / penguatkuasaan',
+  harm: 'Kemudaratan',
+  gap: 'Jurang perkhidmatan',
+  confidence: 'Keyakinan data',
+};
 
 const labels: Record<string, string> = {
   Available: 'Data dibekalkan',

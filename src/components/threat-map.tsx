@@ -19,17 +19,12 @@ import {
 } from 'lucide-react';
 import { Badge, DemoBadge } from './ui';
 import type { StateShape } from '@/lib/server/geometry';
-import { formatNumber, dateBM, type MapZoneDTO, type Layer } from '@/lib/domain/types';
+import { formatNumber, dateBM, type MapZoneDTO } from '@/lib/domain/types';
 import { filterQuery, type Filters } from '@/lib/domain/filters';
 import { demoBand, demoBands, demoRange, demoBandVersion } from '@/lib/domain/demo-map-bands';
+import { layerLabels } from '@/lib/domain/display';
+export { layerLabels };
 
-export const layerLabels: Record<Layer, string> = {
-  burden: 'Beban / permintaan',
-  supply: 'Bekalan / penguatkuasaan',
-  harm: 'Kemudaratan',
-  gap: 'Jurang perkhidmatan',
-  confidence: 'Keyakinan data',
-};
 const stateLabels = {
   value: 'Nilai tersedia',
   unknown: 'Tidak diketahui',
@@ -122,6 +117,7 @@ export function ThreatMap({
   const bandMeasure = filters.mode === 'count' ? 'bilangan' : 'kadar';
   return (
     <section
+      id="peta-strategik"
       className={`panel threat-panel ${full ? 'full-map-panel' : ''} ${overview ? 'overview-map' : ''}`}
       aria-label="Peta strategik Malaysia"
     >
