@@ -74,11 +74,12 @@ export function ThreatMap({
   const fullMapHref = `/map?${filterQuery(filters)}&state=${active}`;
   const max = Math.max(1, ...zones.map((z) => z.rate ?? 0));
   const countMax = Math.max(1, ...zones.map((z) => z.count ?? 0));
-  const banded =
-    filters.mode === 'rate' && filters.layer !== 'confidence' && filters.source !== 'supplied';
-  const range = demoRange(zones.filter((z) => z.state === 'value').map((z) => z.rate));
+  const banded = filters.layer !== 'confidence' && filters.source !== 'supplied';
+  // Each mode is banded by the value it actually shows: the rate, or the count.
+  const measure = (z: MapZoneDTO) => (filters.mode === 'count' ? z.count : z.rate);
+  const range = demoRange(zones.filter((z) => z.state === 'value').map(measure));
   function bandFor(z?: MapZoneDTO) {
-    return banded && z?.state === 'value' ? demoBand(z.rate, range) : null;
+    return banded && z?.state === 'value' ? demoBand(measure(z), range) : null;
   }
   function bandLabel(z?: MapZoneDTO) {
     const band = bandFor(z);
@@ -111,12 +112,14 @@ export function ThreatMap({
     if (z.state === 'not-collected') return 'url(#not-collected-pattern)';
     if (z.state === 'not-applicable') return '#27303a';
     if (z.count === 0) return '#122535';
-    if (filters.mode === 'count') return '#172d3c';
     const band = bandFor(z);
     if (band) return demoBands[band].color;
+    if (filters.mode === 'count') return '#172d3c';
     return `hsl(225 ${45 + ((z.rate ?? 0) / max) * 35}% ${26 + ((z.rate ?? 0) / max) * 34}%)`;
   }
   const unit = filters.layer === 'confidence' ? '% medan sah' : 'per 100,000 populasi demo';
+  const bandUnit = filters.mode === 'count' ? 'bilangan agregat demo' : unit;
+  const bandMeasure = filters.mode === 'count' ? 'bilangan' : 'kadar';
   return (
     <section
       className={`panel threat-panel ${full ? 'full-map-panel' : ''} ${overview ? 'overview-map' : ''}`}
@@ -456,7 +459,10 @@ export function ThreatMap({
           <div className="map-legend">
             {banded ? (
               <div className="demo-band-legend">
-                <strong>Tahap relatif · DEMO / SYNTHETIC</strong>
+                <strong>
+                  Tahap relatif · DEMO / SYNTHETIC
+                  {filters.mode === 'count' ? ' · saiz simbol = bilangan' : ''}
+                </strong>
                 <div className="demo-band-swatches">
                   {Object.entries(demoBands).map(([key, band]) => (
                     <span key={key}>
@@ -468,20 +474,20 @@ export function ThreatMap({
                 <details>
                   <summary>Bagaimana warna ditentukan?</summary>
                   <p>
-                    Julat kadar positif dalam paparan ini dibahagi kepada tiga bahagian sama. Warna
-                    berubah bersama penapis; bukan ambang ancaman rasmi atau perbandingan tahap
-                    antara tempoh.
+                    Julat {bandMeasure} positif dalam paparan ini dibahagi kepada tiga bahagian
+                    sama. Warna berubah bersama penapis; bukan ambang ancaman rasmi atau
+                    perbandingan tahap antara tempoh.
                   </p>
                   {range ? (
                     <p>
                       Rendah: ≤ {formatNumber(range.lowMax, 2)}; sederhana: &gt;{' '}
                       {formatNumber(range.lowMax, 2)} hingga {formatNumber(range.mediumMax, 2)};
-                      tinggi: &gt; {formatNumber(range.mediumMax, 2)}. Unit: {unit}. Had dipaparkan
-                      dibundarkan; klasifikasi menggunakan nilai penuh.
+                      tinggi: &gt; {formatNumber(range.mediumMax, 2)}. Unit: {bandUnit}. Had
+                      dipaparkan dibundarkan; klasifikasi menggunakan nilai penuh.
                     </p>
                   ) : (
                     <p>
-                      Tiada julat kadar positif yang berbeza untuk dikelaskan; warna biru neutral
+                      Tiada julat {bandMeasure} positif yang berbeza untuk dikelaskan; warna neutral
                       digunakan.
                     </p>
                   )}
@@ -551,13 +557,11 @@ export function ThreatMap({
                 ? stateLabels[zone.state]
                 : 'Tiada data dalam skop'
               : formatNumber(
-                  overview && filters.mode === 'count'
-                    ? (zone?.count ?? null)
-                    : (zone?.rate ?? null),
-                  overview && filters.mode === 'count' ? 0 : 1,
+                  filters.mode === 'count' ? (zone?.count ?? null) : (zone?.rate ?? null),
+                  filters.mode === 'count' ? 0 : 1,
                 )}
             {(!overview || zone?.state === 'value') && (
-              <small>{overview && filters.mode === 'count' ? 'bilangan agregat demo' : unit}</small>
+              <small>{filters.mode === 'count' ? 'bilangan agregat demo' : unit}</small>
             )}
           </div>
           {overview && zone?.state === 'suppressed' && (
