@@ -21,6 +21,7 @@ import { Badge, DemoBadge } from './ui';
 import type { StateShape } from '@/lib/server/geometry';
 import { formatNumber, dateBM, type MapZoneDTO, type Layer } from '@/lib/domain/types';
 import { filterQuery, type Filters } from '@/lib/domain/filters';
+import { demoBand, demoBands, demoRange, demoBandVersion } from '@/lib/domain/demo-map-bands';
 
 export const layerLabels: Record<Layer, string> = {
   burden: 'Beban / permintaan',
@@ -73,6 +74,16 @@ export function ThreatMap({
   const fullMapHref = `/map?${filterQuery(filters)}&state=${active}`;
   const max = Math.max(1, ...zones.map((z) => z.rate ?? 0));
   const countMax = Math.max(1, ...zones.map((z) => z.count ?? 0));
+  const banded =
+    filters.mode === 'rate' && filters.layer !== 'confidence' && filters.source !== 'supplied';
+  const range = demoRange(zones.filter((z) => z.state === 'value').map((z) => z.rate));
+  function bandFor(z?: MapZoneDTO) {
+    return banded && z?.state === 'value' ? demoBand(z.rate, range) : null;
+  }
+  function bandLabel(z?: MapZoneDTO) {
+    const band = bandFor(z);
+    return band ? `${demoBands[band].symbol} ${demoBands[band].label} · relatif demo` : '';
+  }
   const rank =
     zone && zone.rate !== null
       ? sorted.filter((z) => z.rate !== null).findIndex((z) => z.id === selected) + 1
@@ -101,6 +112,8 @@ export function ThreatMap({
     if (z.state === 'not-applicable') return '#27303a';
     if (z.count === 0) return '#122535';
     if (filters.mode === 'count') return '#172d3c';
+    const band = bandFor(z);
+    if (band) return demoBands[band].color;
     return `hsl(225 ${45 + ((z.rate ?? 0) / max) * 35}% ${26 + ((z.rate ?? 0) / max) * 34}%)`;
   }
   const unit = filters.layer === 'confidence' ? '% medan sah' : 'per 100,000 populasi demo';
@@ -295,7 +308,7 @@ export function ThreatMap({
                         tabIndex={0}
                         role="button"
                         aria-pressed={s.id === active}
-                        aria-label={`${s.name}: ${z ? stateLabels[z.state] : 'Tiada data dalam skop'}. DEMO / SYNTHETIC`}
+                        aria-label={`${s.name}: ${z ? stateLabels[z.state] : 'Tiada data dalam skop'}. ${bandLabel(z)}. DEMO / SYNTHETIC`}
                         onClick={() => select(s.id)}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' || e.key === ' ') {
@@ -304,7 +317,7 @@ export function ThreatMap({
                           }
                         }}
                       >
-                        <title>{`${s.name} · ${z?.count !== null && z?.count !== undefined ? `${formatNumber(z.count)} · ${formatNumber(z.rate, 1)} ${unit}` : 'Tiada nilai boleh dipaparkan'} · DEMO / SYNTHETIC`}</title>
+                        <title>{`${s.name} · ${z?.count !== null && z?.count !== undefined ? `${formatNumber(z.count)} · ${formatNumber(z.rate, 1)} ${unit}` : 'Tiada nilai boleh dipaparkan'} · ${bandLabel(z)} · DEMO / SYNTHETIC`}</title>
                       </path>
                     );
                   })}
@@ -422,7 +435,12 @@ export function ThreatMap({
                           ? stateLabels[z.state]
                           : formatNumber(z.rate, 1)}
                       </td>
-                      <td>{stateLabels[z.state]}</td>
+                      <td>
+                        {stateLabels[z.state]}
+                        {bandFor(z) && (
+                          <span className={`map-band-tag band-${bandFor(z)}`}>{bandLabel(z)}</span>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -436,22 +454,58 @@ export function ThreatMap({
             </div>
           )}
           <div className="map-legend">
-            <div className="rate-legend">
-              <span>
-                {filters.mode === 'rate'
-                  ? 'Skala nilai, bukan tahap ancaman'
-                  : 'Saiz simbol = bilangan'}
-              </span>
-              {filters.mode === 'rate' && (
-                <>
-                  <div className="legend-ramp" />
-                  <div className="legend-values">
-                    <span>0</span>
-                    <span>{formatNumber(max, 1)}</span>
-                  </div>
-                </>
-              )}
-            </div>
+            {banded ? (
+              <div className="demo-band-legend">
+                <strong>Tahap relatif · DEMO / SYNTHETIC</strong>
+                <div className="demo-band-swatches">
+                  {Object.entries(demoBands).map(([key, band]) => (
+                    <span key={key}>
+                      <i style={{ background: band.color }} />
+                      {band.symbol} {band.label}
+                    </span>
+                  ))}
+                </div>
+                <details>
+                  <summary>Bagaimana warna ditentukan?</summary>
+                  <p>
+                    Julat kadar positif dalam paparan ini dibahagi kepada tiga bahagian sama. Warna
+                    berubah bersama penapis; bukan ambang ancaman rasmi atau perbandingan tahap
+                    antara tempoh.
+                  </p>
+                  {range ? (
+                    <p>
+                      Rendah: ≤ {formatNumber(range.lowMax, 2)}; sederhana: &gt;{' '}
+                      {formatNumber(range.lowMax, 2)} hingga {formatNumber(range.mediumMax, 2)};
+                      tinggi: &gt; {formatNumber(range.mediumMax, 2)}. Unit: {unit}. Had dipaparkan
+                      dibundarkan; klasifikasi menggunakan nilai penuh.
+                    </p>
+                  ) : (
+                    <p>
+                      Tiada julat kadar positif yang berbeza untuk dikelaskan; warna biru neutral
+                      digunakan.
+                    </p>
+                  )}
+                  <p>Sifar dan nilai disekat tidak dikelaskan. Versi: {demoBandVersion}.</p>
+                </details>
+              </div>
+            ) : (
+              <div className="rate-legend">
+                <span>
+                  {filters.mode === 'rate'
+                    ? 'Skala nilai, bukan tahap ancaman'
+                    : 'Saiz simbol = bilangan'}
+                </span>
+                {filters.mode === 'rate' && (
+                  <>
+                    <div className="legend-ramp" />
+                    <div className="legend-values">
+                      <span>0</span>
+                      <span>{formatNumber(max, 1)}</span>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
             <div className="legend-states">
               <span>
                 <i className="legend-zero" />
@@ -486,6 +540,9 @@ export function ThreatMap({
             <DemoBadge />
             <Badge>{zone ? stateLabels[zone.state] : 'Tiada data dalam skop'}</Badge>
           </div>
+          {bandFor(zone) && (
+            <div className={`map-band-tag band-${bandFor(zone)}`}>{bandLabel(zone)}</div>
+          )}
           <div
             className={`zone-value ${overview && (!zone || zone.state !== 'value') ? 'zone-unavailable' : ''}`}
           >
@@ -653,8 +710,10 @@ export function ThreatMap({
           <h3>Kaedah yang boleh diperiksa</h3>
           <p>
             <b>DEMO / SYNTHETIC.</b> Kiraan dan populasi adalah rekaan. Kadar = bilangan ÷ populasi
-            demo × 100,000. Warna ialah skala berterusan nilai terendah–tertinggi dalam paparan; ia
-            tidak memberikan kategori ancaman. Saiz bulatan menunjukkan beban mutlak.
+            demo × 100,000. Hijau/rendah, kuning/sederhana dan merah/tinggi membahagikan julat kadar
+            positif paparan kepada tiga bahagian sama (demo relatif sahaja). Buka kaedah pada
+            legenda untuk had semasa. Keyakinan data kekal pada skala biru; saiz bulatan menunjukkan
+            beban mutlak. Tiada kategori ancaman rasmi ditetapkan.
           </p>
           <div className="method-grid">
             <p>
@@ -663,8 +722,8 @@ export function ThreatMap({
               formula keyakinan rasmi diluluskan.
             </p>
             <p>
-              <b>Penzonan & komposit:</b> dinyahaktifkan. Komponen, wajaran, ambang, kaedah data
-              hilang dan peraturan minimum mesti diluluskan dahulu.
+              <b>Penzonan rasmi & komposit:</b> dinyahaktifkan. Komponen, wajaran, ambang, kaedah
+              data hilang dan peraturan minimum mesti diluluskan dahulu.
             </p>
             <p>
               <b>Geografi:</b> geoBoundaries / OpenStreetMap, 2017, versi 9469f09, ODbL 1.0.
@@ -690,7 +749,12 @@ export function ThreatMap({
         tiada ambang ancaman rasmi. Kiraan bukan prevalens dan tidak membuktikan impak.
       </div>
       <div className="map-bottom-note">
-        <span>DEMO / SYNTHETIC · Tiada ambang ancaman diluluskan</span>
+        <span>
+          DEMO / SYNTHETIC ·{' '}
+          {banded
+            ? 'Warna = tahap relatif demo; bukan ambang rasmi'
+            : 'Tiada ambang ancaman diluluskan'}
+        </span>
         <button className="text-button" onClick={() => setTab(tab === 'map' ? 'table' : 'map')}>
           {tab === 'map' ? 'Lihat jadual setara' : 'Kembali ke peta'} <ArrowUpRight size={13} />
         </button>

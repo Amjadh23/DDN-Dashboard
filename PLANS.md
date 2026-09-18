@@ -1,5 +1,9 @@
 # V1 Dashboard Implementation Plan
 
+## 2026-09-18 — Traffic-light demo map
+
+- ACTIVE: user requested green/low, yellow/medium, red/high. Versioned display-only demo rule divides the visible positive-rate range into three equal intervals; no classification when all positive rates are equal. Zero and missing/suppressed states remain distinct. Confidence retains a blue scale, counts retain proportional symbols. Show the rule, relative labels and legend in overview/full map/table/tooltips and update AIDA's explanation. Validate boundary cases, interactions, mobile/axe and build/static checks.
+
 ## 2026-09-17 — Guided assistant demo
 
 - ACTIVE (explicit user request): right-side local rule-based assistant, guided questions, navigation suggestions and custom generated red/blue character. Clear demo disclosure; no API keys, network chat, row data access, mutations or persistent message storage. Test rule routing/fallback, keyboard dialog behaviour, mobile layout and accessibility; then build/type/lint checks. This is a presentation-only navigation guide, not production AI or a source of policy/clinical conclusions.

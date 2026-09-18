@@ -45,7 +45,7 @@ export function answerDemoQuestion(input: string): AssistantAnswer {
     };
   if (/peta|map|negeri|lapisan|kadar|bilangan|warna/.test(q))
     return {
-      text: 'Pilih lapisan seperti beban, kemudaratan atau jurang perkhidmatan, kemudian pilih negeri. “Kadar” membandingkan nilai relatif kepada denominator; “Bilangan” menunjukkan jumlah. Warna biru ialah skala nilai, bukan tahap ancaman rasmi. Mahu memahami data yang disekat atau mencipta tindakan?',
+      text: 'Pilih lapisan dan negeri. Dalam mod kadar, hijau bermaksud rendah, kuning sederhana dan merah tinggi secara relatif dalam senario demo. Julat kadar positif paparan dibahagi tiga; buka kaedah legenda untuk had semasa. Ini bukan tahap ancaman rasmi. Keyakinan data kekal biru dan mod bilangan menggunakan saiz simbol. Mahu memahami data yang disekat atau mencipta tindakan?',
       choices: ['Apa maksud disekat?', 'Cipta tindakan'],
       link: { label: 'Terokai peta strategik', href: '/map' },
     };

@@ -66,7 +66,7 @@ Ask: *"Terangkan peta"* · *"Apa maksud lapisan?"* · *"Kadar atau bilangan?"* �
 
 Trigger words: `peta`, `map`, `negeri`, `lapisan`, `kadar`, `bilangan`, `warna`.
 
-Explains layer selection, the difference between rate and count, and that the blue scale is a value scale rather than an official threat level. Opens the **strategic map** (`/map`).
+Explains layer selection, the difference between rate and count, and the relative demo bands — green low, amber medium, red high — stating that these are not official threat thresholds. Opens the **strategic map** (`/map`).
 
 ### 6. Suppressed, zero and missing values
 

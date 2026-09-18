@@ -1,4 +1,84 @@
-/* Continuous blue value scale; the red brand accent does not encode map severity. */
+/* Blue scale retained for confidence and unclassified data. */
+.demo-band-legend {
+  flex: 1;
+  min-width: 0;
+  max-width: 520px;
+  font-size: 11px;
+  color: #c4d1eb;
+}
+.demo-band-legend strong {
+  font-size: 10px;
+  font-weight: 600;
+}
+.demo-band-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  margin: 10px 0;
+}
+.demo-band-swatches > span {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+.demo-band-swatches i {
+  width: 25px;
+  height: 8px;
+  border-radius: 3px;
+}
+.demo-band-legend summary {
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  padding: 5px 0;
+}
+.demo-band-legend p {
+  font-size: 11px;
+  line-height: 1.7;
+  margin: 8px 0;
+}
+.map-band-tag {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 10px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 650;
+  border: 1px solid;
+}
+.map-band-tag.band-low {
+  color: #b8f1d9;
+  background: #163e32;
+  border-color: #55ac88;
+}
+.map-band-tag.band-medium {
+  color: #fff0b0;
+  background: #42391b;
+  border-color: #c5aa51;
+}
+.map-band-tag.band-high {
+  color: #ffd3d9;
+  background: #4b2330;
+  border-color: #d77887;
+}
+.map-table-wrap .map-band-tag {
+  display: flex;
+  white-space: nowrap;
+}
+@media print {
+  .demo-band-legend,
+  .demo-band-legend p {
+    color: #222;
+  }
+  .demo-band-legend details > * {
+    display: block;
+  }
+  .map-band-tag {
+    color: #111 !important;
+    background: #fff !important;
+  }
+}
 .legend-ramp {
   background: linear-gradient(90deg, hsl(225 45% 26%), hsl(225 80% 60%));
 }
