@@ -86,8 +86,12 @@ try {
     2200000, 1300000, 1100000, 650000, 900000, 1200000, 1400000, 1800000, 250000, 3500000, 1050000,
     2400000, 2000000, 1600000, 90000, 120000,
   ];
+  // W.P. Labuan carries a value proportionate to its demonstration population. A
+  // value below the minimum cell size would be withheld, and disclosure control
+  // would withhold the next smallest state with it, which is not what this
+  // scenario is meant to demonstrate.
   const burden = [
-    2800, 2530, 2860, 455, 738, 1740, 1680, 2970, 0, 4725, 2520, 2520, 1800, 1360, 3, 0,
+    2800, 2530, 2860, 455, 738, 1740, 1680, 2970, 0, 4725, 2520, 2520, 1800, 1360, 165, 0,
   ];
   const codes = ['D-BURDEN', 'D-SUPPLY', 'D-HARM', 'D-GAP', 'D-CONFIDENCE'];
   for (const period of ['2026-08-02', '2026-08-09'])
