@@ -8,7 +8,6 @@ import { dateBM, formatNumber } from '@/lib/domain/types';
 import { PageHeading, Badge } from '@/components/ui';
 import { FilterBar } from '@/components/filters';
 import { ThreatMap } from '@/components/threat-map';
-import { TerasView } from '@/components/teras-view';
 
 const teras = [
   { n: 1, title: 'Pendidikan pencegahan', status: 'Konteks sumber & demo', accent: 'teal' },
@@ -23,8 +22,7 @@ export default async function Overview({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const p = await searchParams;
-  const filters = parseFilters(p),
+  const filters = parseFilters(await searchParams),
     session = await getSession();
   const [metrics, zones, shapes] = await Promise.all([
     getMetrics(session, filters),
@@ -209,9 +207,7 @@ export default async function Overview({
           {teras.map((t) => (
             <Link
               key={t.n}
-              href={
-                t.n === 1 ? '/?' + query + '#pendidikan-pencegahan' : '/teras/' + t.n + '?' + query
-              }
+              href={'/teras/' + t.n + '?' + query}
               className={'overview-teras-link accent-' + t.accent}
             >
               <span className="overview-teras-number">0{t.n}</span>
@@ -224,7 +220,6 @@ export default async function Overview({
           ))}
         </div>
       </section>
-      <TerasView teras={1} p={p} embedded />
     </div>
   );
 }

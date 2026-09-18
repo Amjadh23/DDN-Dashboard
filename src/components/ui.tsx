@@ -24,16 +24,12 @@ export function PageHeading({
   title,
   description,
   children,
-  // A heading embedded in another page is a section of it, not a second page title.
-  level = 1,
 }: {
   eyebrow: string;
   title: string;
   description: string;
   children?: React.ReactNode;
-  level?: 1 | 2;
 }) {
-  const Title = level === 1 ? 'h1' : 'h2';
   return (
     <div className="page-heading">
       <div>
@@ -41,7 +37,7 @@ export function PageHeading({
           <span />
           {eyebrow}
         </div>
-        <Title>{title}</Title>
+        <h1>{title}</h1>
         <p>{description}</p>
       </div>
       <div className="page-heading-actions">{children}</div>
