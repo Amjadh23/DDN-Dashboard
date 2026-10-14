@@ -1,6 +1,6 @@
 'use client';
 import Link from 'next/link';
-import { useState, useTransition } from 'react';
+import { useEffect, useRef, useState, useTransition } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   Map,
@@ -37,6 +37,16 @@ const stateLabels = {
   'not-applicable': 'Tidak berkenaan',
   suppressed: 'Disekat',
 };
+const W = 1100,
+  H = 445;
+type View = { k: number; x: number; y: number };
+const home: View = { k: 1, x: 0, y: 0 };
+function clampView(v: View): View {
+  const k = Math.min(4, Math.max(1, v.k));
+  if (k === 1) return home;
+  const clamp = (n: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, n));
+  return { k, x: clamp(v.x, W * (1 - k) - 120, 120), y: clamp(v.y, H * (1 - k) - 80, 80) };
+}
 export function ThreatMap({
   zones,
   shapes,
@@ -62,9 +72,19 @@ export function ThreatMap({
     (zones.some((z) => z.id === 'MY-03') ? 'MY-03' : (zones[0]?.id ?? 'MY-03'));
   const [selected, setSelected] = useState(initial),
     [tab, setTab] = useState<'map' | 'table'>('map'),
-    [zoom, setZoom] = useState(1),
+    [view, setView] = useState<View>(home),
+    [hover, setHover] = useState<{ id: string; x: number; y: number; flip: boolean } | null>(null),
+    [focusBand, setFocusBand] = useState<'low' | 'medium' | 'high' | null>(null),
+    [dragging, setDragging] = useState(false),
+    [hint, setHint] = useState(false),
     [method, setMethod] = useState(false),
     [query, setQuery] = useState('');
+  const svgRef = useRef<SVGSVGElement>(null),
+    canvasRef = useRef<HTMLDivElement>(null),
+    drag = useRef<{ x: number; y: number; from: View; moved: boolean } | null>(null),
+    suppressClick = useRef(false),
+    hintTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const interactive = !overview;
   const sorted = [...zones].sort((a, b) => (b.rate ?? -1) - (a.rate ?? -1));
   const active = filters.geography !== 'MY' ? filters.geography : (params.get('state') ?? selected);
   const zone = zones.find((z) => z.id === active),
@@ -108,6 +128,120 @@ export function ThreatMap({
     for (const [k, v] of Object.entries({ ...filters, [key]: value })) p.set(k, v);
     p.set('state', active);
     startTransition(() => router.replace(`${path}?${p}`, { scroll: false }));
+  }
+  function svgPoint(clientX: number, clientY: number) {
+    const svg = svgRef.current,
+      m = svg?.getScreenCTM();
+    if (!svg || !m) return { x: W / 2, y: H / 2 };
+    const p = new DOMPoint(clientX, clientY).matrixTransform(m.inverse());
+    return { x: p.x, y: p.y };
+  }
+  function zoomAt(px: number, py: number, k: number) {
+    const next = Math.min(4, Math.max(1, k));
+    setView(
+      clampView({
+        k: next,
+        x: px - (px - view.x) * (next / view.k),
+        y: py - (py - view.y) * (next / view.k),
+      }),
+    );
+  }
+  function flyTo(id: string) {
+    const target = shapes.find((s) => s.id === id);
+    if (!target) return;
+    const k = Math.max(view.k, 2.2);
+    setView(clampView({ k, x: W / 2 - target.cx * k, y: H / 2 - target.cy * k }));
+  }
+  function tipAt(id: string, clientX: number, clientY: number) {
+    const box = canvasRef.current?.getBoundingClientRect();
+    if (box)
+      setHover({
+        id,
+        x: clientX - box.left,
+        y: clientY - box.top,
+        flip: clientX - box.left > box.width - 260,
+      });
+  }
+  function tipAtShape(id: string) {
+    const target = shapes.find((s) => s.id === id),
+      m = svgRef.current?.getScreenCTM(),
+      box = canvasRef.current?.getBoundingClientRect();
+    if (!target || !m || !box) return;
+    const p = new DOMPoint(
+      target.cx * view.k + view.x,
+      target.cy * view.k + view.y,
+    ).matrixTransform(m);
+    setHover({ id, x: p.x - box.left, y: p.y - box.top, flip: p.x - box.left > box.width - 260 });
+  }
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg || !interactive) return;
+    function onWheel(e: WheelEvent) {
+      if (!e.ctrlKey && !e.metaKey) {
+        setHint(true);
+        clearTimeout(hintTimer.current);
+        hintTimer.current = setTimeout(() => setHint(false), 1400);
+        return;
+      }
+      e.preventDefault();
+      const p = svgPoint(e.clientX, e.clientY);
+      setView((v) => {
+        const k = Math.min(4, Math.max(1, v.k * Math.exp(-e.deltaY * 0.0025)));
+        return clampView({
+          k,
+          x: p.x - (p.x - v.x) * (k / v.k),
+          y: p.y - (p.y - v.y) * (k / v.k),
+        });
+      });
+    }
+    svg.addEventListener('wheel', onWheel, { passive: false });
+    return () => svg.removeEventListener('wheel', onWheel);
+  });
+  function onPointerDown(e: React.PointerEvent<SVGSVGElement>) {
+    if (!interactive || e.button !== 0) return;
+    drag.current = { x: e.clientX, y: e.clientY, from: view, moved: false };
+    const move = (ev: PointerEvent) => {
+      const d = drag.current,
+        svg = svgRef.current;
+      if (!d || !svg) return;
+      const scale = W / svg.getBoundingClientRect().width;
+      const dx = (ev.clientX - d.x) * scale,
+        dy = (ev.clientY - d.y) * scale;
+      if (!d.moved && Math.hypot(dx, dy) < 5) return;
+      if (!d.moved) setDragging(true);
+      d.moved = true;
+      setHover(null);
+      if (d.from.k > 1) setView(clampView({ ...d.from, x: d.from.x + dx, y: d.from.y + dy }));
+    };
+    const up = () => {
+      if (drag.current?.moved) suppressClick.current = true;
+      drag.current = null;
+      setDragging(false);
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  }
+  const hoverZone = hover ? zones.find((z) => z.id === hover.id) : undefined,
+    hoverShape = hover ? shapes.find((s) => s.id === hover.id) : undefined;
+  const tipValue = (z?: MapZoneDTO) =>
+    !z
+      ? 'Tiada data dalam skop'
+      : z.state !== 'value'
+        ? stateLabels[z.state]
+        : filters.mode === 'count'
+          ? `${formatNumber(z.count)} ${supplied ? 'orang direkodkan' : 'bilangan agregat demo'}`
+          : `${formatNumber(z.rate, 1)} ${unit}`;
+  function zoneClass(z: MapZoneDTO | undefined, id: string) {
+    const c = ['map-zone'];
+    if (id === active) c.push('is-active');
+    if (hover?.id === id) c.push('is-hovered');
+    if (focusBand && band(z) !== focusBand) c.push('is-dimmed');
+    if (z && z.state === 'not-applicable') c.push('zone-fill-na');
+    else if (z && z.state === 'value' && z.count === 0) c.push('zone-fill-zero');
+    else if (z && z.state === 'value' && filters.mode === 'count') c.push('zone-fill-count');
+    return c.join(' ');
   }
   function fill(z?: MapZoneDTO) {
     if (!z || z.state === 'unknown') return 'url(#unknown-pattern)';
@@ -236,7 +370,10 @@ export function ThreatMap({
             )}
           </div>
           {tab === 'map' ? (
-            <div className="map-canvas">
+            <div
+              className={`map-canvas ${interactive && view.k > 1 ? 'can-pan' : ''} ${dragging ? 'is-dragging' : ''}`}
+              ref={canvasRef}
+            >
               {!overview && (
                 <div className="map-search">
                   <Search size={14} />
@@ -258,6 +395,7 @@ export function ThreatMap({
                             key={s.id}
                             onClick={() => {
                               select(s.id);
+                              flyTo(s.id);
                               setQuery('');
                             }}
                           >
@@ -270,15 +408,33 @@ export function ThreatMap({
                 </div>
               )}
               <svg
+                ref={svgRef}
                 viewBox="0 0 1100 445"
                 className="malaysia-map"
+                onPointerDown={onPointerDown}
+                onClickCapture={(e) => {
+                  if (suppressClick.current) {
+                    suppressClick.current = false;
+                    e.stopPropagation();
+                  }
+                }}
+                onDoubleClick={(e) => {
+                  if (!interactive) return;
+                  const p = svgPoint(e.clientX, e.clientY);
+                  zoomAt(p.x, p.y, view.k * 1.6);
+                }}
                 role="group"
                 aria-label={`Peta Malaysia mengikut negeri, ${evidenceLabel}; setiap negeri boleh dipilih melalui papan kekunci`}
               >
                 <defs>
                   <pattern id="unknown-pattern" width="7" height="7" patternUnits="userSpaceOnUse">
-                    <rect width="7" height="7" fill="#182331" />
-                    <path d="M0,7L7,0" stroke="#304353" strokeWidth="0.6" />
+                    <rect width="7" height="7" fill="#182331" className="pat-unknown-bg" />
+                    <path
+                      d="M0,7L7,0"
+                      stroke="#304353"
+                      strokeWidth="0.6"
+                      className="pat-unknown-line"
+                    />
                   </pattern>
                   <pattern
                     id="suppressed-pattern"
@@ -286,8 +442,13 @@ export function ThreatMap({
                     height="6"
                     patternUnits="userSpaceOnUse"
                   >
-                    <rect width="6" height="6" fill="#253340" />
-                    <path d="M0,0L6,6M0,6L6,0" stroke="#536174" strokeWidth="0.7" />
+                    <rect width="6" height="6" fill="#253340" className="pat-suppressed-bg" />
+                    <path
+                      d="M0,0L6,6M0,6L6,0"
+                      stroke="#536174"
+                      strokeWidth="0.7"
+                      className="pat-suppressed-line"
+                    />
                   </pattern>
                   <pattern
                     id="not-collected-pattern"
@@ -295,11 +456,11 @@ export function ThreatMap({
                     height="7"
                     patternUnits="userSpaceOnUse"
                   >
-                    <rect width="7" height="7" fill="#172331" />
-                    <circle cx="3" cy="3" r="1" fill="#718294" />
+                    <rect width="7" height="7" fill="#172331" className="pat-missing-bg" />
+                    <circle cx="3" cy="3" r="1" fill="#718294" className="pat-missing-dot" />
                   </pattern>
                   <pattern id="sea-grid" width="32" height="32" patternUnits="userSpaceOnUse">
-                    <circle cx="1" cy="1" r="0.7" fill="#324754" />
+                    <circle cx="1" cy="1" r="0.7" fill="#324754" className="sea-dot" />
                   </pattern>
                 </defs>
                 <rect width="1100" height="445" fill="url(#sea-grid)" opacity=".32" />
@@ -307,9 +468,13 @@ export function ThreatMap({
                   LAUT CHINA SELATAN
                 </text>
                 <g
-                  transform={`translate(${(1 - zoom) * (shape?.cx ?? 550)} ${(1 - zoom) * (shape?.cy ?? 220)}) scale(${zoom})`}
+                  className={`map-stage ${dragging ? '' : 'is-smooth'}`}
+                  style={{
+                    transform: `translate(${view.x}px, ${view.y}px) scale(${view.k})`,
+                    transformOrigin: '0 0',
+                  }}
                 >
-                  {shapes.map((s) => {
+                  {shapes.map((s, i) => {
                     const z = zones.find((z) => z.id === s.id);
                     return (
                       <path
@@ -317,14 +482,20 @@ export function ThreatMap({
                         d={s.path}
                         fill={fill(z)}
                         fillRule="evenodd"
-                        stroke={s.id === active ? '#eff4ff' : '#7895d1'}
-                        strokeWidth={s.id === active ? 2.6 : 0.85}
+                        className={zoneClass(z, s.id)}
+                        style={{ '--i': i } as React.CSSProperties}
                         vectorEffect="non-scaling-stroke"
                         tabIndex={0}
                         role="button"
                         aria-pressed={s.id === active}
                         aria-label={`${s.name}: ${z ? stateLabels[z.state] : 'Tiada data dalam skop'}. ${evidenceLabel}`}
                         onClick={() => select(s.id)}
+                        onPointerMove={(e) => {
+                          if (!drag.current?.moved) tipAt(s.id, e.clientX, e.clientY);
+                        }}
+                        onPointerLeave={() => setHover(null)}
+                        onFocus={() => tipAtShape(s.id)}
+                        onBlur={() => setHover(null)}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' || e.key === ' ') {
                             e.preventDefault();
@@ -332,7 +503,7 @@ export function ThreatMap({
                           }
                         }}
                       >
-                        <title>{`${s.name} · ${z?.count !== null && z?.count !== undefined ? `${formatNumber(z.count)} · ${formatNumber(z.rate, 1)} ${unit}` : 'Tiada nilai boleh dipaparkan'} · ${band(z) ? bandText(band(z)!) : ''} · ${evidenceLabel}`}</title>
+                        <desc>{`${tipValue(z)}${band(z) ? ` · ${bandText(band(z)!)}` : ''}`}</desc>
                       </path>
                     );
                   })}
@@ -346,7 +517,12 @@ export function ThreatMap({
                           cy={s.cy}
                           r={5 + Math.sqrt(z.count / countMax) * 18}
                           className="workload-circle"
+                          vectorEffect="non-scaling-stroke"
                           onClick={() => select(s.id)}
+                          onPointerMove={(e) => {
+                            if (!drag.current?.moved) tipAt(s.id, e.clientX, e.clientY);
+                          }}
+                          onPointerLeave={() => setHover(null)}
                         >
                           <title>{`${s.name}: ${formatNumber(z.count)} · ${evidenceLabel}`}</title>
                         </circle>
@@ -365,17 +541,41 @@ export function ThreatMap({
                         {s.name.toUpperCase()}
                       </text>
                     ))}
-                  {shape && (
-                    <g pointerEvents="none">
-                      <circle cx={shape.cx} cy={shape.cy - 19} r="4" fill="#d4fff5" />
-                      <circle
-                        cx={shape.cx}
-                        cy={shape.cy - 19}
-                        r="9"
-                        fill="none"
-                        stroke="#b0e9dc"
-                        opacity=".45"
+                  <g className="map-highlights" aria-hidden="true" pointerEvents="none">
+                    {hoverShape && hoverShape.id !== active && (
+                      <path
+                        d={hoverShape.path}
+                        fillRule="evenodd"
+                        className="map-hover-outline"
+                        vectorEffect="non-scaling-stroke"
                       />
+                    )}
+                    {shape && (
+                      <path
+                        key={shape.id}
+                        d={shape.path}
+                        fillRule="evenodd"
+                        className="map-active-outline"
+                        vectorEffect="non-scaling-stroke"
+                      />
+                    )}
+                  </g>
+                  {shape && (
+                    <g
+                      className="map-pin"
+                      aria-hidden="true"
+                      pointerEvents="none"
+                      transform={`translate(${shape.cx} ${shape.cy - 24}) scale(${1 / view.k})`}
+                    >
+                      <ellipse className="map-pin-shadow" cx="0" cy="6" rx="7" ry="2.6" />
+                      <circle className="map-pin-pulse" cx="0" cy="6" r="8" />
+                      <g className="map-pin-drop" key={shape.id}>
+                        <path
+                          className="map-pin-body"
+                          d="M0 6C-7-3-11-8-11-14a11 11 0 1 1 22 0c0 6-4 11-11 20z"
+                        />
+                        <circle cx="0" cy="-14" r="4.2" fill="#fff" />
+                      </g>
                     </g>
                   )}
                 </g>
@@ -386,26 +586,72 @@ export function ThreatMap({
                   MALAYSIA TIMUR
                 </text>
               </svg>
+              {hover && (
+                <div
+                  className={`map-tooltip ${hover.flip ? 'flip' : ''}`}
+                  style={{ left: hover.x, top: hover.y }}
+                  aria-hidden="true"
+                >
+                  <span className="map-tooltip-name">
+                    {hoverShape?.name ?? hover.id}
+                    {hover.id === active && <em>Dipilih</em>}
+                  </span>
+                  {hoverZone?.state === 'value' ? (
+                    <strong>
+                      {formatNumber(
+                        filters.mode === 'count' ? hoverZone.count : hoverZone.rate,
+                        filters.mode === 'count' ? 0 : 1,
+                      )}
+                      <small>
+                        {filters.mode === 'count'
+                          ? supplied
+                            ? 'orang direkodkan'
+                            : 'bilangan agregat demo'
+                          : unit}
+                      </small>
+                    </strong>
+                  ) : (
+                    <strong>{tipValue(hoverZone)}</strong>
+                  )}
+                  {band(hoverZone) && (
+                    <span className={`map-band-tag band-${band(hoverZone)}`}>
+                      {bandText(band(hoverZone)!)}
+                    </span>
+                  )}
+                  <span className="map-tooltip-meta">
+                    {hoverZone?.state === 'value' && hoverZone.confidence != null
+                      ? `Kelengkapan ${formatNumber(hoverZone.confidence)}% · `
+                      : ''}
+                    {evidenceLabel}
+                  </span>
+                </div>
+              )}
+              {interactive && (
+                <div className={`map-hint ${hint ? 'show' : ''}`} aria-hidden="true">
+                  Tekan Ctrl + tatal untuk zum · seret untuk alih
+                </div>
+              )}
               {!overview && (
                 <>
                   <div className="map-zoom">
                     <button
                       className="icon-button"
-                      onClick={() => setZoom(Math.min(2.5, zoom + 0.3))}
+                      onClick={() => zoomAt(shape?.cx ?? W / 2, shape?.cy ?? H / 2, view.k * 1.35)}
                       aria-label="Zum masuk"
                     >
                       <Plus size={16} />
                     </button>
                     <button
                       className="icon-button"
-                      onClick={() => setZoom(Math.max(1, zoom - 0.3))}
+                      onClick={() => zoomAt(shape?.cx ?? W / 2, shape?.cy ?? H / 2, view.k / 1.35)}
                       aria-label="Zum keluar"
                     >
                       <Minus size={16} />
                     </button>
+                    <span className="map-zoom-level">{view.k.toFixed(1)}×</span>
                     <button
                       className="icon-button"
-                      onClick={() => setZoom(1)}
+                      onClick={() => setView(home)}
                       aria-label="Tetapkan semula zum"
                     >
                       <LocateFixed size={16} />
@@ -470,10 +716,17 @@ export function ThreatMap({
                 <strong>{bandLabel}</strong>
                 <div className="demo-band-swatches">
                   {(['low', 'medium', 'high'] as const).map((level) => (
-                    <span key={level}>
+                    <button
+                      key={level}
+                      type="button"
+                      className={`band-chip ${focusBand === level ? 'is-on' : ''}`}
+                      aria-pressed={focusBand === level}
+                      title="Serlahkan negeri dalam tahap ini"
+                      onClick={() => setFocusBand(focusBand === level ? null : level)}
+                    >
                       <i style={{ background: demoPalette[level].colour }} />
                       {demoPalette[level].label.split(' · ')[0]}
-                    </span>
+                    </button>
                   ))}
                 </div>
                 <details>

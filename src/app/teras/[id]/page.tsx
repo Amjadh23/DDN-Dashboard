@@ -18,6 +18,7 @@ import { TerasContent, perspectives } from '@/components/teras-content';
 import { SourceEvidence } from '@/components/source-evidence';
 import { CohortPicker } from '@/components/cohort-picker';
 import { Disclosure } from '@/components/disclosure';
+import { TerasCharacter } from '@/components/illustrations';
 import { Responsibility } from '@/components/responsibility';
 import { actionLabels } from '@/lib/domain/actions';
 import { dateBM } from '@/lib/domain/types';
@@ -67,6 +68,7 @@ export default async function TerasPage({
         eyebrow={`TERAS 0${teras} / DASAR DADAH NEGARA`}
         title={info.title}
         description={info.question}
+        art={<TerasCharacter n={teras} size={168} />}
       >
         <Link
           href={`/actions?teras=${teras}&geography=${filters.geography}&period=${filters.period}`}

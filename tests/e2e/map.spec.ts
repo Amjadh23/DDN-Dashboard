@@ -43,6 +43,35 @@ test('zero and suppressed values remain distinct and inaccessible values stay ab
   await expect(page.locator('.zone-value')).toContainText('0');
   await expect(page.locator('.zone-detail')).toContainText('Nilai tersedia');
 });
+test('map hover card, band highlight, zoom and search fly-to keep selection intact', async ({
+  page,
+}) => {
+  await page.goto('/?source=synthetic');
+  const johor = page.getByRole('button', { name: /Johor: Nilai tersedia/ });
+  await johor.hover();
+  const card = page.locator('.map-tooltip');
+  await expect(card).toContainText('Johor');
+  await expect(card).toContainText('DEMO / SYNTHETIC');
+  await expect(card).toHaveAttribute('aria-hidden', 'true');
+  await page.mouse.move(2, 2);
+  await expect(card).toHaveCount(0);
+  const high = page.locator('.band-chip').filter({ hasText: 'Tinggi' });
+  await high.click();
+  await expect(high).toHaveAttribute('aria-pressed', 'true');
+  expect(await page.locator('.map-zone.is-dimmed').count()).toBeGreaterThan(0);
+  await high.click();
+  await expect(page.locator('.map-zone.is-dimmed')).toHaveCount(0);
+  await johor.click();
+  await expect(page.locator('.zone-detail h3')).toHaveText('Johor');
+  await page.getByRole('button', { name: 'Zum masuk' }).click();
+  await expect(page.locator('.map-zoom-level')).not.toHaveText('1.0×');
+  await page.getByRole('button', { name: 'Tetapkan semula zum' }).click();
+  await expect(page.locator('.map-zoom-level')).toHaveText('1.0×');
+  await page.getByLabel('Cari negeri').fill('Sabah');
+  await page.locator('.search-results button').first().click();
+  await expect(page.locator('.zone-detail h3')).toHaveText('Sabah');
+  await expect(page.locator('.map-zoom-level')).not.toHaveText('1.0×');
+});
 test('essential overview and map reflow to 320 CSS pixels', async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 800 });
   for (const route of ['/', '/map']) {

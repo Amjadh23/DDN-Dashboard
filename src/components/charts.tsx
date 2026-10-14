@@ -175,7 +175,7 @@ export function LineChart({
               x2="533"
               y1={170 - n * 140}
               y2={170 - n * 140}
-              stroke="#2b4050"
+              stroke="var(--line-strong)"
               strokeDasharray="3 6"
             />
             <text x="29" y={173 - n * 140} textAnchor="end">
@@ -197,7 +197,7 @@ export function LineChart({
               cx={x}
               cy={y}
               r="3.5"
-              fill="#142632"
+              fill="var(--surface)"
               stroke="var(--chart-accent, #7fbfb4)"
               strokeWidth="1.5"
             />
@@ -297,7 +297,7 @@ export function Matrix({
                 <td key={c}>
                   <span
                     style={{
-                      background: `color-mix(in srgb, var(--chart-accent, #7fbfb4) ${12 + ((safe[i][j] ?? 0) / max) * 25}%, #112331)`,
+                      background: `color-mix(in srgb, var(--chart-accent, #7fbfb4) ${12 + ((safe[i][j] ?? 0) / max) * 25}%, var(--surface))`,
                     }}
                   >
                     {safe[i][j] === null ? 'Disekat' : safe[i][j]}

@@ -24,6 +24,8 @@ import {
 import { roleLabels } from '@/lib/domain/demo-identities';
 import type { Role } from '@/lib/domain/policy';
 import { MockAssistant } from './mock-assistant';
+import { ThemeToggle } from './theme-toggle';
+import { Character, rolePersonas } from './illustrations';
 
 const navigation = [
   { href: '/', label: 'Scenario Semasa', icon: LayoutDashboard },
@@ -184,24 +186,29 @@ export function AppShell({
               <span className="topbar-divider" />
               <span className="muted topbar-extra">Dasar Dadah Negara 2017</span>
             </div>
-            <div className="profile">
-              <span className="profile-avatar">{session.role === 'executive' ? 'EK' : 'DM'}</span>
-              <label>
-                <span>PROFIL DEMO</span>
-                <select
-                  value={session.role}
-                  onChange={(e) => changeProfile(e.target.value)}
-                  disabled={busy}
-                  aria-label="Pilih profil demonstrasi"
-                >
-                  {Object.entries(roleLabels).map(([key, label]) => (
-                    <option key={key} value={key}>
-                      {label}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              <ChevronDown size={14} />
+            <div className="topbar-actions">
+              <ThemeToggle />
+              <div className="profile">
+                <span className="profile-avatar">
+                  <Character persona={rolePersonas[session.role]} size={40} />
+                </span>
+                <label>
+                  <span>PROFIL DEMO</span>
+                  <select
+                    value={session.role}
+                    onChange={(e) => changeProfile(e.target.value)}
+                    disabled={busy}
+                    aria-label="Pilih profil demonstrasi"
+                  >
+                    {Object.entries(roleLabels).map(([key, label]) => (
+                      <option key={key} value={key}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <ChevronDown size={14} />
+              </div>
             </div>
           </header>
           {error && (

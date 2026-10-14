@@ -24,14 +24,16 @@ export function PageHeading({
   title,
   description,
   children,
+  art,
 }: {
   eyebrow: string;
   title: string;
   description: string;
   children?: React.ReactNode;
+  art?: React.ReactNode;
 }) {
   return (
-    <div className="page-heading">
+    <div className={art ? 'page-heading has-art' : 'page-heading'}>
       <div>
         <div className="eyebrow">
           <span />
@@ -41,6 +43,11 @@ export function PageHeading({
         <p>{description}</p>
       </div>
       <div className="page-heading-actions">{children}</div>
+      {art && (
+        <div className="page-heading-art" aria-hidden="true">
+          {art}
+        </div>
+      )}
     </div>
   );
 }

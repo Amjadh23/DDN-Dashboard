@@ -1,16 +1,26 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-test('reference palette and AIDA appearance match while Scenario Semasa remains', async ({
+test('Ember light and dark modes switch, persist by cookie and keep AIDA', async ({
   page,
+  context,
 }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Scenario Semasa', exact: true })).toBeVisible();
-  const palette = await page.evaluate(() => {
-    const css = getComputedStyle(document.documentElement);
-    return ['--bg', '--panel', '--teal'].map((key) => css.getPropertyValue(key).trim());
-  });
-  expect(palette).toEqual(['#141311', '#1c1d20', '#7496fb']);
+  const canvas = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+  expect(await canvas()).toBe('rgb(246, 242, 236)');
+  await page.getByRole('button', { name: 'Tukar ke mod gelap' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  expect(await canvas()).toBe('rgb(17, 14, 12)');
+  expect((await context.cookies()).find((c) => c.name === 'ddn-theme')?.value).toBe('dark');
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+  expect(await canvas()).toBe('rgb(17, 14, 12)');
+  await page.getByRole('button', { name: 'Tukar ke mod cerah' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+  expect(await canvas()).toBe('rgb(246, 242, 236)');
+  expect(await page.evaluate(() => [localStorage.length, sessionStorage.length])).toEqual([0, 0]);
   await expect(page.locator('.brand-emblem')).toHaveAttribute('src', /aadk-logo/);
   await expect(page.locator('.brand-mission')).toContainText('Lima teras.');
   await page
@@ -106,12 +116,19 @@ test('reference demo map colours and approved annual relative rates are explicit
 test('AIDA and matched colours remain accessible at desktop and mobile widths', async ({
   page,
 }) => {
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  for (const width of [1440, 390, 320]) {
+  for (const [width, colorScheme] of [
+    [1440, 'light'],
+    [390, 'light'],
+    [320, 'light'],
+    [1440, 'dark'],
+    [390, 'dark'],
+    [320, 'dark'],
+  ] as const) {
+    await page.emulateMedia({ reducedMotion: 'reduce', colorScheme });
     await page.setViewportSize({ width, height: 844 });
     await page.goto('/');
     await page.screenshot({
-      path: `artifacts/screenshots/reference-match-${width}.png`,
+      path: `artifacts/screenshots/ember-${colorScheme}-${width}.png`,
       fullPage: true,
     });
     await page
@@ -121,7 +138,7 @@ test('AIDA and matched colours remain accessible at desktop and mobile widths', 
     expect(
       await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth),
     ).toBeTruthy();
-    await page.screenshot({ path: `artifacts/screenshots/aida-${width}.png` });
+    await page.screenshot({ path: `artifacts/screenshots/aida-${colorScheme}-${width}.png` });
     const scan = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
       .analyze();

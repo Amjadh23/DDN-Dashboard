@@ -65,7 +65,7 @@ export function PartnerMap({ shapes }: { shapes: { name: string; path: string }[
           >
             <defs>
               <pattern id="world-grid" width="25" height="25" patternUnits="userSpaceOnUse">
-                <circle cx="1" cy="1" r=".6" fill="#3f435a" />
+                <circle cx="1" cy="1" r=".6" fill="var(--map-sea-dot)" />
               </pattern>
             </defs>
             <rect width="720" height="345" fill="url(#world-grid)" />
@@ -75,12 +75,12 @@ export function PartnerMap({ shapes }: { shapes: { name: string; path: string }[
                 d={s.path}
                 fill={
                   partners.some((p) => p.country === s.name)
-                    ? '#4b466d'
+                    ? 'var(--pm-partner)'
                     : s.name === 'Malaysia'
-                      ? '#899bb5'
-                      : '#1b2c3c'
+                      ? 'var(--pm-home)'
+                      : 'var(--pm-land)'
                 }
-                stroke="#395065"
+                stroke="var(--pm-border)"
                 strokeWidth=".45"
               />
             ))}
@@ -91,7 +91,7 @@ export function PartnerMap({ shapes }: { shapes: { name: string; path: string }[
                 <g key={p.name}>
                   <path
                     d={`M${origin.x},${origin.y} Q${(origin.x + x) / 2},${Math.min(origin.y, y) - 40} ${x},${y}`}
-                    stroke={active === i ? '#b7a6df' : '#645d82'}
+                    stroke={active === i ? 'var(--pm-arc-on)' : 'var(--pm-arc)'}
                     fill="none"
                     strokeWidth={active === i ? 1.5 : 0.7}
                     strokeDasharray="3 4"
@@ -100,7 +100,7 @@ export function PartnerMap({ shapes }: { shapes: { name: string; path: string }[
                     cx={x}
                     cy={y}
                     r={active === i ? 6 : 4}
-                    fill={active === i ? '#d4c6fa' : '#8a7aaf'}
+                    fill={active === i ? 'var(--pm-dot-on)' : 'var(--pm-dot)'}
                     tabIndex={0}
                     role="button"
                     aria-label={`Pilih ${p.name}, lokasi contoh ${p.country}`}
@@ -115,7 +115,7 @@ export function PartnerMap({ shapes }: { shapes: { name: string; path: string }[
                 </g>
               );
             })}
-            <circle cx={origin.x} cy={origin.y} r="4" fill="#a2dcce" />
+            <circle cx={origin.x} cy={origin.y} r="4" fill="var(--ember)" />
             <text x={origin.x - 13} y={origin.y + 15} className="partner-map-label">
               MALAYSIA
             </text>

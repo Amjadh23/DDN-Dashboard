@@ -9,6 +9,7 @@ import { dateBM, formatNumber } from '@/lib/domain/types';
 import { PageHeading, Badge } from '@/components/ui';
 import { FilterBar } from '@/components/filters';
 import { ThreatMap } from '@/components/threat-map';
+import { TerasCharacter, TerasEnsemble } from '@/components/illustrations';
 
 const teras = [
   { n: 1, title: 'Pendidikan pencegahan', status: 'Konteks sumber & demo', accent: 'teal' },
@@ -47,6 +48,7 @@ export default async function ScenarioSemasa({
         eyebrow="PUSAT STRATEGIK KEBANGSAAN"
         title="Scenario Semasa"
         description="Ringkasan nasional, analisis peta negeri dan tindakan bersama dalam satu paparan."
+        art={<TerasEnsemble />}
       />
       <FilterBar filters={filters} />
       <section className="overview-snapshot" aria-label="Data dibekalkan">
@@ -204,6 +206,7 @@ export default async function ScenarioSemasa({
               href={'/teras/' + t.n + '?' + query}
               className={'overview-teras-link accent-' + t.accent}
             >
+              <TerasCharacter n={t.n} size={84} className="overview-teras-art" />
               <span className="overview-teras-number">0{t.n}</span>
               <div>
                 <h3>{t.title}</h3>
