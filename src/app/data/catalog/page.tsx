@@ -26,7 +26,9 @@ function dataset(origin: Origin, definitions: MetricDefinition[]): CatalogueData
   const supplied = origin === 'supplied';
   return {
     id: origin,
-    title: supplied ? 'Petikan Statistik Mingguan AADK' : 'Senario analisis demonstrasi',
+    title: supplied
+      ? 'Petikan Statistik Mingguan AADK & Buku Maklumat Dadah'
+      : 'Senario analisis demonstrasi',
     evidence: supplied ? 'Available' : 'Proposed',
     definitions,
     source: unique(definitions.map((definition) => definition.source)).join(' · '),
@@ -148,11 +150,7 @@ export default async function DataCatalogue() {
                 </Disclosure>
                 <Link
                   className="text-link"
-                  href={
-                    isDemo
-                      ? '/indicators?q=DEMO%20%2F%20SYNTHETIC'
-                      : '/indicators?q=Statistik%20Mingguan%20AADK'
-                  }
+                  href={isDemo ? '/indicators?q=DEMO%20%2F%20SYNTHETIC' : '/indicators?q=AADK'}
                 >
                   Lihat definisi dataset <ArrowUpRight size={14} />
                 </Link>

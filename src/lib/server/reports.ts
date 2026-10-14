@@ -2,7 +2,7 @@ import 'server-only';
 import { createHash, randomUUID } from 'node:crypto';
 import ExcelJS from 'exceljs';
 import { allowed, type Resource, type Session } from '../domain/policy';
-import { parseFilters, type Filters } from '../domain/filters';
+import { parseFilters, isAnnualPeriod, type Filters } from '../domain/filters';
 import { csvCell } from '../domain/semantics';
 import type { MapZoneDTO, MetricDTO } from '../domain/types';
 import { getMapZones, getMetrics } from './dal';
@@ -39,6 +39,7 @@ interface SavedContext {
   caveats: string[];
   supplied: FrozenMetric[];
   synthetic: FrozenZone[];
+  sourceZones?: FrozenZone[];
 }
 interface ExportContext {
   schema: 'report-export-v1';
@@ -102,7 +103,11 @@ function parseSavedContext(value: unknown): SavedContext {
     context.synthetic.length > 16 ||
     context.supplied.length + context.synthetic.length > 32 ||
     !context.supplied.every((row) => isResource(row.access)) ||
-    !context.synthetic.every((row) => isResource(row.access))
+    !context.synthetic.every((row) => isResource(row.access)) ||
+    (context.sourceZones !== undefined &&
+      (!Array.isArray(context.sourceZones) ||
+        context.sourceZones.length > 16 ||
+        !context.sourceZones.every((row) => row.synthetic === false && isResource(row.access))))
   )
     throw new Error('Akses ditolak untuk versi paparan yang tidak dikenali.');
   return context as SavedContext;
@@ -127,6 +132,7 @@ function resources(context: SavedContext): Resource[] {
   return [
     ...context.supplied.map((row) => row.access),
     ...context.synthetic.map((row) => row.access),
+    ...(context.sourceZones ?? []).map((row) => row.access),
   ];
 }
 function authorise(session: Session, permission: 'view' | 'export', items: Resource[]) {
@@ -151,7 +157,7 @@ function dto(id: string, createdAt: string, context: SavedContext): SavedReportD
     generatedAt: context.generatedAt,
     classification: context.classification,
     filters: context.filters,
-    suppliedRows: context.supplied.length,
+    suppliedRows: context.supplied.length + (context.sourceZones?.length ?? 0),
     syntheticRows: context.synthetic.length,
     publications: context.versions.publications,
     definitions: context.versions.definitions,
@@ -187,7 +193,7 @@ async function captureSnapshot(
   ]);
   if (metrics.length > 14 || zones.length > 16 || metrics.length + zones.length > 32)
     throw new Error('Akses ditolak: laporan besar tidak tersedia dalam V1.');
-  const publications = unique(zones.map((row) => row.publication));
+  const publications = unique(zones.filter((row) => row.synthetic).map((row) => row.publication));
   const descriptors = publications.length
     ? await withScope(session, async (client) => {
         const result = await client.query(
@@ -203,30 +209,44 @@ async function captureSnapshot(
         }[];
       })
     : [];
-  const synthetic = zones.map((zone) => {
-    const descriptor = descriptors.find(
-      (row) =>
-        row.publication_id === zone.publication &&
-        row.geography === zone.id &&
-        row.code === `D-${zone.layer === 'supply' ? 'SUPPLY' : zone.layer.toUpperCase()}`,
-    );
-    if (!descriptor) throw new Error('Akses ditolak: sumber penerbitan laporan tidak ditemui.');
-    return {
+  const synthetic = zones
+    .filter((zone) => zone.synthetic)
+    .map((zone) => {
+      const descriptor = descriptors.find(
+        (row) =>
+          row.publication_id === zone.publication &&
+          row.geography === zone.id &&
+          row.code === `D-${zone.layer === 'supply' ? 'SUPPLY' : zone.layer.toUpperCase()}`,
+      );
+      if (!descriptor) throw new Error('Akses ditolak: sumber penerbitan laporan tidak ditemui.');
+      return {
+        ...zone,
+        access: {
+          organisation: descriptor.organisation,
+          geography: descriptor.geography,
+          teras: descriptor.teras,
+          sensitivity: 'demo' as const,
+          state: 'published' as const,
+        },
+      };
+    });
+  const sourceZones: FrozenZone[] = zones
+    .filter((zone) => !zone.synthetic)
+    .map((zone) => ({
       ...zone,
       access: {
-        organisation: descriptor.organisation,
-        geography: descriptor.geography,
-        teras: descriptor.teras,
-        sensitivity: 'demo' as const,
-        state: 'published' as const,
+        organisation: 'shared',
+        geography: zone.id,
+        teras: 1,
+        sensitivity: 'public-aggregate',
+        state: 'published',
       },
-    };
-  });
+    }));
   const supplied = metrics.map((metric) => ({
     ...metric,
     access: {
       organisation: 'shared',
-      geography: 'MY',
+      geography: metric.geography ?? 'MY',
       teras: metric.definition.teras,
       sensitivity: 'public-aggregate' as const,
       state: 'published' as const,
@@ -235,10 +255,11 @@ async function captureSnapshot(
   const allResources = [
     ...supplied.map((row) => row.access),
     ...synthetic.map((row) => row.access),
+    ...sourceZones.map((row) => row.access),
   ];
   authorise(session, 'view', allResources);
   const classification =
-    supplied.length && synthetic.length
+    (supplied.length || sourceZones.length) && synthetic.length
       ? `${SUPPLIED} + ${DEMO}`
       : synthetic.length
         ? DEMO
@@ -253,16 +274,31 @@ async function captureSnapshot(
       publications: unique([
         ...supplied.map((row) => row.publication),
         ...synthetic.map((row) => row.publication),
+        ...sourceZones.map((row) => row.publication),
       ]),
       definitions: unique([
         ...supplied.map((row) => row.definition.version),
         ...synthetic.map((row) => row.definition),
+        ...sourceZones.map((row) => row.definition),
       ]),
-      boundaries: unique(synthetic.map((row) => row.boundary)),
+      boundaries: unique([...synthetic, ...sourceZones].map((row) => row.boundary)),
     },
-    caveats: [...CAVEATS],
+    caveats: unique([
+      ...CAVEATS,
+      ...supplied.map((row) => row.definition.interpretation),
+      ...(isAnnualPeriod(filters.period)
+        ? [
+            'Tempoh tahunan; bukan stok mingguan. Kaedah kiraan rawatan berubah pada 2025; perbandingan merentas perubahan ini tidak dikira.',
+          ]
+        : []),
+      ...sourceZones.map(
+        (row) =>
+          `Penyebut: ${row.denominatorSource} Sempadan: ${row.boundary}. Rekod pentadbiran dipadankan; bukan prevalens.`,
+      ),
+    ]),
     supplied,
     synthetic,
+    sourceZones,
   };
 }
 
@@ -370,7 +406,7 @@ function csvBytes(context: SavedContext): Buffer {
         .map(csvCell)
         .join(','),
     );
-  lines.push('', csvCell(DEMO));
+  lines.push('', csvCell(context.sourceZones?.length ? SUPPLIED : DEMO));
   lines.push(
     [
       'geography',
@@ -389,7 +425,7 @@ function csvBytes(context: SavedContext): Buffer {
       'coverage',
     ].join(','),
   );
-  for (const row of context.synthetic)
+  for (const row of [...context.synthetic, ...(context.sourceZones ?? [])])
     lines.push(
       [
         row.id,
@@ -445,8 +481,10 @@ async function xlsxBytes(context: SavedContext): Promise<Buffer> {
       ].map(spreadsheetString),
     ),
   );
-  const synthetic = workbook.addWorksheet('DEMO SYNTHETIC');
-  synthetic.addRow([DEMO]);
+  const synthetic = workbook.addWorksheet(
+    context.sourceZones?.length ? 'Supplied geography' : 'DEMO SYNTHETIC',
+  );
+  synthetic.addRow([context.sourceZones?.length ? SUPPLIED : DEMO]);
   synthetic.addRow([
     'geography',
     'name',
@@ -463,7 +501,7 @@ async function xlsxBytes(context: SavedContext): Promise<Buffer> {
     'confidence',
     'coverage',
   ]);
-  context.synthetic.forEach((row) =>
+  [...context.synthetic, ...(context.sourceZones ?? [])].forEach((row) =>
     synthetic.addRow(
       [
         row.id,

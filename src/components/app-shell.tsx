@@ -1,10 +1,10 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import {
   LayoutDashboard,
-  Map,
   GraduationCap,
   HeartPulse,
   ShieldCheck,
@@ -19,15 +19,14 @@ import {
   Menu,
   X,
   ArrowUpRight,
-  Shield,
   Layers3,
 } from 'lucide-react';
 import { roleLabels } from '@/lib/domain/demo-identities';
 import type { Role } from '@/lib/domain/policy';
+import { MockAssistant } from './mock-assistant';
 
 const navigation = [
-  { href: '/', label: 'Gambaran nasional', icon: LayoutDashboard },
-  { href: '/map', label: 'Peta strategik', icon: Map },
+  { href: '/', label: 'Scenario Semasa', icon: LayoutDashboard },
   { href: '/teras/1', label: 'Pendidikan pencegahan', icon: GraduationCap, n: '01' },
   { href: '/teras/2', label: 'Rawatan & pemulihan', icon: HeartPulse, n: '02' },
   { href: '/teras/3', label: 'Penguatkuasaan', icon: ShieldCheck, n: '03' },
@@ -71,41 +70,75 @@ export function AppShell({
     }
   }
   return (
-    <div className="app-frame">
-      {open && (
-        <button
-          className="nav-backdrop"
-          aria-label="Tutup navigasi"
-          onClick={() => setOpen(false)}
-        />
-      )}
-      <aside className={`sidebar ${open ? 'is-open' : ''}`} aria-label="Navigasi utama">
-        <div className="brand">
-          <div className="brand-mark">
-            <Shield size={24} strokeWidth={1.6} />
-            <span />
-          </div>
-          <div>
-            <strong>
-              DDN<span className="brand-dot">.</span>
-            </strong>
-            <small>MALAYSIA</small>
-          </div>
+    <>
+      <div className="app-frame">
+        {open && (
           <button
-            className="icon-button mobile-close"
+            className="nav-backdrop"
+            aria-label="Tutup navigasi"
             onClick={() => setOpen(false)}
-            aria-label="Tutup menu"
-          >
-            <X size={19} />
-          </button>
-        </div>
-        <div className="brand-subtitle">DASAR DADAH NEGARA</div>
-        <div className="nav-section-label">PUSAT STRATEGIK</div>
-        <nav>
-          {navigation.map((item, i) => (
-            <div key={item.href}>
-              {i === 2 && <div className="nav-section-label teras-nav-label">LIMA TERAS DASAR</div>}
+          />
+        )}
+        <aside className={`sidebar ${open ? 'is-open' : ''}`} aria-label="Navigasi utama">
+          <div className="brand">
+            <Image
+              className="brand-emblem"
+              src="/aadk-logo.png"
+              alt="Agensi Antidadah Kebangsaan"
+              width={64}
+              height={64}
+            />
+            <div>
+              <strong>
+                DDN<span className="brand-dot">.</span>
+              </strong>
+              <small>MALAYSIA</small>
+            </div>
+            <button
+              className="icon-button mobile-close"
+              onClick={() => setOpen(false)}
+              aria-label="Tutup menu"
+            >
+              <X size={19} />
+            </button>
+          </div>
+          <div className="brand-subtitle">DASAR DADAH NEGARA</div>
+          <Link className="brand-mission" href="/#peta-strategik" onClick={() => setOpen(false)}>
+            <span className="mission-kicker">BUKTI MENJADI TINDAKAN</span>
+            <strong>
+              Lima teras.
+              <br />
+              Satu hala tuju.
+            </strong>
+            <span className="mission-link">
+              Terokai peta strategik <ArrowUpRight size={16} />
+            </span>
+          </Link>
+          <div className="nav-section-label">PUSAT STRATEGIK</div>
+          <nav>
+            {navigation.map((item, i) => (
+              <div key={item.href}>
+                {i === 1 && (
+                  <div className="nav-section-label teras-nav-label">LIMA TERAS DASAR</div>
+                )}
+                <Link
+                  className={`nav-item ${path === item.href ? 'active' : ''}`}
+                  href={item.href}
+                  aria-current={path === item.href ? 'page' : undefined}
+                  onClick={() => setOpen(false)}
+                >
+                  <item.icon size={17} strokeWidth={1.65} />
+                  <span>{item.label}</span>
+                  {item.n && <small>{item.n}</small>}
+                </Link>
+              </div>
+            ))}
+          </nav>
+          <div className="nav-section-label">RUANG KOLABORASI</div>
+          <nav>
+            {workspace.map((item) => (
               <Link
+                key={item.href}
                 className={`nav-item ${path === item.href ? 'active' : ''}`}
                 href={item.href}
                 aria-current={path === item.href ? 'page' : undefined}
@@ -113,96 +146,81 @@ export function AppShell({
               >
                 <item.icon size={17} strokeWidth={1.65} />
                 <span>{item.label}</span>
-                {item.n && <small>{item.n}</small>}
               </Link>
-            </div>
-          ))}
-        </nav>
-        <div className="nav-section-label">RUANG KOLABORASI</div>
-        <nav>
-          {workspace.map((item) => (
+            ))}
+          </nav>
+          <div className="sidebar-bottom">
             <Link
-              key={item.href}
-              className={`nav-item ${path === item.href ? 'active' : ''}`}
-              href={item.href}
-              aria-current={path === item.href ? 'page' : undefined}
+              className={`nav-item ${path.startsWith('/admin') ? 'active' : ''}`}
+              href="/admin/governance"
               onClick={() => setOpen(false)}
             >
-              <item.icon size={17} strokeWidth={1.65} />
-              <span>{item.label}</span>
+              <Settings2 size={17} />
+              <span>Tadbir urus</span>
+              <ArrowUpRight size={13} />
             </Link>
-          ))}
-        </nav>
-        <div className="sidebar-bottom">
-          <Link
-            className={`nav-item ${path.startsWith('/admin') ? 'active' : ''}`}
-            href="/admin/governance"
-            onClick={() => setOpen(false)}
-          >
-            <Settings2 size={17} />
-            <span>Tadbir urus</span>
-            <ArrowUpRight size={13} />
-          </Link>
-          <div className="environment">
-            <span className="status-dot" />
-            <div>
-              <strong>Ruang demonstrasi</strong>
-              <small>V1 · Pengesahan pihak berkepentingan</small>
+            <div className="environment">
+              <span className="status-dot" />
+              <div>
+                <strong>Ruang demonstrasi</strong>
+                <small>V1 · Pengesahan pihak berkepentingan</small>
+              </div>
             </div>
           </div>
-        </div>
-      </aside>
-      <div className="main-frame">
-        <header className="topbar">
-          <div className="topbar-context">
-            <button
-              className="icon-button mobile-menu"
-              onClick={() => setOpen(true)}
-              aria-label="Buka navigasi"
-              aria-expanded={open}
-            >
-              <Menu size={22} />
-            </button>
-            <span className="country-tag">Malaysia</span>
-            <span>Ruang strategik kebangsaan</span>
-            <span className="topbar-divider" />
-            <span className="muted topbar-extra">Dasar Dadah Negara 2017</span>
-          </div>
-          <div className="profile">
-            <span className="profile-avatar">{session.role === 'executive' ? 'EK' : 'DM'}</span>
-            <label>
-              <span>PROFIL DEMO</span>
-              <select
-                value={session.role}
-                onChange={(e) => changeProfile(e.target.value)}
-                disabled={busy}
-                aria-label="Pilih profil demonstrasi"
+        </aside>
+        <div className="main-frame">
+          <header className="topbar">
+            <div className="topbar-context">
+              <button
+                className="icon-button mobile-menu"
+                onClick={() => setOpen(true)}
+                aria-label="Buka navigasi"
+                aria-expanded={open}
               >
-                {Object.entries(roleLabels).map(([key, label]) => (
-                  <option key={key} value={key}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <ChevronDown size={14} />
-          </div>
-        </header>
-        {error && (
-          <div className="error-banner" role="alert">
-            {error}
-          </div>
-        )}
-        <main id="main-content" tabIndex={-1}>
-          {children}
-        </main>
-        <footer className="app-footer">
-          <span>
-            DDN MALAYSIA <span className="muted">/</span> Ruang bukti & tindakan bersama
-          </span>
-          <span>Prototaip V1 · Bukan sistem operasi nasional</span>
-        </footer>
+                <Menu size={22} />
+              </button>
+              <span className="country-tag">Malaysia</span>
+              <span>Ruang strategik kebangsaan</span>
+              <span className="topbar-divider" />
+              <span className="muted topbar-extra">Dasar Dadah Negara 2017</span>
+            </div>
+            <div className="profile">
+              <span className="profile-avatar">{session.role === 'executive' ? 'EK' : 'DM'}</span>
+              <label>
+                <span>PROFIL DEMO</span>
+                <select
+                  value={session.role}
+                  onChange={(e) => changeProfile(e.target.value)}
+                  disabled={busy}
+                  aria-label="Pilih profil demonstrasi"
+                >
+                  {Object.entries(roleLabels).map(([key, label]) => (
+                    <option key={key} value={key}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <ChevronDown size={14} />
+            </div>
+          </header>
+          {error && (
+            <div className="error-banner" role="alert">
+              {error}
+            </div>
+          )}
+          <main id="main-content" tabIndex={-1}>
+            {children}
+          </main>
+          <footer className="app-footer">
+            <span>
+              DDN MALAYSIA <span className="muted">/</span> Ruang bukti & tindakan bersama
+            </span>
+            <span>Prototaip V1 · Bukan sistem operasi nasional</span>
+          </footer>
+        </div>
       </div>
-    </div>
+      <MockAssistant />
+    </>
   );
 }

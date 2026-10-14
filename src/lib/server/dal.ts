@@ -2,12 +2,16 @@ import 'server-only';
 import { withScope } from './db';
 import { allowed, type Session } from '../domain/policy';
 import { metricDefinitions } from '../domain/registry';
-import type { Filters } from '../domain/filters';
+import { isAnnualPeriod, type Filters } from '../domain/filters';
+import { getAnnualMetrics } from './dashboard-source';
+import { getAnnual } from './annual';
+import { annualDefinitions } from '../domain/annual';
 import type { MapZoneDTO, MetricDTO, DataState, MetricDefinition } from '../domain/types';
 import { disclose, compareObservations, rate } from '../domain/semantics';
 import { stateNames } from '../domain/demo-identities';
 
 export async function getMetrics(session: Session, filters: Filters): Promise<MetricDTO[]> {
+  if (isAnnualPeriod(filters.period)) return getAnnualMetrics(session, filters);
   return withScope(session, async (c) => {
     if (filters.source === 'synthetic') return [];
     const result = await c.query(
@@ -42,6 +46,41 @@ export async function getMetrics(session: Session, filters: Filters): Promise<Me
   });
 }
 export async function getMapZones(session: Session, filters: Filters): Promise<MapZoneDTO[]> {
+  if (isAnnualPeriod(filters.period)) {
+    if (filters.layer !== 'burden') return [];
+    const view = await getAnnual(session, filters, '1.1');
+    return (
+      view?.rows
+        .filter((r) => r.geography !== 'MY')
+        .map((row) => ({
+          id: row.geography,
+          name: stateNames[row.geography],
+          layer: filters.layer,
+          count: row.cells.count.value,
+          denominator: row.denominator ?? null,
+          rate: row.rate ?? null,
+          previous: null,
+          change: null,
+          state: row.cells.count.state,
+          confidence: null,
+          coverage: null,
+          period: filters.period,
+          source: `Buku Maklumat Dadah 2025 · Jadual 1.1, hlm. 16 · rekod dipadankan AADK/PDRM/KKM/PPP · SHA-256 ${view.sourceHash}`,
+          denominatorSource: 'DOSM, dipetik dalam BMD hlm. 170; tahun sepadan. 2024–2025 sahaja.',
+          boundary: 'gb-MYS-ADM1-2017-9469f09 · sempadan contoh belum diluluskan',
+          definition: 'bmd-v1 · rekod pentadbiran, bukan prevalens',
+          publication: view.publications[0],
+          synthetic: false,
+          drivers: [
+            {
+              label: 'Orang direkodkan selepas pemadanan sumber',
+              value: row.cells.count.value,
+              unit: 'orang',
+            },
+          ],
+        })) ?? []
+    );
+  }
   if (filters.source === 'supplied') return [];
   const code = {
     burden: 'D-BURDEN',
@@ -137,7 +176,9 @@ export async function getMapZones(session: Session, filters: Filters): Promise<M
   });
 }
 export async function getRegistry(session: Session): Promise<MetricDefinition[]> {
-  return metricDefinitions.filter((d) => session.teras.includes(d.teras));
+  return [...metricDefinitions, ...annualDefinitions].filter((d) =>
+    session.teras.includes(d.teras),
+  );
 }
 export interface ActionDTO {
   id: string;

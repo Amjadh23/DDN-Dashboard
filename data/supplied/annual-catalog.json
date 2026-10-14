@@ -1,0 +1,1105 @@
+{
+  "schemaVersion": "bmd-annual-v1",
+  "sourceTitle": "Buku Maklumat Dadah 2025",
+  "sourcePath": "data/Laporan-Buku-Dadah-2025.pdf",
+  "sourceHash": "3659b121667412aa63e0a347c535583ea8b3490cdd890ec5bb8a2251c8198051",
+  "ingestedAt": "2026-10-06T00:00:00Z",
+  "tables": [
+    {
+      "id": "1.1",
+      "title": "Penagih dan penyalah guna direkodkan mengikut negeri",
+      "teras": 1,
+      "pages": [
+        16
+      ],
+      "columns": [
+        {
+          "key": "count",
+          "label": "Bilangan direkodkan",
+          "unit": "orang"
+        }
+      ],
+      "scope": "state",
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Gabungan AADK/PDRM/KKM/PPP selepas pemadanan yang dilaporkan; bukan anggaran prevalens masyarakat.",
+        "Naratif p.3 menyebut penurunan [nilai sumber]%; jadual menunjukkan [nilai sumber] kepada [nilai sumber] (kira-kira [nilai sumber]%). Naratif tidak diimport."
+      ],
+      "rowCount": 85
+    },
+    {
+      "id": "1.4",
+      "title": "Bangsa direkodkan",
+      "teras": 1,
+      "pages": [
+        30
+      ],
+      "columns": [
+        {
+          "key": "count",
+          "label": "Bilangan direkodkan",
+          "unit": "orang"
+        }
+      ],
+      "scope": "national",
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Taburan kebangsaan sahaja; tidak menyokong penapis silang negeri × demografi × dadah."
+      ],
+      "rowCount": 35
+    },
+    {
+      "id": "1.5",
+      "title": "Kumpulan umur direkodkan",
+      "teras": 1,
+      "pages": [
+        31
+      ],
+      "columns": [
+        {
+          "key": "count",
+          "label": "Bilangan direkodkan",
+          "unit": "orang"
+        }
+      ],
+      "scope": "national",
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Taburan kebangsaan sahaja; tidak menyokong penapis silang negeri × demografi × dadah."
+      ],
+      "rowCount": 56
+    },
+    {
+      "id": "1.6",
+      "title": "Tahap pendidikan direkodkan",
+      "teras": 1,
+      "pages": [
+        32
+      ],
+      "columns": [
+        {
+          "key": "count",
+          "label": "Bilangan direkodkan",
+          "unit": "orang"
+        }
+      ],
+      "scope": "national",
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Taburan kebangsaan sahaja; tidak menyokong penapis silang negeri × demografi × dadah."
+      ],
+      "rowCount": 50
+    },
+    {
+      "id": "1.7",
+      "title": "Kategori pekerjaan direkodkan",
+      "teras": 1,
+      "pages": [
+        33
+      ],
+      "columns": [
+        {
+          "key": "count",
+          "label": "Bilangan direkodkan",
+          "unit": "orang"
+        }
+      ],
+      "scope": "national",
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Taburan kebangsaan sahaja; tidak menyokong penapis silang negeri × demografi × dadah."
+      ],
+      "rowCount": 50
+    },
+    {
+      "id": "1.8",
+      "title": "Kategori dadah direkodkan",
+      "teras": 1,
+      "pages": [
+        34
+      ],
+      "columns": [
+        {
+          "key": "count",
+          "label": "Bilangan direkodkan",
+          "unit": "orang"
+        }
+      ],
+      "scope": "national",
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Taburan kebangsaan sahaja; tidak menyokong penapis silang negeri × demografi × dadah."
+      ],
+      "rowCount": 30
+    },
+    {
+      "id": "1.3",
+      "title": "Jantina direkodkan mengikut negeri",
+      "teras": 1,
+      "pages": [
+        28,
+        29
+      ],
+      "columns": [
+        {
+          "key": "male",
+          "label": "Lelaki",
+          "unit": "orang"
+        },
+        {
+          "key": "female",
+          "label": "Perempuan",
+          "unit": "orang"
+        },
+        {
+          "key": "total",
+          "label": "Jumlah",
+          "unit": "orang"
+        }
+      ],
+      "scope": "state",
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar."
+      ],
+      "rowCount": 85
+    },
+    {
+      "id": "2.1",
+      "title": "Klien rawatan mengikut negeri dan tetapan",
+      "teras": 2,
+      "pages": [
+        42,
+        43
+      ],
+      "columns": [
+        {
+          "key": "total",
+          "label": "Jumlah klien",
+          "unit": "klien"
+        },
+        {
+          "key": "community",
+          "label": "RPDK",
+          "unit": "klien"
+        },
+        {
+          "key": "institution",
+          "label": "RPDI",
+          "unit": "klien"
+        }
+      ],
+      "scope": "state",
+      "comparisonBreak": 2025,
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Kaedah berubah pada 2025: pusat rawatan terakhir sahaja; 2021–2024 boleh mengira klien di kedua-dua fasiliti. Perubahan merentasi 2025 tidak dikira."
+      ],
+      "rowCount": 85
+    },
+    {
+      "id": "2.3",
+      "title": "Status kes rawatan",
+      "teras": 2,
+      "pages": [
+        68
+      ],
+      "columns": [
+        {
+          "key": "total",
+          "label": "Jumlah",
+          "unit": "klien"
+        },
+        {
+          "key": "new",
+          "label": "Baharu",
+          "unit": "klien"
+        },
+        {
+          "key": "repeat",
+          "label": "Berulang",
+          "unit": "klien"
+        }
+      ],
+      "scope": "national",
+      "comparisonBreak": 2025,
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Berulang ialah status sumber; bukan relaps. Per kes dan per individu kekal berasingan.",
+        "Kaedah berubah pada 2025: pusat rawatan terakhir sahaja; 2021–2024 boleh mengira klien di kedua-dua fasiliti. Perubahan merentasi 2025 tidak dikira."
+      ],
+      "rowCount": 15
+    },
+    {
+      "id": "2.4",
+      "title": "Jantina klien rawatan",
+      "teras": 2,
+      "pages": [
+        69
+      ],
+      "columns": [
+        {
+          "key": "total",
+          "label": "Jumlah",
+          "unit": "klien"
+        },
+        {
+          "key": "male",
+          "label": "Lelaki",
+          "unit": "klien"
+        },
+        {
+          "key": "female",
+          "label": "Perempuan",
+          "unit": "klien"
+        }
+      ],
+      "scope": "national",
+      "comparisonBreak": 2025,
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Berulang ialah status sumber; bukan relaps. Per kes dan per individu kekal berasingan.",
+        "Kaedah berubah pada 2025: pusat rawatan terakhir sahaja; 2021–2024 boleh mengira klien di kedua-dua fasiliti. Perubahan merentasi 2025 tidak dikira."
+      ],
+      "rowCount": 15
+    },
+    {
+      "id": "2.5",
+      "title": "Bangsa klien rawatan",
+      "teras": 2,
+      "pages": [
+        70
+      ],
+      "columns": [
+        {
+          "key": "total",
+          "label": "Jumlah",
+          "unit": "klien"
+        },
+        {
+          "key": "malay",
+          "label": "Melayu",
+          "unit": "klien"
+        },
+        {
+          "key": "chinese",
+          "label": "Cina",
+          "unit": "klien"
+        },
+        {
+          "key": "indian",
+          "label": "India",
+          "unit": "klien"
+        },
+        {
+          "key": "sabah",
+          "label": "Pribumi Sabah",
+          "unit": "klien"
+        },
+        {
+          "key": "sarawak",
+          "label": "Pribumi Sarawak",
+          "unit": "klien"
+        },
+        {
+          "key": "other",
+          "label": "Lain-lain",
+          "unit": "klien"
+        }
+      ],
+      "scope": "national",
+      "comparisonBreak": 2025,
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Berulang ialah status sumber; bukan relaps. Per kes dan per individu kekal berasingan.",
+        "Kaedah berubah pada 2025: pusat rawatan terakhir sahaja; 2021–2024 boleh mengira klien di kedua-dua fasiliti. Perubahan merentasi 2025 tidak dikira."
+      ],
+      "rowCount": 15
+    },
+    {
+      "id": "2.9",
+      "title": "Kategori dadah klien rawatan",
+      "teras": 2,
+      "pages": [
+        77
+      ],
+      "columns": [
+        {
+          "key": "total",
+          "label": "Jumlah",
+          "unit": "klien"
+        },
+        {
+          "key": "ats",
+          "label": "Stimulan jenis amfetamina",
+          "unit": "klien"
+        },
+        {
+          "key": "opiate",
+          "label": "Opiat",
+          "unit": "klien"
+        },
+        {
+          "key": "cannabis",
+          "label": "Ganja",
+          "unit": "klien"
+        },
+        {
+          "key": "psychotropic",
+          "label": "Pil psikotropik",
+          "unit": "klien"
+        },
+        {
+          "key": "other",
+          "label": "Lain-lain",
+          "unit": "klien"
+        }
+      ],
+      "scope": "national",
+      "comparisonBreak": 2025,
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Berulang ialah status sumber; bukan relaps. Per kes dan per individu kekal berasingan.",
+        "Kaedah berubah pada 2025: pusat rawatan terakhir sahaja; 2021–2024 boleh mengira klien di kedua-dua fasiliti. Perubahan merentasi 2025 tidak dikira."
+      ],
+      "rowCount": 15
+    },
+    {
+      "id": "2.11",
+      "title": "Laluan kemasukan institusi",
+      "teras": 2,
+      "pages": [
+        80
+      ],
+      "columns": [
+        {
+          "key": "count",
+          "label": "Bilangan direkodkan",
+          "unit": "orang"
+        }
+      ],
+      "scope": "national",
+      "comparisonBreak": 2025,
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Kes perintah mahkamah dan sukarela mengikut istilah sumber.",
+        "Kaedah berubah pada 2025: pusat rawatan terakhir sahaja; 2021–2024 boleh mengira klien di kedua-dua fasiliti. Perubahan merentasi 2025 tidak dikira."
+      ],
+      "rowCount": 15
+    },
+    {
+      "id": "2.6",
+      "title": "Umur klien mengikut tetapan",
+      "teras": 2,
+      "pages": [
+        71,
+        72
+      ],
+      "columns": [
+        {
+          "key": "total",
+          "label": "Jumlah",
+          "unit": "klien"
+        },
+        {
+          "key": "community",
+          "label": "RPDK",
+          "unit": "klien"
+        },
+        {
+          "key": "institution",
+          "label": "RPDI",
+          "unit": "klien"
+        }
+      ],
+      "scope": "national",
+      "comparisonBreak": 2025,
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Kaedah berubah pada 2025: pusat rawatan terakhir sahaja; 2021–2024 boleh mengira klien di kedua-dua fasiliti. Perubahan merentasi 2025 tidak dikira."
+      ],
+      "rowCount": 26
+    },
+    {
+      "id": "2.7",
+      "title": "Pendidikan klien mengikut tetapan",
+      "teras": 2,
+      "pages": [
+        73,
+        74
+      ],
+      "columns": [
+        {
+          "key": "total",
+          "label": "Jumlah",
+          "unit": "klien"
+        },
+        {
+          "key": "none",
+          "label": "Tiada pendidikan formal",
+          "unit": "klien"
+        },
+        {
+          "key": "primary",
+          "label": "Sekolah rendah",
+          "unit": "klien"
+        },
+        {
+          "key": "pmr",
+          "label": "PMR/setaraf",
+          "unit": "klien"
+        },
+        {
+          "key": "spm",
+          "label": "SPM/SPMV/setaraf",
+          "unit": "klien"
+        },
+        {
+          "key": "stpm",
+          "label": "STPM/setaraf",
+          "unit": "klien"
+        },
+        {
+          "key": "diploma",
+          "label": "Diploma",
+          "unit": "klien"
+        },
+        {
+          "key": "degree",
+          "label": "Sarjana muda/sarjana/PhD",
+          "unit": "klien"
+        },
+        {
+          "key": "other",
+          "label": "Lain-lain",
+          "unit": "klien"
+        }
+      ],
+      "scope": "national",
+      "comparisonBreak": 2025,
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Profil semasa daftar; bukan hasil pekerjaan selepas rawatan.",
+        "Kaedah berubah pada 2025: pusat rawatan terakhir sahaja; 2021–2024 boleh mengira klien di kedua-dua fasiliti. Perubahan merentasi 2025 tidak dikira."
+      ],
+      "rowCount": 15
+    },
+    {
+      "id": "2.8",
+      "title": "Pekerjaan klien mengikut tetapan",
+      "teras": 2,
+      "pages": [
+        75,
+        76
+      ],
+      "columns": [
+        {
+          "key": "total",
+          "label": "Jumlah",
+          "unit": "klien"
+        },
+        {
+          "key": "private",
+          "label": "Swasta",
+          "unit": "klien"
+        },
+        {
+          "key": "labour",
+          "label": "Buruh",
+          "unit": "klien"
+        },
+        {
+          "key": "unemployed",
+          "label": "Penganggur",
+          "unit": "klien"
+        },
+        {
+          "key": "self",
+          "label": "Bekerja sendiri",
+          "unit": "klien"
+        },
+        {
+          "key": "parttime",
+          "label": "Rencam/sambilan",
+          "unit": "klien"
+        },
+        {
+          "key": "government",
+          "label": "Kerajaan",
+          "unit": "klien"
+        },
+        {
+          "key": "student",
+          "label": "Penuntut",
+          "unit": "klien"
+        },
+        {
+          "key": "retired",
+          "label": "Pesara",
+          "unit": "klien"
+        },
+        {
+          "key": "none",
+          "label": "Tiada pekerjaan",
+          "unit": "klien"
+        }
+      ],
+      "scope": "national",
+      "comparisonBreak": 2025,
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Profil semasa daftar; bukan hasil pekerjaan selepas rawatan.",
+        "Kaedah berubah pada 2025: pusat rawatan terakhir sahaja; 2021–2024 boleh mengira klien di kedua-dua fasiliti. Perubahan merentasi 2025 tidak dikira."
+      ],
+      "rowCount": 15
+    },
+    {
+      "id": "3.1",
+      "title": "Tangkapan mengikut seksyen sumber",
+      "teras": 3,
+      "pages": [
+        106
+      ],
+      "columns": [
+        {
+          "key": "count",
+          "label": "Tangkapan",
+          "unit": "tangkapan"
+        }
+      ],
+      "scope": "national",
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Tangkapan tidak membuktikan kesalahan, sabitan atau prevalens; seksyen ialah kategori sumber, bukan nasihat undang-undang."
+      ],
+      "rowCount": 30
+    },
+    {
+      "id": "3.2",
+      "title": "Rampasan mengikut dadah dan unit",
+      "teras": 3,
+      "pages": [
+        107,
+        108
+      ],
+      "columns": [
+        {
+          "key": "quantity",
+          "label": "Kuantiti rampasan",
+          "unit": "unit sumber"
+        }
+      ],
+      "scope": "national",
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Kg, liter dan pokok tidak dijumlahkan; angka kebangsaan tidak menyokong peta negeri."
+      ],
+      "rowCount": 85
+    },
+    {
+      "id": "3.4",
+      "title": "Kes dan nilai harta mengikut status",
+      "teras": 3,
+      "pages": [
+        110
+      ],
+      "columns": [
+        {
+          "key": "value",
+          "label": "Nilai mengikut baris",
+          "unit": "unit sumber"
+        }
+      ],
+      "scope": "national",
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Kes, tangkapan, sitaan dan pelucuthakan ialah unit/status berasingan."
+      ],
+      "rowCount": 15
+    },
+    {
+      "id": "3.5",
+      "title": "Makmal dibongkar dan tangkapan",
+      "teras": 3,
+      "pages": [
+        110
+      ],
+      "columns": [
+        {
+          "key": "value",
+          "label": "Nilai mengikut baris",
+          "unit": "unit sumber"
+        }
+      ],
+      "scope": "national",
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Kes, tangkapan, sitaan dan pelucuthakan ialah unit/status berasingan."
+      ],
+      "rowCount": 10
+    },
+    {
+      "id": "4.1-family",
+      "title": "Pencegahan kluster keluarga",
+      "teras": 1,
+      "pages": [
+        114
+      ],
+      "columns": [
+        {
+          "key": "programmes",
+          "label": "Bilangan program",
+          "unit": "program"
+        },
+        {
+          "key": "participants",
+          "label": "Peserta dilaporkan",
+          "unit": "peserta"
+        }
+      ],
+      "scope": "state",
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Peserta dilaporkan tidak disahkan sebagai orang unik merentas program; tiada denominator sasaran atau penilaian keberkesanan.",
+        "Wilayah Persekutuan gabungan tidak diagihkan kepada tiga W.P."
+      ],
+      "rowCount": 30
+    },
+    {
+      "id": "4.1-education",
+      "title": "Pencegahan kluster institusi pendidikan",
+      "teras": 1,
+      "pages": [
+        114
+      ],
+      "columns": [
+        {
+          "key": "programmes",
+          "label": "Bilangan program",
+          "unit": "program"
+        },
+        {
+          "key": "participants",
+          "label": "Peserta dilaporkan",
+          "unit": "peserta"
+        }
+      ],
+      "scope": "state",
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Peserta dilaporkan tidak disahkan sebagai orang unik merentas program; tiada denominator sasaran atau penilaian keberkesanan.",
+        "Wilayah Persekutuan gabungan tidak diagihkan kepada tiga W.P."
+      ],
+      "rowCount": 30
+    },
+    {
+      "id": "4.1-workplace",
+      "title": "Pencegahan kluster tempat kerja",
+      "teras": 1,
+      "pages": [
+        115
+      ],
+      "columns": [
+        {
+          "key": "programmes",
+          "label": "Bilangan program",
+          "unit": "program"
+        },
+        {
+          "key": "participants",
+          "label": "Peserta dilaporkan",
+          "unit": "peserta"
+        }
+      ],
+      "scope": "state",
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Peserta dilaporkan tidak disahkan sebagai orang unik merentas program; tiada denominator sasaran atau penilaian keberkesanan.",
+        "Wilayah Persekutuan gabungan tidak diagihkan kepada tiga W.P."
+      ],
+      "rowCount": 30
+    },
+    {
+      "id": "6.2",
+      "title": "Operasi dan saringan awal mengikut negeri",
+      "teras": 3,
+      "pages": [
+        158
+      ],
+      "columns": [
+        {
+          "key": "operations",
+          "label": "Operasi",
+          "unit": "operasi"
+        },
+        {
+          "key": "screened",
+          "label": "Saringan awal",
+          "unit": "saringan dilaporkan"
+        }
+      ],
+      "scope": "state",
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Saringan awal tidak sama dengan pengesahan, sabitan atau prevalens.",
+        "Saringan Kuala Lumpur 2021 tidak menyelaraskan; partition saringan tahun itu ditahan dan kadar positif tidak dikira."
+      ],
+      "rowCount": 85
+    },
+    {
+      "id": "population",
+      "title": "Anggaran penduduk DOSM yang dipetik dalam BMD",
+      "teras": 1,
+      "pages": [
+        170
+      ],
+      "columns": [
+        {
+          "key": "population",
+          "label": "Anggaran penduduk",
+          "unit": "penduduk"
+        }
+      ],
+      "scope": "state",
+      "notes": [
+        "Petikan tahunan BMD 2025; bukan suapan langsung atau penerbitan rasmi platform.",
+        "Pemilik indikator, sasaran dan formula keyakinan semasa memerlukan pengesahan.",
+        "Tanda sengkang sumber dikekalkan sebagai tidak diketahui; tidak ditukar kepada sifar.",
+        "Sumber p.170 dalam ribu; didarab [nilai sumber]. Anggaran 2024–2025 sahaja. Versi sempadan kerajaan belum disahkan."
+      ],
+      "rowCount": 34
+    }
+  ],
+  "manifestHash": "7a390aa234ce89366ea143f377af6ac2004e1bb76d0dfda58a4aa5fa3f859927",
+  "quarantine": [
+    {
+      "id": "4.2-breakdown",
+      "reason": "Pecahan bahan saringan mengandungi sel orang kecil; keseluruhan pecahan ditahan termasuk jumlah pecahan.",
+      "pages": [
+        120
+      ]
+    },
+    {
+      "id": "3.3",
+      "reason": "Julat harga jalanan bukan KPI V[nilai sumber] yang dipersetujui; unit dan kaedah harga memerlukan pengesahan.",
+      "pages": [
+        109
+      ]
+    },
+    {
+      "id": "5.1",
+      "reason": "Kriteria kekal pulih, horizon penilaian dan kehilangan susulan belum ditakrifkan.",
+      "pages": [
+        130
+      ]
+    },
+    {
+      "id": "6.1",
+      "reason": "Jumlah aduan [nilai sumber] berbeza daripada [nilai sumber](a); kumpulan tempoh penyelesaian tidak meliputi semua aduan selesai.",
+      "pages": [
+        156
+      ]
+    },
+    {
+      "id": "6.1a",
+      "reason": "Jumlah [nilai sumber] dan agihan negeri berbeza daripada [nilai sumber]; memerlukan penyelarasan sumber.",
+      "pages": [
+        157
+      ]
+    },
+    {
+      "id": "6.6",
+      "reason": "[nilai sumber]: [nilai sumber]+[nilai sumber]+[nilai sumber]=[nilai sumber] bukan jumlah [nilai sumber]",
+      "pages": [
+        164,
+        165,
+        166
+      ]
+    },
+    {
+      "id": "6.7",
+      "reason": "Jumlah pendakwaan dan substatus tidak menyelaraskan; tiada pautan kohort IP.",
+      "pages": [
+        167,
+        168
+      ]
+    },
+    {
+      "id": "4.1-community",
+      "reason": "Peserta [nilai sumber] pada p.[nilai sumber] berbanding [nilai sumber] pada p.[nilai sumber]; tajuk kluster berulang.",
+      "pages": [
+        115,
+        119
+      ]
+    },
+    {
+      "id": "1.2",
+      "reason": "Daerah, sempadan, denominator dan pendedahan sel kecil belum disahkan.",
+      "pages": [
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ]
+    },
+    {
+      "id": "2.2",
+      "reason": "Daerah, sempadan, denominator dan pendedahan sel kecil belum disahkan.",
+      "pages": [
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        62,
+        63,
+        64,
+        65,
+        66,
+        67
+      ]
+    },
+    {
+      "id": "6.5",
+      "reason": "Jumlah RPDK [nilai sumber] berbeza daripada [nilai sumber] pada jadual [nilai sumber]; skop perlu pengesahan.",
+      "pages": [
+        162,
+        163
+      ]
+    },
+    {
+      "id": "2.17",
+      "reason": "Tajuk jantina menggunakan Kes Baharu/Kes Berulang; label perlu pengesahan.",
+      "pages": [
+        89
+      ]
+    },
+    {
+      "id": "6.2/2021/screened",
+      "reason": "Saringan positif melebihi saringan awal bagi Kuala Lumpur; partition dan jumlah ditahan.",
+      "pages": [
+        158,
+        159
+      ]
+    },
+    {
+      "id": "6.2-positive/2021/count",
+      "reason": "Saringan positif melebihi saringan awal bagi Kuala Lumpur; partition dan jumlah ditahan.",
+      "pages": [
+        158,
+        159
+      ]
+    },
+    {
+      "id": "5.10/2021/capacity",
+      "reason": "Jumlah sumber [nilai sumber]; jumlah baris diketahui [nilai sumber] Partition ditahan.",
+      "pages": [
+        145,
+        146,
+        147,
+        148
+      ]
+    },
+    {
+      "id": "5.10/2021/admissions",
+      "reason": "Jumlah sumber [nilai sumber]; jumlah baris diketahui [nilai sumber] Partition ditahan.",
+      "pages": [
+        145,
+        146,
+        147,
+        148
+      ]
+    },
+    {
+      "id": "5.10/2025/capacity",
+      "reason": "Jumlah sumber [nilai sumber]; jumlah baris diketahui [nilai sumber] Partition ditahan.",
+      "pages": [
+        145,
+        146,
+        147,
+        148
+      ]
+    },
+    {
+      "id": "5.10/2025/admissions",
+      "reason": "Jumlah sumber [nilai sumber]; jumlah baris diketahui [nilai sumber] Partition ditahan.",
+      "pages": [
+        145,
+        146,
+        147,
+        148
+      ]
+    },
+    {
+      "id": "1.5/2022/count",
+      "reason": "Partition mengandungi sel orang kecil; ditahan sepenuhnya sehingga dasar pendedahan disahkan.",
+      "pages": [
+        31
+      ]
+    },
+    {
+      "id": "2.6/2021/institution",
+      "reason": "Partition mengandungi sel orang kecil; ditahan sepenuhnya sehingga dasar pendedahan disahkan.",
+      "pages": [
+        71,
+        72
+      ]
+    },
+    {
+      "id": "2.6/2023/community",
+      "reason": "Partition mengandungi sel orang kecil; ditahan sepenuhnya sehingga dasar pendedahan disahkan.",
+      "pages": [
+        71,
+        72
+      ]
+    },
+    {
+      "id": "2.6/2023/institution",
+      "reason": "Partition mengandungi sel orang kecil; ditahan sepenuhnya sehingga dasar pendedahan disahkan.",
+      "pages": [
+        71,
+        72
+      ]
+    },
+    {
+      "id": "2.6/2024/community",
+      "reason": "Partition mengandungi sel orang kecil; ditahan sepenuhnya sehingga dasar pendedahan disahkan.",
+      "pages": [
+        71,
+        72
+      ]
+    },
+    {
+      "id": "2.6/2024/institution",
+      "reason": "Partition mengandungi sel orang kecil; ditahan sepenuhnya sehingga dasar pendedahan disahkan.",
+      "pages": [
+        71,
+        72
+      ]
+    },
+    {
+      "id": "2.6/2021",
+      "reason": "Partition sepunya ditahan untuk mengelakkan pembinaan semula sel kecil.",
+      "pages": [
+        71,
+        72
+      ]
+    },
+    {
+      "id": "2.6/2023",
+      "reason": "Partition sepunya ditahan untuk mengelakkan pembinaan semula sel kecil.",
+      "pages": [
+        71,
+        72
+      ]
+    },
+    {
+      "id": "2.6/2024",
+      "reason": "Partition sepunya ditahan untuk mengelakkan pembinaan semula sel kecil.",
+      "pages": [
+        71,
+        72
+      ]
+    },
+    {
+      "id": "5.10/2022/admissions",
+      "reason": "Partition mengandungi sel orang kecil; ditahan sepenuhnya sehingga dasar pendedahan disahkan.",
+      "pages": [
+        145,
+        146,
+        147,
+        148
+      ]
+    },
+    {
+      "id": "5.11/2021/admissions",
+      "reason": "Partition mengandungi sel orang kecil; ditahan sepenuhnya sehingga dasar pendedahan disahkan.",
+      "pages": [
+        149,
+        150
+      ]
+    },
+    {
+      "id": "5.11/2022/admissions",
+      "reason": "Partition mengandungi sel orang kecil; ditahan sepenuhnya sehingga dasar pendedahan disahkan.",
+      "pages": [
+        149,
+        150
+      ]
+    },
+    {
+      "id": "6.2-positive/2022/count",
+      "reason": "Partition mengandungi sel orang kecil; ditahan sepenuhnya sehingga dasar pendedahan disahkan.",
+      "pages": [
+        159
+      ]
+    }
+  ]
+}

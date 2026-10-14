@@ -140,7 +140,7 @@ export function ActionWorkspace({
                     {a.verifiedBy && <p>Penutupan disahkan oleh {a.verifiedBy}.</p>}
                     <Link
                       className="text-link"
-                      href={`/map?geography=${a.geography}&period=${a.context.period ?? '2026-08-09'}`}
+                      href={`/?geography=${a.geography}&period=${a.context.period ?? '2026-08-09'}`}
                     >
                       Buka konteks peta
                       <ArrowUpRight size={13} />

@@ -33,7 +33,10 @@ test('data catalogue separates supplied and synthetic lineage without exposing r
 
   await expect(page.getByRole('heading', { name: 'Katalog data', exact: true })).toBeVisible();
   const supplied = page
-    .getByRole('heading', { name: 'Petikan Statistik Mingguan AADK', exact: true })
+    .getByRole('heading', {
+      name: 'Petikan Statistik Mingguan AADK & Buku Maklumat Dadah',
+      exact: true,
+    })
     .locator('xpath=ancestor::section');
   await expect(supplied).toContainText('Data dibekalkan');
   await expect(supplied).toContainText('Pemilik');

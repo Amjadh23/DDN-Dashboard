@@ -452,7 +452,7 @@ export function UploadWorkspace({
             {active.state === 'published' && (
               <div className="button-row">
                 <Link
-                  href={`/map?geography=${active.geography}&period=${active.period}&layer=${active.teras === 3 ? 'supply' : active.teras === 4 ? 'harm' : 'burden'}`}
+                  href={`/?geography=${active.geography}&period=${active.period}&layer=${active.teras === 3 ? 'supply' : active.teras === 4 ? 'harm' : 'burden'}`}
                   className="button button-secondary"
                 >
                   Lihat peta

@@ -1,7 +1,46 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-test('overview explains the supplied snapshot and focuses the live map', async ({ page }) => {
+test('Scenario Semasa combines the snapshot and full map in one navigation destination', async ({
+  page,
+}) => {
+  await page.goto('/');
+  await expect(page.getByRole('heading', { name: 'Scenario Semasa', exact: true })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Scenario Semasa', exact: true })).toHaveCount(1);
+  await expect(
+    page.getByRole('link', { name: /^(Gambaran nasional|Peta strategik)$/i }),
+  ).toHaveCount(0);
+  await expect(page.getByRole('region', { name: 'Data dibekalkan' })).toContainText('47,084');
+  await expect(page.locator('.threat-panel')).toHaveCount(1);
+  await expect(page.getByRole('combobox', { name: 'Bandingkan', exact: true })).toBeVisible();
+  await expect(page.getByLabel('Cari negeri', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Zum masuk' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Cipta tindakan bersama' })).toBeVisible();
+  await page.getByRole('button', { name: 'Kaedah & batasan' }).click();
+  await expect(page.getByRole('heading', { name: 'Kaedah yang boleh diperiksa' })).toBeVisible();
+});
+
+test('legacy map links preserve selected filters in Scenario Semasa', async ({ page }) => {
+  await page.goto(
+    '/map?period=2025&layer=burden&mode=count&geography=MY-01&state=MY-01&source=supplied',
+  );
+  await expect(page).toHaveURL(/\/\?period=2025/);
+  const url = new URL(page.url());
+  for (const [key, value] of Object.entries({
+    period: '2025',
+    layer: 'burden',
+    mode: 'count',
+    geography: 'MY-01',
+    state: 'MY-01',
+    source: 'supplied',
+  }))
+    expect(url.searchParams.get(key)).toBe(value);
+  await expect(page.getByRole('heading', { name: 'Scenario Semasa', exact: true })).toBeVisible();
+  await expect(page.locator('.zone-detail h3')).toHaveText('Johor');
+  await expect(page.getByRole('region', { name: 'Data dibekalkan' })).toBeVisible();
+});
+
+test('Scenario Semasa retains supplied snapshot and full map controls', async ({ page }) => {
   await page.goto('/');
   const snapshot = page.getByRole('region', { name: 'Data dibekalkan' });
   await expect(snapshot).toBeVisible();
@@ -12,10 +51,10 @@ test('overview explains the supplied snapshot and focuses the live map', async (
   await page.getByText('Tentang angka ini', { exact: true }).click();
   await expect(snapshot).toContainText('halaman 2');
   await expect(snapshot).not.toContainText('supplied-t2-v1');
-  await expect(page.getByLabel('Bandingkan', { exact: true })).toHaveCount(0);
+  await expect(page.getByRole('combobox', { name: 'Bandingkan', exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Lagi', exact: true })).toHaveCount(0);
-  await expect(page.getByLabel('Cari negeri', { exact: true })).toHaveCount(0);
-  await expect(page.getByRole('button', { name: 'Zum masuk' })).toHaveCount(0);
+  await expect(page.getByLabel('Cari negeri', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Zum masuk' })).toBeVisible();
   await page.getByLabel('Lapisan peta').selectOption('harm');
   await page.getByRole('button', { name: 'Bilangan', exact: true }).click();
   await expect(page.locator('.workload-circle').first()).toBeVisible();
@@ -24,9 +63,9 @@ test('overview explains the supplied snapshot and focuses the live map', async (
   await page.getByRole('button', { name: 'Paparan jadual' }).click();
   await page.getByRole('button', { name: 'Johor', exact: true }).click();
   await expect(page.locator('.zone-detail h3')).toHaveText('Johor');
-  await expect(page.getByRole('link', { name: 'Buka Peta Strategik' })).toHaveAttribute(
+  await expect(page.getByRole('link', { name: 'Cipta tindakan bersama' })).toHaveAttribute(
     'href',
-    /state=MY-01/,
+    /geography=MY-01/,
   );
   await expect(page.locator('.overview-teras a')).toHaveCount(5);
   await expect(page.getByRole('heading', { name: 'Kualiti bukti' })).toHaveCount(0);
@@ -74,6 +113,10 @@ test('overview supports keyboard states, period changes and narrow source detail
   for (const width of [1440, 390, 320]) {
     await page.setViewportSize({ width, height: 844 });
     await page.goto('/?state=MY-04');
+    await page.screenshot({
+      path: 'artifacts/screenshots/scenario-semasa-' + width + '.png',
+      fullPage: true,
+    });
     await page.getByText('Tentang angka ini', { exact: true }).click();
     await expect(page.locator('.overview-source-body')).toBeVisible();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(

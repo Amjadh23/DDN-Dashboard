@@ -6,7 +6,9 @@ A governed, collaborative dashboard concept for monitoring Malaysia's five Natio
 
 The **V1 local stakeholder prototype is implemented and passes its automated validation**, with acceptance evidence and remaining limitations recorded in `docs/VALIDATION.md` and `PLANS.md`. Full contract acceptance remains open, including manual screen-reader review and the explicitly partial requirements in `docs/REQUIREMENT_STATUS.md`. It runs on Next.js 16.3.4, React 19.2.8, strict TypeScript and PostgreSQL17/PostGIS3.6.2.
 
-The overview, five Teras, map, registry, catalogue, upload/review/publication workflow, actions, saved reports and scoped demo administration are available. The stakeholder refinement introduces compact disclosure, current-work views and isolated regression databases. Production identity and governance remain unconfigured. The workspace is Git-backed; source documents are preserved.
+Scenario Semasa combines the executive overview and full strategic map in one page; old `/map` links redirect there with filters preserved. The five Teras, registry, catalogue, upload/review/publication workflow, actions, saved reports and scoped demo administration are available. The stakeholder refinement introduces compact disclosure, current-work views and isolated regression databases. Production identity and governance remain unconfigured. The workspace is Git-backed; source documents are preserved.
+
+The visual theme and mock AIDA assistant match the user-supplied Vercel reference. AIDA provides predefined local help and navigation; messages stay in memory for this browser session. See `docs/VERCEL_DESIGN_MATCH.md` for design provenance, validation and screenshots.
 
 ## Product Goal
 

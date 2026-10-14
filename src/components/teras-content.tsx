@@ -3,6 +3,8 @@ import { ArrowUpRight, LockKeyhole, CheckCircle2 } from 'lucide-react';
 import { Panel, Badge, EmptyState } from './ui';
 import { Bars, Funnel, LineChart, Matrix, DemoMetric, DemoSource, type ChartDatum } from './charts';
 import { preventionStrategies } from '@/lib/domain/teras';
+import type { AnnualView } from '@/lib/domain/annual';
+import { preventionTotals, sourceBars } from '@/lib/domain/dashboard-bindings';
 
 type Scenario = { value: (n: number) => number; scope: string; period: string; factor: number };
 export const perspectives = [
@@ -15,22 +17,107 @@ export const perspectives = [
 function data(labels: string[], values: number[], s: Scenario): ChartDatum[] {
   return labels.map((label, i) => ({ label, value: s.value(values[i]) }));
 }
+function SeizureBars({ view }: { view: AnnualView }) {
+  const units = [
+    ...new Set(view.rows.map((r) => r.cells.quantity?.unit).filter((u): u is string => Boolean(u))),
+  ];
+  return (
+    <>
+      {units.map((unit) => (
+        <Bars
+          key={unit}
+          data={sourceBars(view, 'quantity', unit)}
+          unit={unit}
+          caption={`Kuantiti rampasan (${unit})`}
+          source={`Buku Maklumat Dadah 2025 · ${view.year} · hlm. 107–108 · PDRM/JKDM/APMM`}
+        />
+      ))}
+      <div className="panel-body">
+        <p className="chart-caveat">
+          Unit dipaparkan berasingan. Bilangan peristiwa rampasan tidak tersedia; kuantiti bukan
+          ukuran prevalens.
+        </p>
+      </div>
+    </>
+  );
+}
 export function TerasContent({
   teras,
   perspective,
   scenario,
+  sourceViews = [],
+  geography = 'MY',
+  sourcePeriod,
+  preventionTrend = [],
 }: {
   teras: number;
   perspective: string;
   scenario: Scenario | null;
+  sourceViews?: AnnualView[];
+  geography?: string;
+  sourcePeriod?: string;
+  preventionTrend?: ChartDatum[];
 }) {
+  const prevention = preventionTotals(sourceViews, geography);
+  const seizures = sourceViews.find((view) => view.id === '3.2');
+  const assets = sourceViews.find((view) => view.id === '3.4');
+  const source = sourceViews.length
+    ? `Buku Maklumat Dadah 2025 · ${sourcePeriod} · hlm. ${[...new Set(sourceViews.flatMap((view) => view.pages))].join(', ')}`
+    : undefined;
   if (!scenario)
     return (
-      <Panel title="Senario tambahan">
-        <EmptyState
-          title="Tiada senario dalam skop ini"
-          description="Penapis atau peranan semasa tidak membenarkan senario rekaan. Pilih DEMO / SYNTHETIC dan organisasi demo yang dibenarkan."
-        />
+      <Panel title={source ? 'Bukti sumber dibekalkan' : 'Senario tambahan'}>
+        {teras === 1 && perspective === 'needs' && source && (
+          <div className="metrics-grid">
+            <DemoMetric
+              label="Program dilaporkan · 3 kluster"
+              value={prevention.programmes}
+              unit="program"
+              code="BMD-T1-PROGRAMMES"
+              description="Keluarga, pendidikan dan tempat kerja; komuniti ditahan. Bukan jumlah semua program pencegahan."
+              source={source}
+              period={sourcePeriod}
+              scope={geography}
+            />
+            <DemoMetric
+              label="Peserta dilaporkan · 3 kluster"
+              value={prevention.participants}
+              unit="penyertaan"
+              code="BMD-T1-PARTICIPANTS"
+              description="Jumlah penyertaan merentas kluster, bukan orang unik atau kadar liputan."
+              source={source}
+              period={sourcePeriod}
+              scope={geography}
+            />
+          </div>
+        )}
+        {teras === 3 && perspective === 'needs' && seizures && <SeizureBars view={seizures} />}
+        {teras === 1 && perspective === 'needs' && source && (
+          <LineChart
+            data={preventionTrend}
+            unit="penyertaan"
+            caption="Penyertaan keluarga, pendidikan dan tempat kerja; bukan orang unik"
+            source="Buku Maklumat Dadah 2025 · hlm. 114–115"
+          />
+        )}
+        {teras === 3 && perspective === 'outcomes' && assets && (
+          <Bars
+            data={sourceBars(assets, 'value', 'RM')}
+            unit="RM"
+            caption="Nilai harta mengikut status"
+            source={source}
+          />
+        )}
+        {!(
+          (teras === 1 && perspective === 'needs' && source) ||
+          (teras === 3 && perspective === 'needs' && seizures) ||
+          (teras === 3 && perspective === 'outcomes' && assets)
+        ) && (
+          <EmptyState
+            title="Tiada senario dalam skop ini"
+            description="Penapis atau peranan semasa tidak membenarkan senario rekaan. Pilih DEMO / SYNTHETIC dan organisasi demo yang dibenarkan."
+          />
+        )}
       </Panel>
     );
   const s = scenario,
@@ -188,13 +275,18 @@ export function TerasContent({
           <>
             <div className="metrics-grid">
               <DemoMetric
-                period={s.period}
-                scope={s.scope}
-                label="Program dalam senario"
-                value={v(128)}
+                period={source ? sourcePeriod : s.period}
+                scope={source ? geography : s.scope}
+                label={source ? 'Program dilaporkan · 3 kluster' : 'Program dalam senario'}
+                value={source ? prevention.programmes : v(128)}
                 unit="program"
-                code="D-T1-PROGRAMMES"
-                description="Program contoh merentas tetapan pendidikan, keluarga, komuniti dan tempat kerja."
+                code={source ? 'BMD-T1-PROGRAMMES' : 'D-T1-PROGRAMMES'}
+                description={
+                  source
+                    ? 'Jumlah program keluarga, pendidikan dan tempat kerja. Kluster komuniti ditahan; bukan jumlah semua program.'
+                    : 'Program contoh merentas tetapan pendidikan, keluarga, komuniti dan tempat kerja.'
+                }
+                source={source}
               />
               <DemoMetric
                 period={s.period}
@@ -206,13 +298,14 @@ export function TerasContent({
                 description="Denominator liputan ditetapkan dalam senario rekaan sahaja."
               />
               <DemoMetric
-                period={s.period}
-                scope={s.scope}
-                label="Kehadiran direkodkan"
-                value={v(6400)}
-                unit="kehadiran"
-                code="D-T1-REACH"
+                period={source ? sourcePeriod : s.period}
+                scope={source ? geography : s.scope}
+                label={source ? 'Peserta dilaporkan · 3 kluster' : 'Kehadiran direkodkan'}
+                value={source ? prevention.participants : v(6400)}
+                unit={source ? 'penyertaan' : 'kehadiran'}
+                code={source ? 'BMD-T1-PARTICIPANTS' : 'D-T1-REACH'}
                 description="Kehadiran bukan orang unik; deduplikasi mesti disahkan sebelum mengira jangkauan individu."
+                source={source}
               />
               <DemoMetric
                 period={s.period}
@@ -239,16 +332,28 @@ export function TerasContent({
                   unit="rekod sasaran"
                 />
               </Panel>
-              <Panel title="Trend jangkauan senario" demo>
-                <LineChart
-                  data={data(
-                    ['5 Jul', '12 Jul', '19 Jul', '26 Jul', '2 Ogos', '9 Ogos'],
-                    [720, 780, 815, 860, 910, 980],
-                    s,
-                  )}
-                  unit="kehadiran"
-                  caption="Kehadiran mingguan demo"
-                />
+              <Panel
+                title={source ? 'Trend penyertaan · 3 kluster' : 'Trend jangkauan senario'}
+                demo={!source}
+              >
+                {source ? (
+                  <LineChart
+                    data={preventionTrend}
+                    unit="penyertaan"
+                    caption="Penyertaan keluarga, pendidikan dan tempat kerja; bukan orang unik"
+                    source={`Buku Maklumat Dadah 2025 · hlm. 114–115`}
+                  />
+                ) : (
+                  <LineChart
+                    data={data(
+                      ['5 Jul', '12 Jul', '19 Jul', '26 Jul', '2 Ogos', '9 Ogos'],
+                      [720, 780, 815, 860, 910, 980],
+                      s,
+                    )}
+                    unit="kehadiran"
+                    caption="Kehadiran mingguan demo"
+                  />
+                )}
               </Panel>
             </div>
           </>
@@ -524,22 +629,28 @@ export function TerasContent({
                 unit="isyarat"
               />
             </Panel>
-            <Panel title="Peristiwa dan kuantiti rampasan" demo>
-              <Bars
-                data={data(
-                  ['Peristiwa bahan A', 'Peristiwa bahan B', 'Peristiwa bahan C'],
-                  [76, 54, 31],
-                  s,
-                )}
-                unit="peristiwa"
-                caption="Peristiwa rampasan demo"
-              />
-              <div className="panel-body">
-                <p className="chart-caveat">
-                  Kuantiti senario: bahan A {v(120)} kg; bahan B {v(840)} tablet; bahan C {v(32)}{' '}
-                  liter. Unit tidak dijumlahkan.
-                </p>
-              </div>
+            <Panel title="Peristiwa dan kuantiti rampasan" demo={!seizures}>
+              {seizures ? (
+                <SeizureBars view={seizures} />
+              ) : (
+                <>
+                  <Bars
+                    data={data(
+                      ['Peristiwa bahan A', 'Peristiwa bahan B', 'Peristiwa bahan C'],
+                      [76, 54, 31],
+                      s,
+                    )}
+                    unit="peristiwa"
+                    caption="Peristiwa rampasan demo"
+                  />
+                  <div className="panel-body">
+                    <p className="chart-caveat">
+                      Kuantiti senario: bahan A {v(120)} kg; bahan B {v(840)} tablet; bahan C{' '}
+                      {v(32)} liter. Unit tidak dijumlahkan.
+                    </p>
+                  </div>
+                </>
+              )}
             </Panel>
           </div>
         ) : perspective === 'process' ? (
@@ -593,16 +704,25 @@ export function TerasContent({
         ) : (
           <>
             <div className="grid-2">
-              <Panel title="Aset mengikut kedudukan undang-undang" demo>
-                <Bars
-                  data={data(
-                    ['Dibekukan', 'Disita', 'Diperintah lucut hak', 'Dipulangkan'],
-                    [480000, 310000, 120000, 40000],
-                    s,
-                  )}
-                  unit="RM"
-                  caption="Aset demo; peringkat tidak boleh dijumlahkan"
-                />
+              <Panel title="Aset mengikut kedudukan undang-undang" demo={!assets}>
+                {assets ? (
+                  <Bars
+                    data={sourceBars(assets, 'value', 'RM')}
+                    unit="RM"
+                    caption="Harta disita dan dilucut hak; peringkat tidak dijumlahkan"
+                    source={`Buku Maklumat Dadah 2025 · ${sourcePeriod} · hlm. 110`}
+                  />
+                ) : (
+                  <Bars
+                    data={data(
+                      ['Dibekukan', 'Disita', 'Diperintah lucut hak', 'Dipulangkan'],
+                      [480000, 310000, 120000, 40000],
+                      s,
+                    )}
+                    unit="RM"
+                    caption="Aset demo; peringkat tidak boleh dijumlahkan"
+                  />
+                )}
               </Panel>
               <Panel title="Isyarat bekalan tambahan" demo>
                 <Matrix

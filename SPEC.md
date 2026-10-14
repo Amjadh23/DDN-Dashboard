@@ -78,19 +78,21 @@ The implementation MUST provide or deliberately phase these routes:
 
 | Route | V1 purpose |
 |---|---|
-| `/` | Executive overview and cross-Teras alerts. |
+| `/` | Scenario Semasa: combined executive overview, strategic Malaysia map and comparison workspace. |
 | `/teras/1` | Pendidikan Pencegahan. |
 | `/teras/2` | Rawatan dan Pemulihan. |
 | `/teras/3` | Penguatkuasaan. |
 | `/teras/4` | Pengurangan Kemudaratan. |
 | `/teras/5` | Kerjasama Antarabangsa. |
-| `/map` | Full-screen map and comparison workspace. |
+| `/map` | Compatibility redirect to `/`, preserving all URL filters and selected state. |
 | `/data/uploads` | Templates, submissions, validation, approval and versions. |
 | `/data/catalog` | Dataset ownership, freshness, fields and lineage. |
 | `/indicators` | KPI definitions, formulae, targets and versions. |
 | `/actions` | Cross-agency actions and closure evidence. |
 | `/reports` | Saved views and export history. |
 | `/admin/*` | Scoped reference and access administration. |
+
+User-approved navigation consolidation, 7 October 2026: Gambaran nasional and Peta strategik share one page named `Scenario Semasa`. This changes page organisation for FR-001/FR-002/FR-003, not their capabilities or any MAP acceptance criteria.
 
 - **FR-030:** Every Teras page SHOULD show page purpose, responsible status, refresh time, KPI cards, a primary strategic visual, trend/comparison panels, a ranked table, quality/coverage, notes/actions and source/formula/caveat access.
 - **FR-031:** Every page SHOULD organise relevant indicators through needs, process, outcome, cost and satisfaction perspectives.
@@ -128,6 +130,7 @@ The implementation MUST provide or deliberately phase these routes:
 
 - **MAP-010:** Red/yellow/orange/green classification MUST use approved, effective-dated rules.
 - **MAP-011:** If rules are unapproved, V1 MUST label the layer as demo and provide an explicit method explanation.
+- User-approved visual clarification (7 October 2026, MAP-010/011): supplied 2024–2025 burden rates may use `supplied-relative-range-v1`, dividing positive disclosed rates into three equal intervals with green/amber/red. Label the colour method DEMO and values supplied; expose boundaries and distinguish relative rates from official threat zoning. No official threat classification is approved.
 - **MAP-012:** Any composite calculation MUST expose its component observations, transformations, weights, missing-data rule and minimum coverage rule.
 - **MAP-013:** Score methodology changes MUST create a new version.
 - **MAP-014:** Every layer MUST retain access to raw values and rates.

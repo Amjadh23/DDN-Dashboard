@@ -1,6 +1,6 @@
 import 'server-only';
 import { allowed, type Session } from '../domain/policy';
-import type { Filters } from '../domain/filters';
+import { isAnnualPeriod, type Filters } from '../domain/filters';
 import { stateNames } from '../domain/demo-identities';
 export function getScenario(session: Session, teras: number, filters: Filters) {
   const geography = filters.geography;
@@ -23,7 +23,7 @@ export function getScenario(session: Session, teras: number, filters: Filters) {
     factor: factor * periodFactor,
     scope: filters.geography === 'MY' ? 'Senario kebangsaan' : stateNames[geography],
     value: (n: number) => Math.round(n * factor * periodFactor),
-    period: filters.period,
+    period: isAnnualPeriod(filters.period) ? '2026-08-09' : filters.period,
     synthetic: true as const,
   };
 }

@@ -17,10 +17,11 @@ import {
   ChevronRight,
   ShieldCheck,
 } from 'lucide-react';
-import { Badge, DemoBadge } from './ui';
+import { Badge } from './ui';
 import type { StateShape } from '@/lib/server/geometry';
 import { formatNumber, dateBM, type MapZoneDTO, type Layer } from '@/lib/domain/types';
-import { filterQuery, type Filters } from '@/lib/domain/filters';
+import { filterQuery, isAnnualPeriod, type Filters } from '@/lib/domain/filters';
+import { demoPalette, relativeDemoRange, relativeDemoBand } from '@/lib/domain/map-palette';
 
 export const layerLabels: Record<Layer, string> = {
   burden: 'Beban / permintaan',
@@ -50,6 +51,8 @@ export function ThreatMap({
   variant?: 'standard' | 'overview';
 }) {
   const overview = variant === 'overview';
+  const supplied = isAnnualPeriod(filters.period) && filters.source !== 'synthetic';
+  const evidenceLabel = supplied ? 'Data dibekalkan · sempadan DEMO' : 'DEMO / SYNTHETIC';
   const [pending, startTransition] = useTransition();
   const params = useSearchParams(),
     path = usePathname(),
@@ -63,25 +66,37 @@ export function ThreatMap({
     [method, setMethod] = useState(false),
     [query, setQuery] = useState('');
   const sorted = [...zones].sort((a, b) => (b.rate ?? -1) - (a.rate ?? -1));
-  const active = overview
-    ? filters.geography !== 'MY'
-      ? filters.geography
-      : (params.get('state') ?? selected)
-    : selected;
+  const active = filters.geography !== 'MY' ? filters.geography : (params.get('state') ?? selected);
   const zone = zones.find((z) => z.id === active),
     shape = shapes.find((s) => s.id === active);
-  const fullMapHref = `/map?${filterQuery(filters)}&state=${active}`;
+  const fullMapHref = `/?${filterQuery(filters)}&state=${active}`;
   const max = Math.max(1, ...zones.map((z) => z.rate ?? 0));
   const countMax = Math.max(1, ...zones.map((z) => z.count ?? 0));
+  const suppliedBands =
+    supplied && ['2024', '2025'].includes(filters.period) && filters.layer === 'burden';
+  const bandLabel = suppliedBands
+    ? 'Kadar relatif · kaedah DEMO'
+    : 'Tahap relatif · DEMO / SYNTHETIC';
+  const bandVersion = suppliedBands ? 'supplied-relative-range-v1' : demoPalette.version;
+  const bandText = (level: 'low' | 'medium' | 'high') =>
+    suppliedBands
+      ? demoPalette[level].label.replace('relatif demo', 'kadar relatif')
+      : demoPalette[level].label;
+  const demoRange =
+    (!supplied || suppliedBands) && filters.layer !== 'confidence' && filters.mode === 'rate'
+      ? relativeDemoRange(zones, suppliedBands)
+      : null;
+  const band = (z?: MapZoneDTO) => relativeDemoBand(z, demoRange, suppliedBands);
+  const selectedBand = band(zone);
   const rank =
     zone && zone.rate !== null
-      ? sorted.filter((z) => z.rate !== null).findIndex((z) => z.id === selected) + 1
+      ? sorted.filter((z) => z.rate !== null).findIndex((z) => z.id === active) + 1
       : null;
   function select(id: string) {
     setSelected(id);
     const p = new URLSearchParams(params);
     p.set('state', id);
-    if (overview && filters.geography !== 'MY') {
+    if (filters.geography !== 'MY') {
       p.set('geography', id);
       router.replace(`${path}?${p}`, { scroll: false });
       return;
@@ -101,11 +116,20 @@ export function ThreatMap({
     if (z.state === 'not-applicable') return '#27303a';
     if (z.count === 0) return '#122535';
     if (filters.mode === 'count') return '#172d3c';
-    return `hsl(193 ${35 + ((z.rate ?? 0) / max) * 26}% ${19 + ((z.rate ?? 0) / max) * 23}%)`;
+    if (z.rate === null) return 'url(#unknown-pattern)';
+    const level = band(z);
+    if (level) return demoPalette[level].colour;
+    return `hsl(225 ${45 + ((z.rate ?? 0) / max) * 35}% ${26 + ((z.rate ?? 0) / max) * 34}%)`;
   }
-  const unit = filters.layer === 'confidence' ? '% medan sah' : 'per 100,000 populasi demo';
+  const unit =
+    filters.layer === 'confidence'
+      ? '% medan sah'
+      : supplied
+        ? 'per 100,000 penduduk'
+        : 'per 100,000 populasi demo';
   return (
     <section
+      id="peta-strategik"
       className={`panel threat-panel ${full ? 'full-map-panel' : ''} ${overview ? 'overview-map' : ''}`}
       aria-label="Peta strategik Malaysia"
     >
@@ -117,15 +141,15 @@ export function ThreatMap({
           </h2>
         </div>
         <div className="panel-actions">
-          <DemoBadge />
+          <Badge tone={supplied ? 'source' : 'demo'}>{evidenceLabel}</Badge>
           {overview ? (
             <Link href={fullMapHref} className="overview-map-link">
-              Buka Peta Strategik <ArrowUpRight size={15} />
+              Buka Scenario Semasa <ArrowUpRight size={15} />
             </Link>
           ) : (
             !full && (
               <Link
-                href={`/map?${filterQuery(filters)}&state=${selected}`}
+                href={`/?${filterQuery(filters)}&state=${active}`}
                 className="icon-button"
                 aria-label="Buka ruang peta penuh"
               >
@@ -143,7 +167,7 @@ export function ThreatMap({
           </label>
           <select
             id={`layer-${full}`}
-            disabled={overview && pending}
+            disabled={pending}
             value={filters.layer}
             onChange={(e) => update('layer', e.target.value)}
           >
@@ -157,7 +181,7 @@ export function ThreatMap({
         <div className="segmented">
           <button
             className={filters.mode === 'rate' ? 'selected' : ''}
-            disabled={overview && pending}
+            disabled={pending}
             aria-pressed={filters.mode === 'rate'}
             onClick={() => update('mode', 'rate')}
           >
@@ -165,7 +189,7 @@ export function ThreatMap({
           </button>
           <button
             className={filters.mode === 'count' ? 'selected' : ''}
-            disabled={overview && pending}
+            disabled={pending}
             aria-pressed={filters.mode === 'count'}
             onClick={() => update('mode', 'count')}
           >
@@ -194,7 +218,11 @@ export function ThreatMap({
           <div className="map-meta">
             <span className="map-layer-caption">
               {layerLabels[filters.layer]} <span>/</span>{' '}
-              {filters.mode === 'rate' ? unit : 'bilangan agregat demo'}
+              {filters.mode === 'rate'
+                ? unit
+                : supplied
+                  ? 'orang direkodkan'
+                  : 'bilangan agregat demo'}
             </span>
             {!overview && (
               <button
@@ -245,7 +273,7 @@ export function ThreatMap({
                 viewBox="0 0 1100 445"
                 className="malaysia-map"
                 role="group"
-                aria-label="Peta Malaysia mengikut negeri, data demonstrasi; setiap negeri boleh dipilih melalui papan kekunci"
+                aria-label={`Peta Malaysia mengikut negeri, ${evidenceLabel}; setiap negeri boleh dipilih melalui papan kekunci`}
               >
                 <defs>
                   <pattern id="unknown-pattern" width="7" height="7" patternUnits="userSpaceOnUse">
@@ -289,13 +317,13 @@ export function ThreatMap({
                         d={s.path}
                         fill={fill(z)}
                         fillRule="evenodd"
-                        stroke={s.id === active ? '#abeee0' : '#5b7c8b'}
+                        stroke={s.id === active ? '#eff4ff' : '#7895d1'}
                         strokeWidth={s.id === active ? 2.6 : 0.85}
                         vectorEffect="non-scaling-stroke"
                         tabIndex={0}
                         role="button"
                         aria-pressed={s.id === active}
-                        aria-label={`${s.name}: ${z ? stateLabels[z.state] : 'Tiada data dalam skop'}. DEMO / SYNTHETIC`}
+                        aria-label={`${s.name}: ${z ? stateLabels[z.state] : 'Tiada data dalam skop'}. ${evidenceLabel}`}
                         onClick={() => select(s.id)}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter' || e.key === ' ') {
@@ -304,7 +332,7 @@ export function ThreatMap({
                           }
                         }}
                       >
-                        <title>{`${s.name} · ${z?.count !== null && z?.count !== undefined ? `${formatNumber(z.count)} · ${formatNumber(z.rate, 1)} ${unit}` : 'Tiada nilai boleh dipaparkan'} · DEMO / SYNTHETIC`}</title>
+                        <title>{`${s.name} · ${z?.count !== null && z?.count !== undefined ? `${formatNumber(z.count)} · ${formatNumber(z.rate, 1)} ${unit}` : 'Tiada nilai boleh dipaparkan'} · ${band(z) ? bandText(band(z)!) : ''} · ${evidenceLabel}`}</title>
                       </path>
                     );
                   })}
@@ -320,7 +348,7 @@ export function ThreatMap({
                           className="workload-circle"
                           onClick={() => select(s.id)}
                         >
-                          <title>{`${s.name}: ${formatNumber(z.count)} · DEMO / SYNTHETIC`}</title>
+                          <title>{`${s.name}: ${formatNumber(z.count)} · ${evidenceLabel}`}</title>
                         </circle>
                       ) : null;
                     })}
@@ -394,7 +422,7 @@ export function ThreatMap({
             <div className="map-table-wrap">
               <table>
                 <caption className="sr-only">
-                  Nilai negeri · DEMO / SYNTHETIC · {filters.period}
+                  Nilai negeri · {evidenceLabel} · {filters.period}
                 </caption>
                 <thead>
                   <tr>
@@ -412,17 +440,18 @@ export function ThreatMap({
                           {z.name}
                         </button>
                       </th>
+                      <td>{z.state !== 'value' ? stateLabels[z.state] : formatNumber(z.count)}</td>
                       <td>
-                        {overview && z.state !== 'value'
-                          ? stateLabels[z.state]
-                          : formatNumber(z.count)}
+                        {z.state !== 'value' ? stateLabels[z.state] : formatNumber(z.rate, 1)}
                       </td>
                       <td>
-                        {overview && z.state !== 'value'
-                          ? stateLabels[z.state]
-                          : formatNumber(z.rate, 1)}
+                        {stateLabels[z.state]}
+                        {band(z) && (
+                          <span className={`map-band-tag band-${band(z)}`}>
+                            {bandText(band(z)!)}
+                          </span>
+                        )}
                       </td>
-                      <td>{stateLabels[z.state]}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -436,22 +465,48 @@ export function ThreatMap({
             </div>
           )}
           <div className="map-legend">
-            <div className="rate-legend">
-              <span>
-                {filters.mode === 'rate'
-                  ? 'Skala nilai, bukan tahap ancaman'
-                  : 'Saiz simbol = bilangan'}
-              </span>
-              {filters.mode === 'rate' && (
-                <>
-                  <div className="legend-ramp" />
-                  <div className="legend-values">
-                    <span>0</span>
-                    <span>{formatNumber(max, 1)}</span>
-                  </div>
-                </>
-              )}
-            </div>
+            {demoRange ? (
+              <div className="demo-band-legend">
+                <strong>{bandLabel}</strong>
+                <div className="demo-band-swatches">
+                  {(['low', 'medium', 'high'] as const).map((level) => (
+                    <span key={level}>
+                      <i style={{ background: demoPalette[level].colour }} />
+                      {demoPalette[level].label.split(' · ')[0]}
+                    </span>
+                  ))}
+                </div>
+                <details>
+                  <summary>Bagaimana warna ditentukan?</summary>
+                  <p>
+                    Julat kadar positif dalam paparan ini dibahagi kepada tiga bahagian sama. Warna
+                    berubah bersama penapis; bukan ambang ancaman rasmi atau perbandingan tahap
+                    antara tempoh. Rendah: ≤ {formatNumber(demoRange.low, 2)}; sederhana: &gt;{' '}
+                    {formatNumber(demoRange.low, 2)} hingga {formatNumber(demoRange.medium, 2)};
+                    tinggi: &gt; {formatNumber(demoRange.medium, 2)}. Unit: {unit}. Had dipaparkan
+                    dibundarkan; klasifikasi menggunakan nilai penuh. Sifar dan nilai disekat tidak
+                    dikelaskan. Versi: {bandVersion}.
+                  </p>
+                </details>
+              </div>
+            ) : (
+              <div className="rate-legend">
+                <span>
+                  {filters.mode === 'rate'
+                    ? 'Skala nilai, bukan tahap ancaman'
+                    : 'Saiz simbol = bilangan'}
+                </span>
+                {filters.mode === 'rate' && (
+                  <>
+                    <div className="legend-ramp" />
+                    <div className="legend-values">
+                      <span>0</span>
+                      <span>{formatNumber(max, 1)}</span>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
             <div className="legend-states">
               <span>
                 <i className="legend-zero" />
@@ -479,36 +534,43 @@ export function ThreatMap({
         <aside className="zone-detail" aria-live="polite">
           <div className="zone-detail-label">
             <span>NEGERI DIPILIH</span>
-            {!overview && <span>{selected}</span>}
+            {!overview && <span>{active}</span>}
           </div>
           <h3>{shape?.name ?? 'Pilih negeri'}</h3>
           <div className="zone-detail-badges">
-            <DemoBadge />
+            <Badge tone={supplied ? 'source' : 'demo'}>{evidenceLabel}</Badge>
             <Badge>{zone ? stateLabels[zone.state] : 'Tiada data dalam skop'}</Badge>
           </div>
+          {selectedBand && (
+            <span className={`map-band-tag band-${selectedBand}`}>{bandText(selectedBand)}</span>
+          )}
           <div
-            className={`zone-value ${overview && (!zone || zone.state !== 'value') ? 'zone-unavailable' : ''}`}
+            className={`zone-value ${!zone || zone.state !== 'value' ? 'zone-unavailable' : ''}`}
           >
-            {overview && (!zone || zone.state !== 'value')
+            {!zone || zone.state !== 'value'
               ? zone
                 ? stateLabels[zone.state]
                 : 'Tiada data dalam skop'
               : formatNumber(
-                  overview && filters.mode === 'count'
-                    ? (zone?.count ?? null)
-                    : (zone?.rate ?? null),
-                  overview && filters.mode === 'count' ? 0 : 1,
+                  filters.mode === 'count' ? (zone?.count ?? null) : (zone?.rate ?? null),
+                  filters.mode === 'count' ? 0 : 1,
                 )}
-            {(!overview || zone?.state === 'value') && (
-              <small>{overview && filters.mode === 'count' ? 'bilangan agregat demo' : unit}</small>
+            {zone?.state === 'value' && (
+              <small>
+                {filters.mode === 'count'
+                  ? supplied
+                    ? 'orang direkodkan'
+                    : 'bilangan agregat demo'
+                  : unit}
+              </small>
             )}
           </div>
-          {overview && zone?.state === 'suppressed' && (
+          {zone?.state === 'suppressed' && (
             <p className="overview-state-explanation">
               Nilai disekat untuk melindungi kiraan kecil. Ia tidak bermaksud sifar.
             </p>
           )}
-          {overview && (!zone || (zone.state !== 'value' && zone.state !== 'suppressed')) && (
+          {(!zone || (zone.state !== 'value' && zone.state !== 'suppressed')) && (
             <p className="overview-state-explanation">
               Nilai tidak tersedia bagi lapisan dan skop ini. Status ini tidak bermaksud sifar.
             </p>
@@ -534,7 +596,13 @@ export function ThreatMap({
               <strong>{formatNumber(zone?.count ?? null)}</strong>
             </div>
             <div>
-              <span>{filters.layer === 'confidence' ? 'Medan dijangka' : 'Populasi demo'}</span>
+              <span>
+                {filters.layer === 'confidence'
+                  ? 'Medan dijangka'
+                  : supplied
+                    ? 'Penduduk DOSM'
+                    : 'Populasi demo'}
+              </span>
               <strong>{formatNumber(zone?.denominator ?? null)}</strong>
             </div>
             {!overview && (
@@ -556,7 +624,7 @@ export function ThreatMap({
             <div>
               <span>
                 <ShieldCheck size={14} />
-                Kelengkapan medan demo
+                {supplied ? 'Keyakinan belum disahkan' : 'Kelengkapan medan demo'}
               </span>
               <strong>
                 {zone?.confidence == null ? 'Tidak tersedia' : `${formatNumber(zone.confidence)}%`}
@@ -588,7 +656,7 @@ export function ThreatMap({
               </div>
               <Link
                 className="button button-primary zone-action"
-                href={`/actions?geography=${selected}&teras=${filters.layer === 'harm' ? 4 : filters.layer === 'supply' ? 3 : filters.layer === 'gap' ? 1 : 2}&layer=${filters.layer}&period=${filters.period}&publication=${encodeURIComponent(zone?.publication ?? 'demo-v1')}`}
+                href={`/actions?geography=${active}&teras=${filters.layer === 'harm' ? 4 : filters.layer === 'supply' ? 3 : filters.layer === 'gap' ? 1 : 2}&layer=${filters.layer}&period=${filters.period}&publication=${encodeURIComponent(zone?.publication ?? 'demo-v1')}`}
               >
                 <Plus size={15} />
                 Cipta tindakan bersama
@@ -596,7 +664,9 @@ export function ThreatMap({
               {zone && (
                 <details className="metric-details">
                   <summary>Pemacu, sumber & versi</summary>
-                  <p>DEMO / SYNTHETIC · {zone.source}</p>
+                  <p>
+                    {evidenceLabel} · {zone.source}
+                  </p>
                   <dl className="id-cell">
                     <dt>Populasi / penyebut</dt>
                     <dd>{zone.denominatorSource}</dd>
@@ -607,11 +677,11 @@ export function ThreatMap({
                       {zone.definition} · {zone.publication}
                     </dd>
                     <dt>Segar semula</dt>
-                    <dd>7 September 2026</dd>
+                    <dd>{supplied ? '7 Oktober 2026' : '7 September 2026'}</dd>
                   </dl>
                   {zone.drivers.length ? (
                     <table>
-                      <caption>Pemacu senario · DEMO / SYNTHETIC</caption>
+                      <caption>Pemacu · {evidenceLabel}</caption>
                       <thead>
                         <tr>
                           <th>Komponen</th>
@@ -652,9 +722,14 @@ export function ThreatMap({
         <div className="map-method">
           <h3>Kaedah yang boleh diperiksa</h3>
           <p>
-            <b>DEMO / SYNTHETIC.</b> Kiraan dan populasi adalah rekaan. Kadar = bilangan ÷ populasi
-            demo × 100,000. Warna ialah skala berterusan nilai terendah–tertinggi dalam paparan; ia
-            tidak memberikan kategori ancaman. Saiz bulatan menunjukkan beban mutlak.
+            <b>{evidenceLabel}.</b>{' '}
+            {supplied
+              ? 'Kiraan pentadbiran dipadankan daripada sumber; bukan prevalens. Kadar = kiraan ÷ penduduk DOSM tahun sepadan × 100,000. Penyebut hanya tersedia untuk 2024–2025.'
+              : 'Kiraan dan populasi adalah rekaan. Kadar = bilangan ÷ populasi demo × 100,000.'}{' '}
+            {demoRange
+              ? `${bandLabel}: tiga bahagian sama julat kadar positif. Kaedah ${bandVersion}; had berubah bersama penapis, bukan kategori ancaman rasmi.`
+              : 'Warna ialah skala berterusan nilai terendah–tertinggi dalam paparan; ia tidak memberikan kategori ancaman.'}{' '}
+            Saiz bulatan menunjukkan beban mutlak.
           </p>
           <div className="method-grid">
             <p>
@@ -672,25 +747,34 @@ export function ThreatMap({
               tanpa data dan denominator sah.
             </p>
             <p>
-              <b>Pendedahan:</b> dasar demo v1 menyekat kiraan 1–4 serta satu sel tambahan. Kadar,
-              pemacu dan perbandingan berkaitan turut disekat. Dasar rasmi belum disahkan.
+              <b>Pendedahan:</b>{' '}
+              {supplied
+                ? 'Agregat negeri daripada sumber dibekalkan. Sel orang kecil dan pecahan tidak konsisten ditahan sebelum import; dasar rasmi belum disahkan.'
+                : 'Dasar demo v1 menyekat kiraan 1–4 serta satu sel tambahan. Kadar, pemacu dan perbandingan berkaitan turut disekat. Dasar rasmi belum disahkan.'}
             </p>
           </div>
           <p>
             <b>Versi:</b> definisi {zone?.definition ?? 'v1'} · {zone?.publication ?? 'demo-v1'} ·
-            Segar semula 7 September 2026. {zone?.source}.
+            Segar semula {supplied ? '7 Oktober 2026' : '7 September 2026'}. {zone?.source}.
           </p>
         </div>
       )}
       <div className="print-metadata">
-        DEMO / SYNTHETIC · {layerLabels[filters.layer]} · {filters.period} · {selected} ·{' '}
-        {filters.mode === 'rate' ? 'Kadar per 100,000 populasi demo' : 'Bilangan'} · Definisi{' '}
-        {zone?.definition ?? 'v1'} · Penerbitan {zone?.publication ?? 'Tidak tersedia'} · Sempadan{' '}
+        {demoRange &&
+          `${bandLabel} · ${bandVersion} · Julat positif ${formatNumber(demoRange.min, 2)}–${formatNumber(demoRange.max, 2)}; rendah ≤ ${formatNumber(demoRange.low, 2)}, sederhana ≤ ${formatNumber(demoRange.medium, 2)}; bukan ambang rasmi. `}
+        {evidenceLabel} · {layerLabels[filters.layer]} · {filters.period} · {active} ·{' '}
+        {filters.mode === 'rate' ? unit : 'Bilangan'} · Definisi {zone?.definition ?? 'v1'} ·
+        Penerbitan {zone?.publication ?? 'Tidak tersedia'} · Sempadan{' '}
         {zone?.boundary ?? 'Tidak tersedia'}. {zone?.source}. Kiraan 1–4 dan sel pelengkap disekat;
         tiada ambang ancaman rasmi. Kiraan bukan prevalens dan tidak membuktikan impak.
       </div>
       <div className="map-bottom-note">
-        <span>DEMO / SYNTHETIC · Tiada ambang ancaman diluluskan</span>
+        <span>
+          {evidenceLabel} ·{' '}
+          {demoRange
+            ? `Warna = ${suppliedBands ? 'kadar relatif · kaedah DEMO' : 'tahap relatif demo'}; bukan ambang rasmi`
+            : 'Tiada ambang ancaman diluluskan'}
+        </span>
         <button className="text-button" onClick={() => setTab(tab === 'map' ? 'table' : 'map')}>
           {tab === 'map' ? 'Lihat jadual setara' : 'Kembali ke peta'} <ArrowUpRight size={13} />
         </button>

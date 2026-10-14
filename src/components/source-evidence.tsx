@@ -8,12 +8,15 @@ import {
 } from '@/lib/server/source-snapshot';
 import { Badge, EmptyState, Panel, SourceNote } from './ui';
 import { displayLabel } from '@/lib/domain/display';
+import { isAnnualPeriod, type Filters } from '@/lib/domain/filters';
+import { getAnnualSnapshot } from '@/lib/server/dashboard-source';
 
 export interface SourceEvidenceProps {
   session: Session;
   purpose: SourcePurpose;
   geography?: string;
   setting?: SourceSetting;
+  filters?: Filters;
 }
 
 const purposeTitles: Record<SourcePurpose, string> = {
@@ -67,7 +70,7 @@ function EvidenceTable({ table }: { table: SourceTableDTO }) {
                         ? row.status === 'unresolved'
                           ? 'Belum dinyatakan'
                           : 'Tidak berkenaan'
-                        : formatNumber(value)}
+                        : formatNumber(value, 2)}
                     </td>
                   );
                 })}
@@ -85,15 +88,20 @@ function EvidenceTable({ table }: { table: SourceTableDTO }) {
   );
 }
 
-export function SourceEvidence({
+export async function SourceEvidence({
   session,
   purpose,
   geography = 'MY',
   setting,
+  filters,
 }: SourceEvidenceProps) {
+  const title =
+    filters && isAnnualPeriod(filters.period) && purpose === 3
+      ? 'Bukti penguatkuasaan tahunan dibekalkan'
+      : purposeTitles[purpose];
   const canView = allowed(session, 'view', {
     organisation: 'shared',
-    geography: 'MY',
+    geography: filters && isAnnualPeriod(filters.period) ? geography : 'MY',
     teras: purpose,
     sensitivity: 'public-aggregate',
     state: 'published',
@@ -102,7 +110,7 @@ export function SourceEvidence({
     return (
       <Panel
         className="source-evidence"
-        title={purposeTitles[purpose]}
+        title={title}
         kicker="Sumber dibekalkan"
         action={<Badge tone="source">Akses terkawal</Badge>}
       >
@@ -115,7 +123,10 @@ export function SourceEvidence({
       </Panel>
     );
   }
-  const snapshot = getSourceSnapshot(session, { purpose, geography, setting });
+  const snapshot =
+    filters && isAnnualPeriod(filters.period)
+      ? await getAnnualSnapshot(session, filters, purpose, setting)
+      : getSourceSnapshot(session, { purpose, geography, setting });
   const hasEvidence =
     snapshot.summary.length > 0 ||
     snapshot.dimensions.length > 0 ||
@@ -124,7 +135,7 @@ export function SourceEvidence({
   return (
     <Panel
       className="source-evidence"
-      title={purposeTitles[purpose]}
+      title={title}
       kicker={`${snapshot.setting ?? 'AADK'} · ${dateBM(snapshot.period)}`}
       action={<Badge tone="source">{snapshot.evidence}</Badge>}
     >

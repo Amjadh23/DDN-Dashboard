@@ -3,7 +3,13 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { SlidersHorizontal, RotateCcw, ChevronDown } from 'lucide-react';
 import { stateNames } from '@/lib/domain/demo-identities';
-import { filterQuery, defaultFilters, type Filters } from '@/lib/domain/filters';
+import {
+  filterQuery,
+  defaultFilters,
+  annualPeriods,
+  isAnnualPeriod,
+  type Filters,
+} from '@/lib/domain/filters';
 export function FilterBar({
   filters,
   variant = 'full',
@@ -19,7 +25,8 @@ export function FilterBar({
   function update(key: keyof Filters, value: string) {
     const query = new URLSearchParams(params);
     for (const [k, v] of Object.entries({ ...filters, [key]: value })) query.set(k, v);
-    if (variant === 'overview' && key === 'geography') {
+    if (key === 'period') query.set('compare', 'none');
+    if (key === 'geography') {
       if (value === 'MY') query.delete('state');
       else query.set('state', value);
     }
@@ -37,6 +44,11 @@ export function FilterBar({
           <select value={filters.period} onChange={(e) => update('period', e.target.value)}>
             <option value="2026-08-09">9 Ogos 2026</option>
             <option value="2026-08-02">2 Ogos 2026 · demo sahaja</option>
+            {annualPeriods.map((year) => (
+              <option key={year} value={year}>
+                {year} · Tahunan
+              </option>
+            ))}
           </select>
         </label>
         <label>
@@ -56,7 +68,9 @@ export function FilterBar({
               Bandingkan
               <select value={filters.compare} onChange={(e) => update('compare', e.target.value)}>
                 <option value="none">Tiada perbandingan</option>
-                <option value="2026-08-02">2 Ogos 2026 · demo</option>
+                {!isAnnualPeriod(filters.period) && (
+                  <option value="2026-08-02">2 Ogos 2026 · demo</option>
+                )}
               </select>
             </label>
             <button

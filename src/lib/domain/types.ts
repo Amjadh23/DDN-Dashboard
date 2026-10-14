@@ -30,6 +30,7 @@ export interface MetricDefinition {
   origin: Origin;
 }
 export interface MetricDTO {
+  geography?: string;
   definition: MetricDefinition;
   value: number | null;
   state: DataState;
@@ -57,7 +58,7 @@ export interface MapZoneDTO {
   boundary: string;
   definition: string;
   publication: string;
-  synthetic: true;
+  synthetic: boolean;
   drivers: { label: string; value: number | null; unit: string }[];
 }
 export const DEMO_LABEL = 'DEMO / SYNTHETIC';
@@ -67,9 +68,11 @@ export const BOUNDARY = 'gb-MYS-ADM1-2017-9469f09';
 export const formatNumber = (n: number | null, digits = 0) =>
   n === null ? '—' : new Intl.NumberFormat('ms-MY', { maximumFractionDigits: digits }).format(n);
 export const dateBM = (s: string) =>
-  new Intl.DateTimeFormat('ms-MY', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    timeZone: 'Asia/Kuala_Lumpur',
-  }).format(new Date(s));
+  /^202[1-5]$/.test(s)
+    ? `${s} · Tahunan`
+    : new Intl.DateTimeFormat('ms-MY', {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        timeZone: 'Asia/Kuala_Lumpur',
+      }).format(new Date(s));

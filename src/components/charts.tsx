@@ -1,5 +1,5 @@
 import { formatNumber, dateBM } from '@/lib/domain/types';
-import { DemoBadge, SourceNote } from './ui';
+import { Badge, DemoBadge, SourceNote } from './ui';
 import { disclose } from '@/lib/domain/semantics';
 export interface ChartDatum {
   label: string;
@@ -52,20 +52,25 @@ export function ChartDetails({
   data,
   unit,
   caption,
+  source,
 }: {
   data: ChartDatum[];
   unit: string;
   caption: string;
+  source?: string;
 }) {
   return (
     <details className="chart-details">
       <summary>Jadual & takrif paparan</summary>
       <p>
-        {caption} · DEMO / SYNTHETIC · {unit}. Versi senario v1; sasaran dan pemilik rasmi belum
-        disahkan. Nilai dihasilkan untuk menunjukkan bentuk analisis sahaja.
+        {source
+          ? `${caption} · ${source} · ${unit}. Petikan sumber; bukan penerbitan rasmi platform.`
+          : `${caption} · DEMO / SYNTHETIC · ${unit}. Versi senario v1; sasaran dan pemilik rasmi belum disahkan. Nilai dihasilkan untuk menunjukkan bentuk analisis sahaja.`}
       </p>
       <table>
-        <caption className="sr-only">{caption} · DEMO / SYNTHETIC</caption>
+        <caption className="sr-only">
+          {caption} · {source ?? 'DEMO / SYNTHETIC'}
+        </caption>
         <thead>
           <tr>
             <th>Kategori</th>
@@ -76,7 +81,7 @@ export function ChartDetails({
           {data.map((d) => (
             <tr key={d.label}>
               <th>{d.label}</th>
-              <td>{formatNumber(d.value, 1)}</td>
+              <td>{formatNumber(d.value, source ? 2 : 1)}</td>
             </tr>
           ))}
         </tbody>
@@ -89,13 +94,15 @@ export function Bars({
   unit = 'rekod',
   caption,
   horizontal = true,
+  source,
 }: {
   data: ChartDatum[];
   unit?: string;
   caption: string;
   horizontal?: boolean;
+  source?: string;
 }) {
-  if (needsDisclosure(data, unit))
+  if (!source && needsDisclosure(data, unit))
     return <DisclosedChart data={data} unit={unit} caption={caption} />;
   const max = Math.max(1, ...data.map((d) => d.value));
   return (
@@ -103,7 +110,7 @@ export function Bars({
       <div
         className={horizontal ? 'horizontal-bars' : 'vertical-bars'}
         role="img"
-        aria-label={`${caption}. DEMO / SYNTHETIC. ${data.map((d) => `${d.label}: ${formatNumber(d.value)} ${unit}`).join('; ')}`}
+        aria-label={`${caption}. ${source ?? 'DEMO / SYNTHETIC'}. ${data.map((d) => `${d.label}: ${formatNumber(d.value, source ? 2 : 0)} ${unit}`).join('; ')}`}
       >
         {data.map((d, i) => (
           <div className="bar-row" key={d.label}>
@@ -118,13 +125,13 @@ export function Bars({
               />
             </div>
             <strong>
-              {formatNumber(d.value, 1)}
+              {formatNumber(d.value, source ? 2 : 1)}
               <small>{unit === '%' ? '%' : ''}</small>
             </strong>
           </div>
         ))}
       </div>
-      <ChartDetails data={data} unit={unit} caption={caption} />
+      <ChartDetails data={data} unit={unit} caption={caption} source={source} />
     </div>
   );
 }
@@ -132,12 +139,14 @@ export function LineChart({
   data,
   unit = 'rekod',
   caption,
+  source,
 }: {
   data: ChartDatum[];
   unit?: string;
   caption: string;
+  source?: string;
 }) {
-  if (needsDisclosure(data, unit))
+  if (!source && needsDisclosure(data, unit))
     return <DisclosedChart data={data} unit={unit} caption={caption} />;
   const max = Math.max(1, ...data.map((d) => d.value)) * 1.18;
   const points = data.map((d, i) => [
@@ -151,7 +160,7 @@ export function LineChart({
         className="line-chart"
         viewBox="0 0 560 210"
         role="img"
-        aria-label={`${caption}. DEMO / SYNTHETIC; ${unit}.`}
+        aria-label={`${caption}. ${source ?? 'DEMO / SYNTHETIC'}; ${unit}.`}
       >
         <defs>
           <linearGradient id={`area-${caption.replaceAll(' ', '-')}`} x1="0" y1="0" x2="0" y2="1">
@@ -198,7 +207,7 @@ export function LineChart({
           </g>
         ))}
       </svg>
-      <ChartDetails data={data} unit={unit} caption={caption} />
+      <ChartDetails data={data} unit={unit} caption={caption} source={source} />
     </div>
   );
 }
@@ -315,6 +324,7 @@ export function DemoMetric({
   description,
   period = '2026-08-09',
   scope = 'Senario kebangsaan',
+  source,
 }: {
   label: string;
   value: number | null;
@@ -323,12 +333,13 @@ export function DemoMetric({
   description: string;
   period?: string;
   scope?: string;
+  source?: string;
 }) {
   return (
     <article className="metric-card demo-metric">
       <div className="metric-top">
         <span>{label}</span>
-        <DemoBadge />
+        {source ? <Badge tone="source">Derived · Sumber dibekalkan</Badge> : <DemoBadge />}
       </div>
       <div className="metric-number">
         {value !== null && needsDisclosure([{ label, value }], unit)
@@ -339,12 +350,19 @@ export function DemoMetric({
       {value === null && <p>{description}</p>}
       <details className="metric-details">
         <summary>Takrif & konteks</summary>
-        <p>
-          {code} · Cadangan · versi demo v1 · {scope} · petikan senario {dateBM(period)} · dikemas
-          kini 7 September 2026. Sumber: penjana senario rekaan; pemilik: Pasukan Demo A (perlu
-          pengesahan pihak berkepentingan). Keyakinan rasmi dan sasaran belum disahkan. Nilai contoh
-          ini bukan statistik rasmi.
-        </p>
+        {source ? (
+          <p>
+            {source} · {dateBM(period)} · {scope}. Petikan sumber; pemilik dan sasaran memerlukan
+            pengesahan.
+          </p>
+        ) : (
+          <p>
+            {code} · Cadangan · versi demo v1 · {scope} · petikan senario {dateBM(period)} · dikemas
+            kini 7 September 2026. Sumber: penjana senario rekaan; pemilik: Pasukan Demo A (perlu
+            pengesahan pihak berkepentingan). Keyakinan rasmi dan sasaran belum disahkan. Nilai
+            contoh ini bukan statistik rasmi.
+          </p>
+        )}
         <p>{description}</p>
         <p>
           Perbandingan: tiada perubahan KPI dipaparkan; kadar dan median contoh tidak ditafsir
@@ -359,7 +377,7 @@ export function DemoSource({ children }: { children?: React.ReactNode }) {
   return (
     <SourceNote demo>
       {children ??
-        'Cadangan · Tempoh dan skop mengikut penapis. Pemilik, definisi operasi dan sasaran rasmi perlu pengesahan.'}
+        'Cadangan · Tempoh senario dinyatakan pada kad; senario tidak menjadi data tahunan apabila tempoh sumber berubah. Pemilik, definisi operasi dan sasaran rasmi perlu pengesahan.'}
     </SourceNote>
   );
 }

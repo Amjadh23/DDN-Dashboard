@@ -41,5 +41,8 @@ export async function provision(name: string) {
   for (const file of ['migrate', 'seed']) {
     await runNode(['node_modules/tsx/dist/cli.mjs', `scripts/${file}.ts`], env);
   }
+  if (/^dashboard_e2e_\d+$/.test(name)) {
+    await runNode(['node_modules/tsx/dist/cli.mjs', 'scripts/ingest-annual.ts', '--isolated'], env);
+  }
   return env;
 }

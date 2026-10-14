@@ -79,7 +79,7 @@ export function ReportsWorkspace({
             >
               Simpan paparan
             </button>
-            <Link className="button button-secondary" href={`/map?${filterQuery(filters)}`}>
+            <Link className="button button-secondary" href={`/?${filterQuery(filters)}`}>
               Semak penapis pada peta
             </Link>
           </div>

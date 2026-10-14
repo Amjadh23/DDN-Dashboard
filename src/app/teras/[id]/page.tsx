@@ -6,8 +6,9 @@ import { getMetrics, getMapZones, getActions } from '@/lib/server/dal';
 import { getStateShapes } from '@/lib/server/geometry';
 import { getWorldShapes } from '@/lib/server/world-geometry';
 import { getScenario } from '@/lib/server/teras-scenario';
+import { getDashboardSource, getPreventionTrend } from '@/lib/server/dashboard-source';
 import { terasInfo } from '@/lib/domain/teras';
-import { parseFilters, filterQuery } from '@/lib/domain/filters';
+import { parseFilters, filterQuery, isAnnualPeriod } from '@/lib/domain/filters';
 import { PageHeading, Panel, MetricCard, SourceNote, Badge, EmptyState } from '@/components/ui';
 import { FilterBar } from '@/components/filters';
 import { ThreatMap } from '@/components/threat-map';
@@ -47,11 +48,13 @@ export default async function TerasPage({
     : 'needs';
   const scenario = getScenario(session, teras, filters),
     cohort = p.cohort === '2025-q4' ? '2025-q4' : '2026-q1';
-  const [metrics, zones, shapes, actions] = await Promise.all([
+  const [metrics, zones, shapes, actions, sourceViews, preventionTrend] = await Promise.all([
     getMetrics(session, filters),
     teras === 5 ? Promise.resolve([]) : getMapZones(session, filters),
     teras === 5 ? Promise.resolve([]) : getStateShapes(),
     getActions(session),
+    teras === 1 || teras === 3 ? getDashboardSource(session, filters, teras) : Promise.resolve([]),
+    teras === 1 ? getPreventionTrend(session, filters) : Promise.resolve([]),
   ]);
   const cards = metrics.filter((m) => m.definition.teras === teras).slice(0, 4);
   const scale = scenario?.value ?? ((n: number) => n),
@@ -98,7 +101,11 @@ export default async function TerasPage({
               <MetricCard key={m.definition.code} metric={m} />
             ))}
           </div>
-          <SourceNote />
+          <SourceNote>
+            {isAnnualPeriod(filters.period)
+              ? `Buku Maklumat Dadah 2025 · ${filters.period} · ${cards.map((m) => `hlm. ${m.definition.sourcePage}`).join(', ')}. Petikan tahunan; bukan stok mingguan.`
+              : undefined}
+          </SourceNote>
         </>
       )}
       {perspective === 'needs' &&
@@ -178,15 +185,38 @@ export default async function TerasPage({
       <div className="policy-caveat">{info.caveat}</div>
 
       {perspective === 'needs' ? (
-        <Disclosure title="Indikator keperluan & liputan" meta="DEMO / SYNTHETIC · ukuran sokongan">
-          <TerasContent teras={teras} perspective={perspective} scenario={scenario} />
+        <Disclosure
+          title="Indikator keperluan & liputan"
+          meta={
+            sourceViews.length
+              ? 'Sumber dibekalkan · senario sokongan dilabel DEMO / SYNTHETIC'
+              : 'DEMO / SYNTHETIC · ukuran sokongan'
+          }
+        >
+          <TerasContent
+            teras={teras}
+            perspective={perspective}
+            scenario={scenario}
+            sourceViews={sourceViews}
+            sourcePeriod={filters.period}
+            geography={filters.geography}
+            preventionTrend={preventionTrend}
+          />
         </Disclosure>
       ) : (
-        <TerasContent teras={teras} perspective={perspective} scenario={scenario} />
+        <TerasContent
+          teras={teras}
+          perspective={perspective}
+          scenario={scenario}
+          sourceViews={sourceViews}
+          sourcePeriod={filters.period}
+          geography={filters.geography}
+          preventionTrend={preventionTrend}
+        />
       )}
       {teras <= 3 &&
         filters.source !== 'synthetic' &&
-        filters.period === '2026-08-09' &&
+        (filters.period === '2026-08-09' || isAnnualPeriod(filters.period)) &&
         filters.organisation === 'all' && (
           <Disclosure
             title="Dapatan sumber dibekalkan"
@@ -212,6 +242,7 @@ export default async function TerasPage({
                 </nav>
               )}
               <SourceEvidence
+                filters={filters}
                 session={session}
                 purpose={teras as 1 | 2 | 3}
                 geography={filters.geography}
@@ -227,7 +258,7 @@ export default async function TerasPage({
               {teras <= 3 ? 'Petikan dibekalkan' : 'Tiada ukuran hasil dalam sumber dibekalkan'}
             </span>
             <Badge tone={teras <= 3 ? 'source' : 'demo'}>
-              {teras <= 3 ? '9 Ogos 2026' : 'DEMO / SYNTHETIC'}
+              {teras <= 3 ? dateBM(filters.period) : 'DEMO / SYNTHETIC'}
             </Badge>
           </div>
           <p className="body-copy">

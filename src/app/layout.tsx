@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import './reference-theme.css';
+import './reference-components.css';
 import { AppShell } from '@/components/app-shell';
 import { getSession } from '@/lib/server/auth';
 
 export const metadata: Metadata = {
-  title: { default: 'DDN · Gambaran Nasional', template: '%s · DDN Malaysia' },
+  title: { default: 'Scenario Semasa · DDN Malaysia', template: '%s · DDN Malaysia' },
   description: 'Prototip kolaboratif Dasar Dadah Negara. Bukti bersama, tindakan bersepadu.',
 };
 export const dynamic = 'force-dynamic';
