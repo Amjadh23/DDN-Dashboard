@@ -2,11 +2,11 @@
   flex: 1 1;
   min-width: 0;
   max-width: 520px;
-  font-size: 11px;
+  font-size: 0.875rem;
   color: light-dark(#312920, #d9cfc3);
 }
 .demo-band-legend strong {
-  font-size: 11.5px;
+  font-size: 0.875rem;
   font-weight: 600;
 }
 .demo-band-swatches {
@@ -32,7 +32,7 @@
   padding: 5px 0;
 }
 .demo-band-legend p {
-  font-size: 11px;
+  font-size: 0.875rem;
   line-height: 1.7;
   margin: 8px 0;
 }
@@ -42,7 +42,7 @@
   margin-top: 10px;
   padding: 5px 8px;
   border-radius: 6px;
-  font-size: 11.5px;
+  font-size: 0.875rem;
   font-weight: 650;
   border: 1px solid;
 }
@@ -274,7 +274,7 @@
 }
 .assistant-launcher strong {
   display: block;
-  font-size: 13px;
+  font-size: 0.875rem;
   text-align: left;
 }
 .assistant-launcher small {
@@ -282,7 +282,7 @@
   gap: 8px;
   align-items: center;
   color: light-dark(#2a221a, #e2d7cb);
-  font-size: 11.5px;
+  font-size: 0.875rem;
   margin-top: 3px;
 }
 .assistant-backdrop {
@@ -328,11 +328,11 @@
   flex: 1 1;
 }
 .assistant-header h2 {
-  font-size: 18px;
+  font-size: 1.125rem;
   letter-spacing: -0.4px;
 }
 .assistant-header p {
-  font-size: 11.5px;
+  font-size: 0.875rem;
   color: light-dark(#211a13, #ece2d8);
   margin-top: 4px;
 }
@@ -356,14 +356,14 @@
   max-width: 94%;
 }
 .assistant-message small {
-  font-size: 10.5px;
+  font-size: 0.875rem;
   letter-spacing: 1.2px;
   color: light-dark(#502514, #efb8a3);
   font-weight: 700;
 }
 .assistant-message p {
   margin: 7px 0 0;
-  font-size: 12px;
+  font-size: 0.875rem;
   line-height: 1.8;
   color: light-dark(#14110d, #f6f1ec);
   white-space: pre-wrap;
@@ -386,7 +386,7 @@
   border: 1px solid light-dark(#7b2b0166, #ed936f66);
   border-radius: 8px;
   margin-top: 12px;
-  font-size: 11px;
+  font-size: 0.875rem;
   background: light-dark(#f79e7c, #8b3d1c);
 }
 .assistant-choices {
@@ -403,7 +403,7 @@
   border: 1px solid light-dark(#b97054, #ad664a);
   color: light-dark(#1c1710, #f0e8df);
   border-radius: 20px;
-  font-size: 11.5px;
+  font-size: 0.875rem;
   padding: 8px 10px;
   cursor: pointer;
 }
@@ -434,7 +434,7 @@
   border: 0;
   background: transparent;
   color: light-dark(#090909, #ffffff);
-  font-size: 12px;
+  font-size: 0.875rem;
 }
 .assistant-compose input::placeholder {
   color: light-dark(#40372e, #c7bdb1);
@@ -458,7 +458,7 @@
 .assistant-privacy {
   text-align: center;
   color: light-dark(#3e362c, #c9bfb3);
-  font-size: 11px;
+  font-size: 0.875rem;
   padding: 9px 12px 13px;
 }
 @media (max-width: 650px) {
@@ -484,7 +484,7 @@
     height: 44px;
   }
   .assistant-header h2 {
-    font-size: 16px;
+    font-size: 1rem;
   }
 }
 @media print {

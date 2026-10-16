@@ -23,16 +23,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const session = await getSession();
   const theme = (await cookies()).get('ddn-theme')?.value;
   return (
-    <html
-      lang="ms"
-      className={jakarta.variable}
-      data-theme={theme === 'light' || theme === 'dark' ? theme : undefined}
-    >
+    <html lang="ms" className={jakarta.variable} data-theme={theme === 'dark' ? 'dark' : 'light'}>
       <body>
         <a className="skip-link" href="#main-content">
           Langkau ke kandungan utama
         </a>
-        <AppShell session={{ name: session.name, role: session.role, id: session.id }}>
+        <AppShell
+          initialTheme={theme === 'dark' ? 'dark' : 'light'}
+          session={{ name: session.name, role: session.role, id: session.id }}
+        >
           {children}
         </AppShell>
       </body>

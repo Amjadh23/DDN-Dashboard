@@ -4,27 +4,23 @@ import { Moon, Sun } from 'lucide-react';
 
 type Mode = 'light' | 'dark';
 
-const query = '(prefers-color-scheme: dark)';
 function subscribe(onChange: () => void) {
-  const media = matchMedia(query);
   const observer = new MutationObserver(onChange);
   observer.observe(document.documentElement, { attributeFilter: ['data-theme'] });
-  media.addEventListener('change', onChange);
   return () => {
     observer.disconnect();
-    media.removeEventListener('change', onChange);
   };
 }
 function currentMode(): Mode {
   const explicit = document.documentElement.dataset.theme;
   if (explicit === 'light' || explicit === 'dark') return explicit;
-  return matchMedia(query).matches ? 'dark' : 'light';
+  return 'light';
 }
 
 // The choice is kept in a preference cookie so the server renders the right mode
 // on the next request; no browser storage is used.
-export function ThemeToggle() {
-  const mode = useSyncExternalStore<Mode | null>(subscribe, currentMode, () => null);
+export function ThemeToggle({ initialMode }: { initialMode: Mode }) {
+  const mode = useSyncExternalStore<Mode>(subscribe, currentMode, () => initialMode);
   function toggle() {
     const next: Mode = currentMode() === 'dark' ? 'light' : 'dark';
     document.documentElement.dataset.theme = next;

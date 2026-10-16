@@ -47,7 +47,7 @@
   }
   .brand strong {
     color: light-dark(#14110d, #f6f1ec);
-    font-size: 31px;
+    font-size: 1.9375rem;
     letter-spacing: -1px;
   }
   .brand small {
@@ -91,14 +91,14 @@
     pointer-events: none;
   }
   .mission-kicker {
-    font-size: 10.5px;
+    font-size: 0.875rem;
     letter-spacing: 1.2px;
     font-weight: 700;
   }
   .brand-mission strong {
     display: block;
     font-family: var(--heading);
-    font-size: 23px;
+    font-size: 1.4375rem;
     line-height: 1.35;
     letter-spacing: -0.7px;
     margin: 11px 0 16px;
@@ -107,11 +107,11 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 11.5px;
+    font-size: 0.875rem;
   }
   .nav-section-label {
     color: light-dark(#58534d, #a8a29b);
-    font-size: 11px;
+    font-size: 0.875rem;
   }
   .nav-item {
     color: light-dark(#45423f, #b6b3ae);

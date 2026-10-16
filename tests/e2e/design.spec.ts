@@ -9,7 +9,7 @@ test('Ember light and dark modes switch, persist by cookie and keep AIDA', async
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Scenario Semasa', exact: true })).toBeVisible();
   const canvas = () => page.evaluate(() => getComputedStyle(document.body).backgroundColor);
-  expect(await canvas()).toBe('rgb(246, 242, 236)');
+  expect(await canvas()).toBe('rgb(250, 249, 247)');
   await page.getByRole('button', { name: 'Tukar ke mod gelap' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   expect(await canvas()).toBe('rgb(17, 14, 12)');
@@ -19,7 +19,7 @@ test('Ember light and dark modes switch, persist by cookie and keep AIDA', async
   expect(await canvas()).toBe('rgb(17, 14, 12)');
   await page.getByRole('button', { name: 'Tukar ke mod cerah' }).click();
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-  expect(await canvas()).toBe('rgb(246, 242, 236)');
+  expect(await canvas()).toBe('rgb(250, 249, 247)');
   expect(await page.evaluate(() => [localStorage.length, sessionStorage.length])).toEqual([0, 0]);
   await expect(page.locator('.brand-emblem')).toHaveAttribute('src', /aadk-logo/);
   await expect(page.locator('.brand-mission')).toContainText('Lima teras.');
@@ -124,6 +124,11 @@ test('AIDA and matched colours remain accessible at desktop and mobile widths', 
     [390, 'dark'],
     [320, 'dark'],
   ] as const) {
+    await page
+      .context()
+      .addCookies([
+        { name: 'ddn-theme', value: colorScheme, url: test.info().project.use.baseURL! },
+      ]);
     await page.emulateMedia({ reducedMotion: 'reduce', colorScheme });
     await page.setViewportSize({ width, height: 844 });
     await page.goto('/');

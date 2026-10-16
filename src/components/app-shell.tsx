@@ -45,9 +45,11 @@ const workspace = [
 export function AppShell({
   children,
   session,
+  initialTheme,
 }: {
   children: React.ReactNode;
   session: { name: string; role: Role; id: string };
+  initialTheme: 'light' | 'dark';
 }) {
   const path = usePathname(),
     router = useRouter();
@@ -187,7 +189,7 @@ export function AppShell({
               <span className="muted topbar-extra">Dasar Dadah Negara 2017</span>
             </div>
             <div className="topbar-actions">
-              <ThemeToggle />
+              <ThemeToggle initialMode={initialTheme} />
               <div className="profile">
                 <span className="profile-avatar">
                   <Character persona={rolePersonas[session.role]} size={40} />

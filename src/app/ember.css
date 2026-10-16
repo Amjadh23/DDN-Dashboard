@@ -1,15 +1,15 @@
-/* Ember identity: warm ivory (light) and ember night (dark).
+/* Ember identity: warm white (light) and ember night (dark).
    Loaded after the earlier theme layers. Data/classification colours are not set here. */
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
   --font: var(--font-jakarta), 'Segoe UI', sans-serif;
   --heading: var(--font-jakarta), 'Segoe UI', sans-serif;
 
-  --canvas: light-dark(#f6f2ec, #110e0c);
+  --canvas: light-dark(#faf9f7, #110e0c);
   --surface: light-dark(#ffffff, #1a1613);
-  --surface-2: light-dark(#fbf8f4, #211c18);
+  --surface-2: light-dark(#f7f5f1, #211c18);
   --surface-sunk: light-dark(#f1ebe3, #0d0b09);
-  --line: light-dark(#ebe3d9, #2e2822);
+  --line: light-dark(#e3ddd5, #2e2822);
   --line-strong: light-dark(#dcd0c2, #40372f);
   --ink: light-dark(#1f1914, #f7f1ea);
   --ink-2: light-dark(#4f463d, #cbbfb2);
@@ -110,8 +110,8 @@
     font-family: var(--font);
     font-feature-settings: 'ss01', 'cv11';
     background:
-      radial-gradient(60rem 30rem at 85% -8%, light-dark(#ffd9c480, #ff6a2a1c), transparent 70%),
-      radial-gradient(40rem 26rem at 20% 110%, light-dark(#ffe9c260, #f5b94210), transparent 70%),
+      radial-gradient(60rem 30rem at 85% -8%, light-dark(#ffd9c420, #ff6a2a1c), transparent 70%),
+      radial-gradient(40rem 26rem at 20% 110%, light-dark(#ffe9c218, #f5b94210), transparent 70%),
       var(--canvas);
     background-attachment: fixed;
     color: var(--ink);
@@ -374,7 +374,7 @@
     min-height: 196px;
   }
   .page-heading .eyebrow {
-    font-size: 10.5px;
+    font-size: 0.875rem;
     letter-spacing: 0.16em;
   }
   /* Art sits fully inside the hero: no negative margins, fluid sizing. */
@@ -722,7 +722,7 @@
   .map-layer-caption,
   .map-meta .text-button {
     color: var(--ink-2);
-    font-size: 12px;
+    font-size: 0.875rem;
   }
   .map-canvas {
     position: relative;
@@ -903,7 +903,7 @@
     align-items: center;
     gap: 8px;
     color: var(--ink-2);
-    font-size: 12.5px;
+    font-size: 0.875rem;
     font-weight: 700;
   }
   .map-tooltip-name em {
@@ -911,12 +911,12 @@
     border-radius: 999px;
     background: var(--ember-tint);
     color: var(--ember-ink);
-    font-size: 10.5px;
+    font-size: 0.875rem;
     font-style: normal;
   }
   .map-tooltip strong {
     color: var(--ink);
-    font-size: 24px;
+    font-size: 1.5rem;
     line-height: 1.1;
     font-weight: 800;
     letter-spacing: -0.02em;
@@ -925,7 +925,7 @@
   .map-tooltip strong small {
     display: block;
     color: var(--ink-3);
-    font-size: 11.5px;
+    font-size: 0.875rem;
     font-weight: 600;
     letter-spacing: 0;
   }
@@ -934,7 +934,7 @@
   }
   .map-tooltip-meta {
     color: var(--ink-3);
-    font-size: 11px;
+    font-size: 0.875rem;
   }
   .map-hint {
     position: absolute;
@@ -945,7 +945,7 @@
     border-radius: 999px;
     background: #1f1914e0;
     color: #fff;
-    font-size: 12.5px;
+    font-size: 0.875rem;
     font-weight: 600;
     opacity: 0;
     pointer-events: none;
@@ -976,7 +976,7 @@
     display: block;
     padding: 2px 0;
     color: var(--ink-3);
-    font-size: 10.5px;
+    font-size: 0.875rem;
     font-weight: 700;
     text-align: center;
     font-variant-numeric: tabular-nums;
@@ -1025,7 +1025,7 @@
     background: var(--surface);
     color: var(--ink);
     font: inherit;
-    font-size: 12px;
+    font-size: 0.875rem;
     font-weight: 600;
     cursor: pointer;
     transition:
@@ -1064,7 +1064,7 @@
   }
   .zone-detail h3 {
     color: var(--ink);
-    font-size: 26px;
+    font-size: 1.625rem;
     font-weight: 800;
     letter-spacing: -0.03em;
   }
@@ -1221,6 +1221,221 @@
     color-scheme: light;
     background: #1a1613;
     border-color: #2e2822;
+  }
+}
+
+/* Reading scale and breathing room. Supporting labels have a 14px floor;
+   prose and inputs use 16px at the browser's default font preference. */
+@media screen {
+  body {
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  small {
+    font-size: 0.875rem;
+  }
+  .page-heading p,
+  .overview-page .page-heading p,
+  .body-copy,
+  .policy-caveat,
+  .chart-caveat,
+  .chart-details p,
+  .care-detail p,
+  .responsibility-strip p,
+  .domain-cards p,
+  .muted-note,
+  .assistant-message p,
+  .decision-placeholder p {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+  input,
+  select,
+  textarea,
+  .panel-body input,
+  .panel-body select,
+  .panel-body textarea,
+  .search-form input,
+  .search-form select,
+  .inline-field select,
+  .assistant-compose input {
+    font-size: 1rem;
+    min-height: 44px;
+  }
+  .button,
+  .icon-button,
+  .theme-toggle,
+  .text-button,
+  .segmented button,
+  .assistant-choices button {
+    min-height: 44px;
+  }
+  .icon-button {
+    min-width: 44px;
+  }
+  .sidebar {
+    width: 272px;
+  }
+  .main-frame {
+    margin-left: 272px;
+  }
+  .sidebar .nav-item {
+    font-size: 0.9375rem;
+    min-height: 48px;
+    line-height: 1.5;
+  }
+  .nav-item > span {
+    min-width: 0;
+  }
+  .nav-section-label {
+    letter-spacing: 0.08em;
+  }
+  .topbar {
+    height: auto;
+    min-height: 76px;
+    padding-block: 10px;
+    gap: 16px;
+  }
+  .country-tag {
+    height: auto;
+    padding-block: 3px;
+  }
+  .profile select {
+    max-width: 190px;
+  }
+  .filter-bar {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px;
+    align-items: end;
+  }
+  .filter-label {
+    width: auto;
+    align-self: center;
+  }
+  .filter-bar > label,
+  .overview-page .filter-bar > label {
+    flex: 1 1 160px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    border: 0;
+    padding: 0;
+    white-space: normal;
+    min-width: 0;
+  }
+  .filter-bar > label select,
+  .overview-page .filter-bar > label select {
+    width: 100%;
+    max-width: 100%;
+    min-height: 44px;
+    font-size: 1rem;
+    padding: 8px 28px 8px 10px;
+    border: 1px solid var(--line-strong);
+    background-color: var(--surface-2);
+  }
+  .filter-bar > label:nth-of-type(3) {
+    border: 0;
+    padding: 0;
+  }
+  .assistant-message.user p {
+    color: inherit;
+  }
+  .disclosure-body .upload-layout .panel-body {
+    padding: 20px;
+  }
+  .badge {
+    white-space: normal;
+  }
+  .metric-top {
+    flex-wrap: wrap;
+  }
+  .page-heading h1 {
+    line-height: 1.2;
+  }
+  .layer-select select {
+    font-size: 1rem;
+    min-height: 44px;
+  }
+  @media (max-width: 700px) {
+    .map-controls {
+      flex-wrap: wrap;
+    }
+    .map-controls .layer-select {
+      flex: 1 1 100%;
+      width: 100%;
+    }
+    .map-controls .layer-select select {
+      width: 100%;
+      max-width: none;
+    }
+    .map-view-toggle {
+      margin-left: auto;
+    }
+    .overview-teras-link {
+      min-height: 144px;
+      padding: 22px 100px 22px 22px;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 8px;
+    }
+    .overview-teras-art {
+      top: 28px;
+    }
+    .overview-teras-link > svg:last-child {
+      top: auto;
+      bottom: 16px;
+      left: auto;
+      right: 24px;
+    }
+  }
+  @media (max-width: 1100px) {
+    .topbar-context > span {
+      display: none;
+    }
+    .metrics-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 800px) {
+    .sidebar {
+      width: min(290px, 90vw);
+    }
+    .main-frame {
+      margin-left: 0;
+    }
+    .topbar {
+      min-height: 72px;
+      padding-inline: 16px;
+      gap: 8px;
+    }
+    .profile select {
+      max-width: 150px;
+    }
+  }
+  @media (max-width: 480px) {
+    .filter-bar > label,
+    .overview-page .filter-bar > label {
+      flex-basis: 100%;
+    }
+    .metrics-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .topbar {
+      padding-inline: 12px;
+    }
+    .topbar-actions {
+      gap: 6px;
+    }
+    .profile {
+      padding: 3px 8px;
+    }
+    .profile-avatar {
+      display: none;
+    }
+    .profile select {
+      max-width: 130px;
+    }
   }
 }
 
