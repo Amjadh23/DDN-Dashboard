@@ -3,6 +3,8 @@ import type { NextConfig } from 'next';
 const config: NextConfig = {
   poweredByHeader: false,
   serverExternalPackages: ['pg', 'exceljs'],
+  // Existing hosted demo reads geometry through filesystem APIs at request time.
+  outputFileTracingIncludes: { '/**': ['./public/geo/*.geojson'] },
   async headers() {
     return [
       {

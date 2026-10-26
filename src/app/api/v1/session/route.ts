@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     r.cookies.set('dashboard-session', signSession(id, role, expires), {
       httpOnly: true,
       sameSite: 'strict',
-      secure: false,
+      secure: process.env.VERCEL === '1',
       path: '/',
       maxAge: 28800,
     });
