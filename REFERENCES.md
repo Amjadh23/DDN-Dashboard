@@ -247,3 +247,20 @@ Examples:
 - If the weekly report lacks a field required by `SPEC.md`, use synthetic/demo data only where allowed and record the gap.
 - If the 2017 policy names a legacy body, keep the historical statement but do not hard-code it as the current owner.
 - If the repository uses a materially different architecture, stop and propose a contract/ADR decision instead of rewriting the application unilaterally.
+
+## Approved DDN 2.0 restructuring — 26 October 2026
+
+The client reference images and explicit human approval replace the current navigation with four Teras. This is a presentation-policy mapping, not a retroactive change to DDN 2017 or stored resource permissions.
+
+| Current pillar | Approved title | Original domains |
+|---|---|---|
+| 1 | Pencegahan Pintar & Generasi Celik | 1: prevention |
+| 2 | Pemulihan Tingkah Laku & Kesihatan Awam | 2: treatment; 4: harm reduction |
+| 3 | Penguatkuasaan Proaktif dan Ramalan Risiko | 3: enforcement |
+| 4 | Kerjasama Antarabangsa & Tadbir Urus Inklusif | 5: international |
+
+Canonical routes are /ddn-2/teras/1..4. Legacy /teras/4 redirects to current pillar 2's harm subview; /teras/5 redirects to current pillar 4. Stored teras values and API v1 teras fields remain original domain identifiers (1–5). Treatment and harm grants remain separate. Original T4/T5 requirement and KPI identifiers retain their meanings; their current presentation locations are pillar 2/pillar 4 respectively. No original data, immutable publications or reports are renumbered.
+
+Titles do not authorize forecasting/predictive policing, new clinical definitions, expanded permissions or exclusive agency assignments. DDN 2017 responsibility statements remain historical; DDN 2.0 commencement and current authority require stakeholder validation. Prior ACC-024 dashboard-label exception and export/upload classification controls remain unchanged. See docs/superpowers/specs/2026-10-26-ddn2-restructuring-design.md and docs/DDN2_IMPACT_ASSESSMENT.md.
+
+Client evidence retained locally: references/client-ddn2-2026-10-26.png (mapping slide) and references/client-ddn2-request-2026-10-26.png (client message). These authorize taxonomy/titles only; the cropped descriptive column does not establish new features or current agency authority.

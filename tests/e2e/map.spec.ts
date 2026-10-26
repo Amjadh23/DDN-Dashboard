@@ -11,9 +11,7 @@ test('overview separates supplied snapshot and demo map, with keyboard/table alt
   await page.goto('/');
   await expect(page.getByRole('heading', { name: 'Scenario Semasa', exact: true })).toBeVisible();
   await expect(page.locator('.metric-number').first()).toContainText('47,084');
-  await expect(
-    page.locator('.threat-panel').getByText('DEMO / SYNTHETIC', { exact: true }).first(),
-  ).toBeVisible();
+  await expect(page.locator('.threat-panel')).not.toContainText('DEMO / SYNTHETIC');
   await page.getByRole('button', { name: 'Paparan jadual' }).click();
   await expect(page.locator('.map-table-wrap')).toBeVisible();
   await page.getByRole('button', { name: 'Johor', exact: true }).click();
@@ -51,7 +49,7 @@ test('map hover card, band highlight, zoom and search fly-to keep selection inta
   await johor.hover();
   const card = page.locator('.map-tooltip');
   await expect(card).toContainText('Johor');
-  await expect(card).toContainText('DEMO / SYNTHETIC');
+  await expect(card).not.toContainText('DEMO / SYNTHETIC');
   await expect(card).toHaveAttribute('aria-hidden', 'true');
   await page.mouse.move(2, 2);
   await expect(card).toHaveCount(0);
@@ -82,5 +80,5 @@ test('essential overview and map reflow to 320 CSS pixels', async ({ page }) => 
     ).toBe(true);
   }
   await page.getByRole('button', { name: 'Buka navigasi' }).click();
-  await expect(page.getByRole('link', { name: 'Rawatan & pemulihan', exact: true })).toBeVisible();
+  await expect(page.locator('.sidebar a[href^="/ddn-2/teras/2?"]')).toBeVisible();
 });

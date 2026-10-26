@@ -1,4 +1,5 @@
 'use client';
+import { pillarIds, pillars, domainLabel } from '@/lib/domain/pillars';
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Panel, DemoBadge } from './ui';
@@ -80,10 +81,14 @@ export function GovernanceControls({ role, organisation }: { role: string; organ
                   Teras dibenarkan
                   <select value={teras} onChange={(e) => setTeras(e.target.value)}>
                     <option value="all">Semua Teras</option>
-                    {[1, 2, 3, 4, 5].map((t) => (
-                      <option key={t} value={t}>
-                        Teras {t}
-                      </option>
+                    {pillarIds.map((id) => (
+                      <optgroup key={id} label={`Teras ${id} · ${pillars[id].title}`}>
+                        {pillars[id].domains.map((domain) => (
+                          <option key={domain} value={domain}>
+                            {domainLabel(domain)}
+                          </option>
+                        ))}
+                      </optgroup>
                     ))}
                   </select>
                 </label>

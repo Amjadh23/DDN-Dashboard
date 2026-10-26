@@ -1,4 +1,5 @@
 'use client';
+import { domainLabel } from '@/lib/domain/pillars';
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -127,12 +128,12 @@ export function ActionWorkspace({
                         )}
                     </span>
                     <span>{stateNames[a.geography] ?? a.geography}</span>
-                    <span>Teras {a.teras}</span>
+                    <span>{domainLabel(a.teras)}</span>
                   </div>
                   <details className="chart-details">
                     <summary>Konteks, bukti & versi</summary>
                     <p>
-                      DEMO / SYNTHETIC · Semakan {a.revision} · {a.context.period} ·{' '}
+                      senario rekaan · Semakan {a.revision} · {a.context.period} ·{' '}
                       {a.context.publication ?? 'Konteks Teras/geografi'} · definisi{' '}
                       {a.context.definition ?? 'v1'}.
                     </p>
@@ -242,7 +243,7 @@ export function ActionWorkspace({
       >
         <Panel
           title="Keputusan seterusnya"
-          kicker={`${stateNames[context.geography] ?? 'Malaysia'} · TERAS ${context.teras}`}
+          kicker={`${stateNames[context.geography] ?? 'Malaysia'} · ${domainLabel(context.teras)}`}
           demo
         >
           <div className="panel-body stack">
@@ -344,7 +345,7 @@ export function ActionWorkspace({
                   </div>
                   <p>{n.body}</p>
                   <small>
-                    {actorName(n.author)} · Teras {n.context.teras} ·{' '}
+                    {actorName(n.author)} · {domainLabel(n.context.teras)} ·{' '}
                     {geographyName(n.context.geography)}
                   </small>
                 </article>

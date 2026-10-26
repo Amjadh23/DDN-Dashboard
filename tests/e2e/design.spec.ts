@@ -22,7 +22,7 @@ test('Ember light and dark modes switch, persist by cookie and keep AIDA', async
   expect(await canvas()).toBe('rgb(250, 249, 247)');
   expect(await page.evaluate(() => [localStorage.length, sessionStorage.length])).toEqual([0, 0]);
   await expect(page.locator('.brand-emblem')).toHaveAttribute('src', /aadk-logo/);
-  await expect(page.locator('.brand-mission')).toContainText('Lima teras.');
+  await expect(page.locator('.brand-mission')).toContainText('Empat teras.');
   await page
     .getByRole('button', { name: 'Buka AIDA, pembantu digital Dasar Dadah Negara' })
     .click();

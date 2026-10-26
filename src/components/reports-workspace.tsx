@@ -85,8 +85,8 @@ export function ReportsWorkspace({
           </div>
           <p className="chart-caveat">
             Eksport besar tidak tersedia dalam V1. Snapshot terhad kepada 14 petikan sumber dan 16
-            negeri; data sumber dan DEMO / SYNTHETIC dipisahkan. Kebenaran disahkan semula pada
-            setiap eksport dan muat turun.
+            negeri; data sumber dan senario rekaan dipisahkan. Kebenaran disahkan semula pada setiap
+            eksport dan muat turun.
           </p>
         </div>
       </Panel>
@@ -102,12 +102,13 @@ export function ReportsWorkspace({
               <article className="action-record" key={v.id}>
                 <h3>{v.title}</h3>
                 <p className="chart-caveat">
-                  {v.classification} · {dateBM(v.filters.period)} ·{' '}
-                  {geographyName(v.filters.geography)}
+                  {dateBM(v.filters.period)} · {geographyName(v.filters.geography)}
                 </p>
                 <details>
                   <summary>Versi & sumber</summary>
                   <p className="id-cell">
+                    Pemetaan: {v.policyMappingVersion ?? 'Domain asal DDN 2017'}
+                    <br />
                     Penerbitan: {v.publications.join(', ')}
                     <br />
                     Definisi: {v.definitions.join(', ')}
@@ -138,9 +139,7 @@ export function ReportsWorkspace({
             {!exports.length && <p>Jana eksport daripada paparan tersimpan.</p>}
             {exports.map((v) => (
               <article key={v.id} className="action-record">
-                <h3>
-                  {v.format.toUpperCase()} · {v.classification}
-                </h3>
+                <h3>{v.format.toUpperCase()}</h3>
                 <p className="chart-caveat">Tamat: {v.expiresAt}</p>
                 <a className="button button-secondary" href={v.downloadUrl}>
                   Muat turun {v.format.toUpperCase()}

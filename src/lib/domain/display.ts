@@ -22,14 +22,19 @@ const labels: Record<string, string> = {
   'dead-letter': 'Perlu semakan',
   'public-aggregate': 'Agregat dibekalkan',
   supplied: 'Data dibekalkan',
-  synthetic: 'DEMO / SYNTHETIC',
+  synthetic: 'Senario rekaan',
   organisation: 'Organisasi',
   programme: 'Program',
   facility: 'Fasiliti',
   partner: 'Rakan',
   forum: 'Forum',
 };
-export const displayLabel = (value: string) => labels[value] ?? value;
+export const displayLabel = (value: string) =>
+  labels[value] ??
+  value
+    .replaceAll('DEMO / SYNTHETIC', '')
+    .replace(/\s*·\s*$/, '')
+    .trim();
 export const actorName = (value: string) =>
   Object.values(demoIdentities).find((p) => p.id === value)?.name ?? value;
 export const geographyName = (value: string) =>

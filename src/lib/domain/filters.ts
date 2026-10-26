@@ -48,3 +48,27 @@ export function filterQuery(filters: Partial<Filters>): string {
   for (const [k, v] of Object.entries(filters)) if (v !== undefined) p.set(k, v);
   return p.toString();
 }
+
+/** Carry only recognised analytical filters between pages, never workflow/private query data. */
+export function navigationHref(
+  path: string,
+  filters: Filters,
+  selectedState?: string | null,
+): string {
+  const current = /^\/ddn-2\/teras\/([1-4])$/.exec(path)?.[1];
+  const destination = current === '4' ? '5' : (current ?? /^\/teras\/([1-5])$/.exec(path)?.[1]);
+  const geography =
+    filters.geography === 'MY' && selectedState && /^MY-(0[1-9]|1[0-6])$/.test(selectedState)
+      ? selectedState
+      : filters.geography;
+  const next = { ...filters, geography };
+  if (destination) {
+    next.layer = destination === '3' ? 'supply' : destination === '4' ? 'harm' : 'burden';
+    if (destination === '5') next.geography = 'MY';
+  }
+  const query = new URLSearchParams(filterQuery(next));
+  // The merged page chooses treatment or harm from the viewer's existing grants.
+  // Injecting burden here overrides the harm-only viewer's correct default.
+  if (current === '2') query.delete('layer');
+  return `${path}?${query}`;
+}

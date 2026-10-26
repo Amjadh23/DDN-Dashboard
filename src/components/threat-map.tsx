@@ -1,5 +1,8 @@
 'use client';
+import { displayLabel } from '@/lib/domain/display';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
+import { domainHref } from '@/lib/domain/pillars';
 import { useEffect, useRef, useState, useTransition } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
@@ -62,7 +65,7 @@ export function ThreatMap({
 }) {
   const overview = variant === 'overview';
   const supplied = isAnnualPeriod(filters.period) && filters.source !== 'synthetic';
-  const evidenceLabel = supplied ? 'Data dibekalkan · sempadan DEMO' : 'DEMO / SYNTHETIC';
+  const evidenceLabel = supplied ? 'Data dibekalkan · sempadan DEMO' : 'senario rekaan';
   const [pending, startTransition] = useTransition();
   const params = useSearchParams(),
     path = usePathname(),
@@ -96,7 +99,7 @@ export function ThreatMap({
     supplied && ['2024', '2025'].includes(filters.period) && filters.layer === 'burden';
   const bandLabel = suppliedBands
     ? 'Kadar relatif · kaedah DEMO'
-    : 'Tahap relatif · DEMO / SYNTHETIC';
+    : 'Tahap relatif · senario rekaan';
   const bandVersion = suppliedBands ? 'supplied-relative-range-v1' : demoPalette.version;
   const bandText = (level: 'low' | 'medium' | 'high') =>
     suppliedBands
@@ -153,14 +156,12 @@ export function ThreatMap({
     setView(clampView({ k, x: W / 2 - target.cx * k, y: H / 2 - target.cy * k }));
   }
   function tipAt(id: string, clientX: number, clientY: number) {
-    const box = canvasRef.current?.getBoundingClientRect();
-    if (box)
-      setHover({
-        id,
-        x: clientX - box.left,
-        y: clientY - box.top,
-        flip: clientX - box.left > box.width - 260,
-      });
+    setHover({
+      id,
+      x: Math.max(16, Math.min(clientX + 18, window.innerWidth - 336)),
+      y: Math.max(16, Math.min(clientY - 120, window.innerHeight - 420)),
+      flip: false,
+    });
   }
   function tipAtShape(id: string) {
     const target = shapes.find((s) => s.id === id),
@@ -171,7 +172,7 @@ export function ThreatMap({
       target.cx * view.k + view.x,
       target.cy * view.k + view.y,
     ).matrixTransform(m);
-    setHover({ id, x: p.x - box.left, y: p.y - box.top, flip: p.x - box.left > box.width - 260 });
+    tipAt(id, p.x, p.y);
   }
   useEffect(() => {
     const svg = svgRef.current;
@@ -528,19 +529,6 @@ export function ThreatMap({
                         </circle>
                       ) : null;
                     })}
-                  {shapes
-                    .filter((s) => ['MY-01', 'MY-03', 'MY-12', 'MY-13'].includes(s.id))
-                    .map((s) => (
-                      <text
-                        key={s.id}
-                        x={s.cx}
-                        y={s.cy + (s.id === 'MY-13' ? 6 : 0)}
-                        className="state-map-label"
-                        textAnchor="middle"
-                      >
-                        {s.name.toUpperCase()}
-                      </text>
-                    ))}
                   <g className="map-highlights" aria-hidden="true" pointerEvents="none">
                     {hoverShape && hoverShape.id !== active && (
                       <path
@@ -586,46 +574,117 @@ export function ThreatMap({
                   MALAYSIA TIMUR
                 </text>
               </svg>
-              {hover && (
-                <div
-                  className={`map-tooltip ${hover.flip ? 'flip' : ''}`}
-                  style={{ left: hover.x, top: hover.y }}
-                  aria-hidden="true"
-                >
-                  <span className="map-tooltip-name">
-                    {hoverShape?.name ?? hover.id}
-                    {hover.id === active && <em>Dipilih</em>}
-                  </span>
-                  {hoverZone?.state === 'value' ? (
-                    <strong>
-                      {formatNumber(
-                        filters.mode === 'count' ? hoverZone.count : hoverZone.rate,
-                        filters.mode === 'count' ? 0 : 1,
-                      )}
-                      <small>
-                        {filters.mode === 'count'
-                          ? supplied
-                            ? 'orang direkodkan'
-                            : 'bilangan agregat demo'
-                          : unit}
-                      </small>
-                    </strong>
-                  ) : (
-                    <strong>{tipValue(hoverZone)}</strong>
-                  )}
-                  {band(hoverZone) && (
-                    <span className={`map-band-tag band-${band(hoverZone)}`}>
-                      {bandText(band(hoverZone)!)}
+              {hover &&
+                createPortal(
+                  <div
+                    className={`map-tooltip ${hover.flip ? 'flip' : ''}`}
+                    style={{ left: hover.x, top: hover.y }}
+                    aria-hidden="true"
+                  >
+                    <span className="map-tooltip-name">
+                      {hoverShape?.name ?? hover.id}
+                      {hover.id === active && <em>Dipilih</em>}
                     </span>
-                  )}
-                  <span className="map-tooltip-meta">
-                    {hoverZone?.state === 'value' && hoverZone.confidence != null
-                      ? `Kelengkapan ${formatNumber(hoverZone.confidence)}% · `
-                      : ''}
-                    {evidenceLabel}
-                  </span>
-                </div>
-              )}
+                    {hoverZone?.state === 'value' ? (
+                      <strong>
+                        {formatNumber(
+                          filters.mode === 'count' ? hoverZone.count : hoverZone.rate,
+                          filters.mode === 'count' ? 0 : 1,
+                        )}
+                        <small>
+                          {filters.mode === 'count'
+                            ? supplied
+                              ? 'orang direkodkan'
+                              : 'bilangan agregat demo'
+                            : unit}
+                        </small>
+                      </strong>
+                    ) : (
+                      <strong>{tipValue(hoverZone)}</strong>
+                    )}
+                    {band(hoverZone) && (
+                      <span className={`map-band-tag band-${band(hoverZone)}`}>
+                        {bandText(band(hoverZone)!)}
+                      </span>
+                    )}
+                    <dl className="map-tooltip-facts">
+                      <div>
+                        <dt>Status</dt>
+                        <dd>
+                          {hoverZone ? stateLabels[hoverZone.state] : 'Tiada data dalam skop'}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Kedudukan kadar</dt>
+                        <dd>
+                          {hoverZone?.state === 'value' && hoverZone.rate != null
+                            ? String(sorted.findIndex((z) => z.id === hoverZone.id) + 1) +
+                              ' / ' +
+                              sorted.filter((z) => z.rate != null).length
+                            : 'Tidak boleh dibandingkan'}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>{supplied ? 'Keyakinan' : 'Kelengkapan demo'}</dt>
+                        <dd>
+                          {hoverZone?.confidence == null
+                            ? 'Belum disahkan'
+                            : formatNumber(hoverZone.confidence) + '%'}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Bilangan</dt>
+                        <dd>
+                          {hoverZone?.state === 'value'
+                            ? formatNumber(hoverZone.count)
+                            : tipValue(hoverZone)}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>{filters.layer === 'confidence' ? 'Kelengkapan' : 'Kadar / 100k'}</dt>
+                        <dd>
+                          {hoverZone?.state === 'value'
+                            ? formatNumber(hoverZone.rate, 1)
+                            : tipValue(hoverZone)}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Penyebut</dt>
+                        <dd>
+                          {hoverZone?.state === 'value'
+                            ? formatNumber(hoverZone.denominator)
+                            : 'Tidak dipaparkan'}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Tempoh</dt>
+                        <dd>{hoverZone?.period ?? filters.period}</dd>
+                      </div>
+                      <div>
+                        <dt>Perbandingan</dt>
+                        <dd>
+                          {filters.compare === 'none'
+                            ? 'Tidak dipilih'
+                            : hoverZone?.state === 'value' && hoverZone.change != null
+                              ? formatNumber(hoverZone.change, 1) + '% · ' + filters.compare
+                              : 'Tidak tersedia'}
+                        </dd>
+                      </div>
+                    </dl>
+                    <span className="map-tooltip-meta">
+                      Sumber: {displayLabel(hoverZone?.source ?? 'Tidak tersedia')}. Penyebut:{' '}
+                      {displayLabel(hoverZone?.denominatorSource ?? 'Tidak tersedia')}. Segar semula{' '}
+                      {supplied ? '7 Oktober 2026' : '7 September 2026'}.
+                    </span>
+                    <span className="map-tooltip-meta">
+                      {hoverZone?.state === 'value' && hoverZone.confidence != null
+                        ? `Kelengkapan ${formatNumber(hoverZone.confidence)}% · `
+                        : ''}
+                      {evidenceLabel}
+                    </span>
+                  </div>,
+                  document.body,
+                )}
               {interactive && (
                 <div className={`map-hint ${hint ? 'show' : ''}`} aria-hidden="true">
                   Tekan Ctrl + tatal untuk zum · seret untuk alih
@@ -785,190 +844,198 @@ export function ThreatMap({
           </div>
         </div>
         <aside className="zone-detail" aria-live="polite">
-          <div className="zone-detail-label">
-            <span>NEGERI DIPILIH</span>
-            {!overview && <span>{active}</span>}
-          </div>
-          <h3>{shape?.name ?? 'Pilih negeri'}</h3>
-          <div className="zone-detail-badges">
-            <Badge tone={supplied ? 'source' : 'demo'}>{evidenceLabel}</Badge>
-            <Badge>{zone ? stateLabels[zone.state] : 'Tiada data dalam skop'}</Badge>
-          </div>
-          {selectedBand && (
-            <span className={`map-band-tag band-${selectedBand}`}>{bandText(selectedBand)}</span>
-          )}
-          <div
-            className={`zone-value ${!zone || zone.state !== 'value' ? 'zone-unavailable' : ''}`}
-          >
-            {!zone || zone.state !== 'value'
-              ? zone
-                ? stateLabels[zone.state]
-                : 'Tiada data dalam skop'
-              : formatNumber(
-                  filters.mode === 'count' ? (zone?.count ?? null) : (zone?.rate ?? null),
-                  filters.mode === 'count' ? 0 : 1,
-                )}
-            {zone?.state === 'value' && (
-              <small>
-                {filters.mode === 'count'
-                  ? supplied
-                    ? 'orang direkodkan'
-                    : 'bilangan agregat demo'
-                  : unit}
-              </small>
+          <div className="zone-summary">
+            <div className="zone-detail-label">
+              <span>NEGERI DIPILIH</span>
+              {!overview && <span>{active}</span>}
+            </div>
+            <h3>{shape?.name ?? 'Pilih negeri'}</h3>
+            <div className="zone-detail-badges">
+              <Badge tone={supplied ? 'source' : 'demo'}>{evidenceLabel}</Badge>
+              <Badge>{zone ? stateLabels[zone.state] : 'Tiada data dalam skop'}</Badge>
+            </div>
+            {selectedBand && (
+              <span className={`map-band-tag band-${selectedBand}`}>{bandText(selectedBand)}</span>
             )}
-          </div>
-          {zone?.state === 'suppressed' && (
-            <p className="overview-state-explanation">
-              Nilai disekat untuk melindungi kiraan kecil. Ia tidak bermaksud sifar.
-            </p>
-          )}
-          {(!zone || (zone.state !== 'value' && zone.state !== 'suppressed')) && (
-            <p className="overview-state-explanation">
-              Nilai tidak tersedia bagi lapisan dan skop ini. Status ini tidak bermaksud sifar.
-            </p>
-          )}
-          {(!overview || filters.compare !== 'none') && (
-            <div className="zone-comparison">
-              {zone?.change !== null && zone?.change !== undefined ? (
-                <>
-                  <ArrowUpRight size={15} />
-                  {zone.change > 0 ? '+' : ''}
-                  {formatNumber(zone.change, 1)}% berbanding 2 Ogos
-                </>
-              ) : (
-                <>
-                  <span>—</span> Tiada perbandingan yang boleh dikira
-                </>
+            <div
+              className={`zone-value ${!zone || zone.state !== 'value' ? 'zone-unavailable' : ''}`}
+            >
+              {!zone || zone.state !== 'value'
+                ? zone
+                  ? stateLabels[zone.state]
+                  : 'Tiada data dalam skop'
+                : formatNumber(
+                    filters.mode === 'count' ? (zone?.count ?? null) : (zone?.rate ?? null),
+                    filters.mode === 'count' ? 0 : 1,
+                  )}
+              {zone?.state === 'value' && (
+                <small>
+                  {filters.mode === 'count'
+                    ? supplied
+                      ? 'orang direkodkan'
+                      : 'bilangan agregat demo'
+                    : unit}
+                </small>
               )}
             </div>
-          )}
-          <div className="zone-facts">
-            <div>
-              <span>Bilangan agregat</span>
-              <strong>{formatNumber(zone?.count ?? null)}</strong>
-            </div>
-            <div>
-              <span>
-                {filters.layer === 'confidence'
-                  ? 'Medan dijangka'
-                  : supplied
-                    ? 'Penduduk DOSM'
-                    : 'Populasi demo'}
-              </span>
-              <strong>{formatNumber(zone?.denominator ?? null)}</strong>
-            </div>
-            {!overview && (
+            {zone?.state === 'suppressed' && (
+              <p className="overview-state-explanation">
+                Nilai disekat untuk melindungi kiraan kecil. Ia tidak bermaksud sifar.
+              </p>
+            )}
+            {(!zone || (zone.state !== 'value' && zone.state !== 'suppressed')) && (
+              <p className="overview-state-explanation">
+                Nilai tidak tersedia bagi lapisan dan skop ini. Status ini tidak bermaksud sifar.
+              </p>
+            )}
+            {(!overview || filters.compare !== 'none') && (
+              <div className="zone-comparison">
+                {zone?.change !== null && zone?.change !== undefined ? (
+                  <>
+                    <ArrowUpRight size={15} />
+                    {zone.change > 0 ? '+' : ''}
+                    {formatNumber(zone.change, 1)}% berbanding 2 Ogos
+                  </>
+                ) : (
+                  <>
+                    <span>—</span> Tiada perbandingan yang boleh dikira
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+          <div className="zone-measures">
+            <div className="zone-facts">
               <div>
-                <span>Kedudukan kadar</span>
+                <span>Bilangan agregat</span>
+                <strong>{formatNumber(zone?.count ?? null)}</strong>
+              </div>
+              <div>
+                <span>
+                  {filters.layer === 'confidence'
+                    ? 'Medan dijangka'
+                    : supplied
+                      ? 'Penduduk DOSM'
+                      : 'Populasi demo'}
+                </span>
+                <strong>{formatNumber(zone?.denominator ?? null)}</strong>
+              </div>
+              {!overview && (
+                <div>
+                  <span>Kedudukan kadar</span>
+                  <strong>
+                    {rank
+                      ? `${String(rank).padStart(2, '0')} / ${sorted.filter((z) => z.rate !== null).length}`
+                      : 'Tidak boleh dibandingkan'}
+                  </strong>
+                </div>
+              )}
+              <div>
+                <span>Tempoh</span>
+                <strong>{dateBM(filters.period)}</strong>
+              </div>
+            </div>
+            <div className="confidence-block">
+              <div>
+                <span>
+                  <ShieldCheck size={14} />
+                  {supplied ? 'Keyakinan belum disahkan' : 'Kelengkapan medan demo'}
+                </span>
                 <strong>
-                  {rank
-                    ? `${String(rank).padStart(2, '0')} / ${sorted.filter((z) => z.rate !== null).length}`
-                    : 'Tidak boleh dibandingkan'}
+                  {zone?.confidence == null
+                    ? 'Tidak tersedia'
+                    : `${formatNumber(zone.confidence)}%`}
                 </strong>
               </div>
-            )}
-            <div>
-              <span>Tempoh</span>
-              <strong>{dateBM(filters.period)}</strong>
-            </div>
-          </div>
-          <div className="confidence-block">
-            <div>
-              <span>
-                <ShieldCheck size={14} />
-                {supplied ? 'Keyakinan belum disahkan' : 'Kelengkapan medan demo'}
-              </span>
-              <strong>
-                {zone?.confidence == null ? 'Tidak tersedia' : `${formatNumber(zone.confidence)}%`}
-              </strong>
-            </div>
-            <div className="meter">
-              <span style={{ width: `${zone?.confidence ?? 0}%` }} />
-            </div>
-            <p>
-              Kelengkapan ialah satu dimensi keyakinan. Formula keyakinan menyeluruh belum
-              diluluskan.
-            </p>
-          </div>
-          {!overview && (
-            <>
-              <div className="zone-context">
-                <h4>Perkara untuk diteliti</h4>
-                <p>
-                  {zone?.state === 'suppressed'
-                    ? 'Nilai dan pemacu disekat. Perincian yang boleh membongkar sel kecil tidak dihantar ke paparan.'
-                    : filters.layer === 'burden'
-                      ? 'Bandingkan keperluan rawatan dengan liputan perkhidmatan. Bilangan klien tidak mewakili prevalens masyarakat.'
-                      : filters.layer === 'supply'
-                        ? 'Isyarat penguatkuasaan tidak membuktikan kesalahan atau kadar prevalens.'
-                        : filters.layer === 'harm'
-                          ? 'Asingkan kejadian kemudaratan daripada jumlah perkhidmatan yang diberikan.'
-                          : 'Semak liputan, kelengkapan dan pemilik tindakan sebelum membuat keputusan.'}
-                </p>
+              <div className="meter">
+                <span style={{ width: `${zone?.confidence ?? 0}%` }} />
               </div>
-              <Link
-                className="button button-primary zone-action"
-                href={`/actions?geography=${active}&teras=${filters.layer === 'harm' ? 4 : filters.layer === 'supply' ? 3 : filters.layer === 'gap' ? 1 : 2}&layer=${filters.layer}&period=${filters.period}&publication=${encodeURIComponent(zone?.publication ?? 'demo-v1')}`}
-              >
-                <Plus size={15} />
-                Cipta tindakan bersama
-              </Link>
-              {zone && (
-                <details className="metric-details">
-                  <summary>Pemacu, sumber & versi</summary>
+              <p>
+                Kelengkapan ialah satu dimensi keyakinan. Formula keyakinan menyeluruh belum
+                diluluskan.
+              </p>
+            </div>
+          </div>
+          <div className="zone-followup">
+            {!overview && (
+              <>
+                <div className="zone-context">
+                  <h4>Perkara untuk diteliti</h4>
                   <p>
-                    {evidenceLabel} · {zone.source}
+                    {zone?.state === 'suppressed'
+                      ? 'Nilai dan pemacu disekat. Perincian yang boleh membongkar sel kecil tidak dihantar ke paparan.'
+                      : filters.layer === 'burden'
+                        ? 'Bandingkan keperluan rawatan dengan liputan perkhidmatan. Bilangan klien tidak mewakili prevalens masyarakat.'
+                        : filters.layer === 'supply'
+                          ? 'Isyarat penguatkuasaan tidak membuktikan kesalahan atau kadar prevalens.'
+                          : filters.layer === 'harm'
+                            ? 'Asingkan kejadian kemudaratan daripada jumlah perkhidmatan yang diberikan.'
+                            : 'Semak liputan, kelengkapan dan pemilik tindakan sebelum membuat keputusan.'}
                   </p>
-                  <dl className="id-cell">
-                    <dt>Populasi / penyebut</dt>
-                    <dd>{zone.denominatorSource}</dd>
-                    <dt>Sempadan</dt>
-                    <dd>{zone.boundary}</dd>
-                    <dt>Definisi / penerbitan</dt>
-                    <dd>
-                      {zone.definition} · {zone.publication}
-                    </dd>
-                    <dt>Segar semula</dt>
-                    <dd>{supplied ? '7 Oktober 2026' : '7 September 2026'}</dd>
-                  </dl>
-                  {zone.drivers.length ? (
-                    <table>
-                      <caption>Pemacu · {evidenceLabel}</caption>
-                      <thead>
-                        <tr>
-                          <th>Komponen</th>
-                          <th>Nilai</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {zone.drivers.map((d) => (
-                          <tr key={d.label}>
-                            <th>{d.label}</th>
-                            <td>
-                              {formatNumber(d.value)} {d.unit}
-                            </td>
+                </div>
+                <Link
+                  className="button button-primary zone-action"
+                  href={`/actions?geography=${active}&teras=${filters.layer === 'harm' ? 4 : filters.layer === 'supply' ? 3 : filters.layer === 'gap' ? 1 : 2}&layer=${filters.layer}&period=${filters.period}&publication=${encodeURIComponent(zone?.publication ?? 'demo-v1')}`}
+                >
+                  <Plus size={15} />
+                  Cipta tindakan bersama
+                </Link>
+                {zone && (
+                  <details className="metric-details">
+                    <summary>Pemacu, sumber & versi</summary>
+                    <p>
+                      {evidenceLabel} · {displayLabel(zone.source)}
+                    </p>
+                    <dl className="id-cell">
+                      <dt>Populasi / penyebut</dt>
+                      <dd>{displayLabel(zone.denominatorSource)}</dd>
+                      <dt>Sempadan</dt>
+                      <dd>{zone.boundary}</dd>
+                      <dt>Definisi / penerbitan</dt>
+                      <dd>
+                        {zone.definition} · {zone.publication}
+                      </dd>
+                      <dt>Segar semula</dt>
+                      <dd>{supplied ? '7 Oktober 2026' : '7 September 2026'}</dd>
+                    </dl>
+                    {zone.drivers.length ? (
+                      <table>
+                        <caption>Pemacu · {evidenceLabel}</caption>
+                        <thead>
+                          <tr>
+                            <th>Komponen</th>
+                            <th>Nilai</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  ) : (
-                    <p>Pemacu tidak tersedia atau disekat.</p>
-                  )}
-                  <p>
-                    Pecahan demografi dan program yang disokong boleh disemak melalui Teras
-                    berkaitan; titik sensitif tidak dipaparkan.
-                  </p>
-                </details>
-              )}
-              <Link
-                href={`/teras/${filters.layer === 'harm' ? 4 : filters.layer === 'supply' ? 3 : filters.layer === 'gap' ? 1 : 2}?${filterQuery(filters)}`}
-                className="zone-teras-link"
-              >
-                Teroka Teras berkaitan <ArrowUpRight size={14} />
-              </Link>
-            </>
-          )}
+                        </thead>
+                        <tbody>
+                          {zone.drivers.map((d) => (
+                            <tr key={d.label}>
+                              <th>{d.label}</th>
+                              <td>
+                                {formatNumber(d.value)} {d.unit}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    ) : (
+                      <p>Pemacu tidak tersedia atau disekat.</p>
+                    )}
+                    <p>
+                      Pecahan demografi dan program yang disokong boleh disemak melalui Teras
+                      berkaitan; titik sensitif tidak dipaparkan.
+                    </p>
+                  </details>
+                )}
+                <Link
+                  href={`${domainHref(filters.layer === 'harm' ? 4 : filters.layer === 'supply' ? 3 : filters.layer === 'gap' ? 1 : 2)}${filters.layer === 'harm' ? '&' : '?'}${filterQuery({ ...filters, geography: active })}`}
+                  className="zone-teras-link"
+                >
+                  Teroka Teras berkaitan <ArrowUpRight size={14} />
+                </Link>
+              </>
+            )}
+          </div>
         </aside>
       </div>
       {!overview && method && (
@@ -1008,7 +1075,8 @@ export function ThreatMap({
           </div>
           <p>
             <b>Versi:</b> definisi {zone?.definition ?? 'v1'} · {zone?.publication ?? 'demo-v1'} ·
-            Segar semula {supplied ? '7 Oktober 2026' : '7 September 2026'}. {zone?.source}.
+            Segar semula {supplied ? '7 Oktober 2026' : '7 September 2026'}.{' '}
+            {displayLabel(zone?.source ?? '')}.
           </p>
         </div>
       )}
@@ -1018,8 +1086,9 @@ export function ThreatMap({
         {evidenceLabel} · {layerLabels[filters.layer]} · {filters.period} · {active} ·{' '}
         {filters.mode === 'rate' ? unit : 'Bilangan'} · Definisi {zone?.definition ?? 'v1'} ·
         Penerbitan {zone?.publication ?? 'Tidak tersedia'} · Sempadan{' '}
-        {zone?.boundary ?? 'Tidak tersedia'}. {zone?.source}. Kiraan 1–4 dan sel pelengkap disekat;
-        tiada ambang ancaman rasmi. Kiraan bukan prevalens dan tidak membuktikan impak.
+        {zone?.boundary ?? 'Tidak tersedia'}. {displayLabel(zone?.source ?? '')}. Kiraan 1–4 dan sel
+        pelengkap disekat; tiada ambang ancaman rasmi. Kiraan bukan prevalens dan tidak membuktikan
+        impak.
       </div>
       <div className="map-bottom-note">
         <span>

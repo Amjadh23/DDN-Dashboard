@@ -1,6 +1,6 @@
 # Requirement-by-requirement status
 
-Generated from every stable requirement ID in SPEC.md. “Demonstrated locally” is evidence for the bounded synthetic prototype, not production approval or human acceptance. “Partial” explicitly does not mean complete. See VALIDATION.md for exact residual work and decisions. No requirement text has been changed.
+Generated from every stable requirement ID in SPEC.md. “Demonstrated locally” is evidence for the bounded synthetic prototype, not production approval or human acceptance. “Partial” explicitly does not mean complete. See VALIDATION.md for exact residual work and decisions. Stable requirement IDs are preserved. Current navigation is DDN 2.0: T1→pillar 1, T2 and T4→pillar 2 (separately scoped), T3→pillar 3, T5→pillar 4. See DDN2_VALIDATION.md for the restructuring checks; earlier V1 limitations remain.
 
 | Requirement | Status | Evidence / implementation |
 |---|---|---|
@@ -71,75 +71,75 @@ Generated from every stable requirement ID in SPEC.md. “Demonstrated locally�
 | MAP-030 | Demonstrated locally | `src/components/threat-map.tsx`, scoped DAL, semantics and map browser tests |
 | MAP-031 | Demonstrated locally | `src/components/threat-map.tsx`, scoped DAL, semantics and map browser tests |
 | MAP-032 | Demonstrated locally | `src/components/threat-map.tsx`, scoped DAL, semantics and map browser tests |
-| FR-T1-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T1-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T1-003 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T1-004 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T1-005 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T1-006 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T1-007 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T1-008 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| DATA-T1-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| VIS-T1-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| VIS-T1-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| VIS-T1-003 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| ACC-T1-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T2-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T2-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T2-003 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T2-004 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T2-005 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T2-006 | Deliberately gated / conditional | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T2-007 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T2-008 | Deliberately gated / conditional | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T2-009 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T2-010 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| DATA-T2-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| DATA-T2-002 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| VIS-T2-001 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| VIS-T2-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| ACC-T2-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T3-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T3-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T3-003 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T3-004 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T3-005 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T3-006 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T3-007 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T3-008 | Deliberately gated / conditional | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T3-009 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| DATA-T3-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| DATA-T3-002 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| VIS-T3-001 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| VIS-T3-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| ACC-T3-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T4-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T4-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T4-003 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T4-004 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T4-005 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T4-006 | Deliberately gated / conditional | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T4-007 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T4-008 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| DATA-T4-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| DATA-T4-002 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| VIS-T4-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| VIS-T4-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| ACC-T4-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T5-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T5-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T5-003 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T5-004 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T5-005 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T5-006 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T5-007 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T5-008 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| FR-T5-009 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| DATA-T5-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| DATA-T5-002 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| VIS-T5-001 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| VIS-T5-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
-| ACC-T5-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T1-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T1-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T1-003 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T1-004 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T1-005 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T1-006 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T1-007 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T1-008 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| DATA-T1-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| VIS-T1-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| VIS-T1-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| VIS-T1-003 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| ACC-T1-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T2-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T2-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T2-003 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T2-004 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T2-005 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T2-006 | Deliberately gated / conditional | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T2-007 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T2-008 | Deliberately gated / conditional | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T2-009 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T2-010 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| DATA-T2-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| DATA-T2-002 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| VIS-T2-001 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| VIS-T2-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| ACC-T2-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T3-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T3-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T3-003 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T3-004 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T3-005 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T3-006 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T3-007 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T3-008 | Deliberately gated / conditional | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T3-009 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| DATA-T3-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| DATA-T3-002 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| VIS-T3-001 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| VIS-T3-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| ACC-T3-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T4-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T4-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T4-003 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T4-004 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T4-005 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T4-006 | Deliberately gated / conditional | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T4-007 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T4-008 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| DATA-T4-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| DATA-T4-002 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| VIS-T4-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| VIS-T4-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| ACC-T4-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T5-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T5-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T5-003 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T5-004 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T5-005 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T5-006 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T5-007 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T5-008 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| FR-T5-009 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| DATA-T5-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| DATA-T5-002 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| VIS-T5-001 | Demonstrated locally | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| VIS-T5-002 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
+| ACC-T5-001 | Partial or acceptance evidence pending | `src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests |
 | DATA-020 | Demonstrated locally | Domain registry/semantics, migrations, seed and source reconciliation tests |
 | DATA-021 | Partial or acceptance evidence pending | Domain registry/semantics, migrations, seed and source reconciliation tests |
 | DATA-022 | Partial or acceptance evidence pending | Domain registry/semantics, migrations, seed and source reconciliation tests |

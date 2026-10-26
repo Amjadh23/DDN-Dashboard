@@ -67,7 +67,7 @@ test('Scenario Semasa retains supplied snapshot and full map controls', async ({
     'href',
     /geography=MY-01/,
   );
-  await expect(page.locator('.overview-teras a')).toHaveCount(5);
+  await expect(page.locator('.overview-teras a')).toHaveCount(4);
   await expect(page.getByRole('heading', { name: 'Kualiti bukti' })).toHaveCount(0);
 });
 
@@ -96,13 +96,13 @@ test('overview supports keyboard states, period changes and narrow source detail
 }) => {
   await page.goto('/');
   await page
-    .getByRole('button', { name: 'Perlis: Nilai tersedia. DEMO / SYNTHETIC', exact: true })
+    .getByRole('button', { name: 'Perlis: Nilai tersedia. senario rekaan', exact: true })
     .press('Enter');
   await expect(page.locator('.zone-value')).toContainText('0');
   await page.reload();
   await expect(page.locator('.zone-detail h3')).toHaveText('Perlis');
   await page
-    .getByRole('button', { name: 'W.P. Putrajaya: Tidak diketahui. DEMO / SYNTHETIC', exact: true })
+    .getByRole('button', { name: 'W.P. Putrajaya: Tidak diketahui. senario rekaan', exact: true })
     .press('Enter');
   await expect(page.locator('.zone-value')).toHaveText('Tidak diketahui');
   await page.getByRole('combobox', { name: 'Tempoh', exact: true }).selectOption('2026-08-02');

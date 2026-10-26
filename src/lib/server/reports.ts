@@ -1,4 +1,5 @@
 import 'server-only';
+import { POLICY_MAPPING_VERSION } from '../domain/pillars';
 import { createHash, randomUUID } from 'node:crypto';
 import ExcelJS from 'exceljs';
 import { allowed, type Resource, type Session } from '../domain/policy';
@@ -26,6 +27,7 @@ interface FrozenZone extends MapZoneDTO {
   access: Resource;
 }
 interface SavedContext {
+  policyMappingVersion?: typeof POLICY_MAPPING_VERSION;
   schema: typeof SNAPSHOT_SCHEMA;
   title: string;
   filters: Filters;
@@ -50,6 +52,7 @@ interface ExportContext {
   resources: Resource[];
 }
 export interface SavedReportDTO {
+  policyMappingVersion: string | null;
   id: string;
   title: string;
   createdAt: string;
@@ -91,6 +94,8 @@ function parseSavedContext(value: unknown): SavedContext {
   const context = value as Partial<SavedContext>;
   if (
     context.schema !== SNAPSHOT_SCHEMA ||
+    (context.policyMappingVersion !== undefined &&
+      context.policyMappingVersion !== POLICY_MAPPING_VERSION) ||
     typeof context.title !== 'string' ||
     typeof context.generatedAt !== 'string' ||
     typeof context.classification !== 'string' ||
@@ -153,6 +158,7 @@ function dto(id: string, createdAt: string, context: SavedContext): SavedReportD
   return {
     id,
     title: context.title,
+    policyMappingVersion: context.policyMappingVersion ?? null,
     createdAt,
     generatedAt: context.generatedAt,
     classification: context.classification,
@@ -266,6 +272,7 @@ async function captureSnapshot(
         : SUPPLIED;
   return {
     schema: SNAPSHOT_SCHEMA,
+    policyMappingVersion: POLICY_MAPPING_VERSION,
     title,
     filters,
     generatedAt: new Date().toISOString(),
@@ -364,6 +371,8 @@ const spreadsheetString = (value: unknown) => {
 function metadataRows(context: SavedContext): [string, string][] {
   return [
     ['title', context.title],
+    ['policy_mapping_version', context.policyMappingVersion ?? 'legacy-domain-v1'],
+    ['resource_scope', 'Original DDN 2017 domains; permissions unchanged'],
     ['filters', JSON.stringify(context.filters)],
     ['period', context.filters.period],
     ['generated_at', context.generatedAt],

@@ -1,4 +1,5 @@
 import { expect, test, type APIRequestContext } from '@playwright/test';
+import pg from 'pg';
 
 const origin = process.env.E2E_BASE_URL!;
 const headers = { origin };
@@ -17,6 +18,37 @@ const filters = {
   confidence: 'all',
   organisation: 'all',
 };
+
+test('historical snapshots without policy mapping still export with original access scope', async ({
+  request,
+}) => {
+  await profile(request, 'analyst');
+  const response = await request.post('/api/v1/reports', {
+    headers,
+    data: { title: 'Historical mapping compatibility fixture', filters },
+  });
+  expect(response.ok()).toBeTruthy();
+  const createdId = (await response.json()).savedView.id;
+  const id = crypto.randomUUID();
+  const pool = new pg.Pool({ connectionString: process.env.DATABASE_ADMIN_URL });
+  try {
+    // Only the isolated runner database: simulate a genuine v1 snapshot, not a source migration.
+    expect(new URL(process.env.DATABASE_ADMIN_URL!).pathname).toMatch(/^\/dashboard_e2e_/);
+    await pool.query(
+      "INSERT INTO core.saved_view(id,title,actor,organisation,context) SELECT $2,title,actor,organisation,context-'policyMappingVersion' FROM core.saved_view WHERE id=$1",
+      [createdId, id],
+    );
+    const generated = await request.post(`/api/v1/reports/${id}/exports`, {
+      headers,
+      data: { format: 'csv' },
+    });
+    expect(generated.ok(), await generated.text()).toBeTruthy();
+    const csv = await request.get((await generated.json()).export.downloadUrl);
+    expect(await csv.text()).toContain('"policy_mapping_version","legacy-domain-v1"');
+  } finally {
+    await pool.end();
+  }
+});
 
 test('analyst saves a frozen disclosed report and downloads actor-bound CSV', async ({ page }) => {
   const api = page.request;
@@ -60,6 +92,7 @@ test('analyst saves a frozen disclosed report and downloads actor-bound CSV', as
   expect(csv).toContain('Petikan sumber dibekalkan');
   expect(csv).toContain('publication_version');
   expect(csv).toContain('definition_version');
+  expect(csv).toContain('"policy_mapping_version","ddn2-client-2026-10-26"');
 
   await page.goto('/reports');
   await expect(page.getByRole('heading', { name: 'Laporan & paparan tersimpan' })).toBeVisible();

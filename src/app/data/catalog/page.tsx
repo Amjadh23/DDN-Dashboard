@@ -1,3 +1,4 @@
+import { domainLabel } from '@/lib/domain/pillars';
 import Link from 'next/link';
 import { ArrowUpRight, Database, FileText, FlaskConical, ShieldCheck } from 'lucide-react';
 import { Badge, DemoBadge, PageHeading, Panel } from '@/components/ui';
@@ -78,7 +79,7 @@ export default async function DataCatalogue() {
           const owners = unique(entry.definitions.map((definition) => definition.owner));
           const freshness = unique(entry.definitions.map((definition) => definition.freshness));
           const teras = unique(
-            entry.definitions.map((definition) => String(definition.teras)),
+            entry.definitions.map((definition) => domainLabel(definition.teras)),
           ).join(', ');
           return (
             <Panel
@@ -99,7 +100,7 @@ export default async function DataCatalogue() {
                 </div>
                 <Disclosure
                   title="Pemilik, kesegaran & jejak data"
-                  meta={`${entry.definitions.length} indikator · Teras ${teras}`}
+                  meta={`${entry.definitions.length} indikator · ${teras}`}
                 >
                   <div className="table-scroll registry-definition">
                     <table>
@@ -122,7 +123,7 @@ export default async function DataCatalogue() {
                         </tr>
                         <tr>
                           <th scope="row">Sumber</th>
-                          <td>{entry.source}</td>
+                          <td>{displayLabel(entry.source)}</td>
                         </tr>
                         <tr>
                           <th scope="row">Medan metadata</th>
@@ -135,7 +136,7 @@ export default async function DataCatalogue() {
                         <tr>
                           <th scope="row">Liputan daftar</th>
                           <td>
-                            {entry.definitions.length} indikator · Teras {teras}
+                            {entry.definitions.length} indikator · {teras}
                           </td>
                         </tr>
                         <tr>

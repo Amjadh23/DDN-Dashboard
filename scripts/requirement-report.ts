@@ -13,7 +13,7 @@ const gated = new Set(
 );
 function evidence(id: string) {
   if (/T[1-5]/.test(id))
-    return '`src/components/teras-content.tsx`, `src/app/teras/[id]/page.tsx`, source reconciliation and Teras browser tests';
+    return '`src/components/teras-content.tsx`, `src/app/ddn-2/teras/[id]/page.tsx`, source reconciliation and Teras browser tests';
   if (id.startsWith('MAP'))
     return '`src/components/threat-map.tsx`, scoped DAL, semantics and map browser tests';
   if (id.startsWith('WF') || /^DATA-0(3|4)/.test(id))
@@ -32,6 +32,6 @@ const rows = ids.map(
 );
 await writeFile(
   'docs/REQUIREMENT_STATUS.md',
-  `# Requirement-by-requirement status\n\nGenerated from every stable requirement ID in SPEC.md. “Demonstrated locally” is evidence for the bounded synthetic prototype, not production approval or human acceptance. “Partial” explicitly does not mean complete. See VALIDATION.md for exact residual work and decisions. No requirement text has been changed.\n\n| Requirement | Status | Evidence / implementation |\n|---|---|---|\n${rows.join('\n')}\n`,
+  `# Requirement-by-requirement status\n\nGenerated from every stable requirement ID in SPEC.md. “Demonstrated locally” is evidence for the bounded synthetic prototype, not production approval or human acceptance. “Partial” explicitly does not mean complete. See VALIDATION.md for exact residual work and decisions. Stable requirement IDs are preserved. Current navigation is DDN 2.0: T1→pillar 1, T2 and T4→pillar 2 (separately scoped), T3→pillar 3, T5→pillar 4. See DDN2_VALIDATION.md for the restructuring checks; earlier V1 limitations remain.\n\n| Requirement | Status | Evidence / implementation |\n|---|---|---|\n${rows.join('\n')}\n`,
 );
 console.log(`Recorded ${ids.length} requirement IDs without changing SPEC.md.`);

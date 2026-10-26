@@ -1,14 +1,14 @@
 'use client';
 import Link from 'next/link';
+import { pillars } from '@/lib/domain/pillars';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import {
   LayoutDashboard,
   GraduationCap,
   HeartPulse,
   ShieldCheck,
-  HandHeart,
   Globe2,
   Database,
   BookOpen,
@@ -26,14 +26,14 @@ import type { Role } from '@/lib/domain/policy';
 import { MockAssistant } from './mock-assistant';
 import { ThemeToggle } from './theme-toggle';
 import { Character, rolePersonas } from './illustrations';
+import { navigationHref, parseFilters } from '@/lib/domain/filters';
 
 const navigation = [
   { href: '/', label: 'Scenario Semasa', icon: LayoutDashboard },
-  { href: '/teras/1', label: 'Pendidikan pencegahan', icon: GraduationCap, n: '01' },
-  { href: '/teras/2', label: 'Rawatan & pemulihan', icon: HeartPulse, n: '02' },
-  { href: '/teras/3', label: 'Penguatkuasaan', icon: ShieldCheck, n: '03' },
-  { href: '/teras/4', label: 'Pengurangan kemudaratan', icon: HandHeart, n: '04' },
-  { href: '/teras/5', label: 'Kerjasama antarabangsa', icon: Globe2, n: '05' },
+  { href: '/ddn-2/teras/1', label: pillars[1].title, icon: GraduationCap, n: '01' },
+  { href: '/ddn-2/teras/2', label: pillars[2].title, icon: HeartPulse, n: '02' },
+  { href: '/ddn-2/teras/3', label: pillars[3].title, icon: ShieldCheck, n: '03' },
+  { href: '/ddn-2/teras/4', label: pillars[4].title, icon: Globe2, n: '04' },
 ];
 const workspace = [
   { href: '/data/uploads', label: 'Hab data', icon: Database },
@@ -52,7 +52,10 @@ export function AppShell({
   initialTheme: 'light' | 'dark';
 }) {
   const path = usePathname(),
-    router = useRouter();
+    router = useRouter(),
+    params = useSearchParams();
+  const filters = parseFilters(Object.fromEntries(params.entries()));
+  const href = (target: string) => navigationHref(target, filters, params.get('state'));
   const [open, setOpen] = useState(false),
     [error, setError] = useState(''),
     [busy, setBusy] = useState(false);
@@ -107,10 +110,14 @@ export function AppShell({
             </button>
           </div>
           <div className="brand-subtitle">DASAR DADAH NEGARA</div>
-          <Link className="brand-mission" href="/#peta-strategik" onClick={() => setOpen(false)}>
+          <Link
+            className="brand-mission"
+            href={`${href('/')}#peta-strategik`}
+            onClick={() => setOpen(false)}
+          >
             <span className="mission-kicker">BUKTI MENJADI TINDAKAN</span>
             <strong>
-              Lima teras.
+              Empat teras.
               <br />
               Satu hala tuju.
             </strong>
@@ -123,11 +130,11 @@ export function AppShell({
             {navigation.map((item, i) => (
               <div key={item.href}>
                 {i === 1 && (
-                  <div className="nav-section-label teras-nav-label">LIMA TERAS DASAR</div>
+                  <div className="nav-section-label teras-nav-label">EMPAT TERAS DDN 2.0</div>
                 )}
                 <Link
                   className={`nav-item ${path === item.href ? 'active' : ''}`}
-                  href={item.href}
+                  href={href(item.href)}
                   aria-current={path === item.href ? 'page' : undefined}
                   onClick={() => setOpen(false)}
                 >
@@ -144,7 +151,7 @@ export function AppShell({
               <Link
                 key={item.href}
                 className={`nav-item ${path === item.href ? 'active' : ''}`}
-                href={item.href}
+                href={href(item.href)}
                 aria-current={path === item.href ? 'page' : undefined}
                 onClick={() => setOpen(false)}
               >
@@ -156,7 +163,7 @@ export function AppShell({
           <div className="sidebar-bottom">
             <Link
               className={`nav-item ${path.startsWith('/admin') ? 'active' : ''}`}
-              href="/admin/governance"
+              href={href('/admin/governance')}
               onClick={() => setOpen(false)}
             >
               <Settings2 size={17} />
@@ -186,9 +193,10 @@ export function AppShell({
               <span className="country-tag">Malaysia</span>
               <span>Ruang strategik kebangsaan</span>
               <span className="topbar-divider" />
-              <span className="muted topbar-extra">Dasar Dadah Negara 2017</span>
+              <span className="muted topbar-extra">DDN 2.0 · Empat teras</span>
             </div>
             <div className="topbar-actions">
+              <MockAssistant />
               <ThemeToggle initialMode={initialTheme} />
               <div className="profile">
                 <span className="profile-avatar">
@@ -229,7 +237,6 @@ export function AppShell({
           </footer>
         </div>
       </div>
-      <MockAssistant />
     </>
   );
 }

@@ -1,4 +1,5 @@
 'use client';
+import { pillarIds, pillars, domainLabel } from '@/lib/domain/pillars';
 import { useState, useEffect, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -206,7 +207,7 @@ export function UploadWorkspace({
                 <span>
                   <strong>{templates.find((t) => t.id === s.template)?.name ?? s.template}</strong>
                   <small>
-                    {geographyName(s.geography)} · Teras {s.teras} · {dateBM(s.period)}
+                    {geographyName(s.geography)} · {domainLabel(s.teras)} · {dateBM(s.period)}
                   </small>
                 </span>
                 <span>
@@ -358,7 +359,7 @@ export function UploadWorkspace({
               <div className="table-scroll">
                 <table>
                   <caption>
-                    Pratonton terkawal · DEMO / SYNTHETIC · sehingga 20 daripada {active.rows} baris
+                    Pratonton terkawal · senario rekaan · sehingga 20 daripada {active.rows} baris
                   </caption>
                   <thead>
                     <tr>
@@ -443,7 +444,7 @@ export function UploadWorkspace({
                       className="button button-primary"
                       onClick={() => act('publish')}
                     >
-                      Terbitkan DEMO / SYNTHETIC
+                      Terbitkan senario rekaan
                     </button>
                   )}
                 </div>
@@ -508,10 +509,14 @@ export function UploadWorkspace({
                     disabled={template !== 'aggregate'}
                     onChange={(e) => setTeras(Number(e.target.value))}
                   >
-                    {[1, 2, 3, 4, 5].map((n) => (
-                      <option key={n} value={n}>
-                        Teras {n}
-                      </option>
+                    {pillarIds.map((id) => (
+                      <optgroup key={id} label={`Teras ${id} · ${pillars[id].title}`}>
+                        {pillars[id].domains.map((domain) => (
+                          <option key={domain} value={domain}>
+                            {domainLabel(domain)}
+                          </option>
+                        ))}
+                      </optgroup>
                     ))}
                   </select>
                 </label>
@@ -586,7 +591,7 @@ export function UploadWorkspace({
                       checked={synthetic}
                       onChange={(e) => setSynthetic(e.target.checked)}
                     />
-                    Saya sahkan fail ini hanya mengandungi DEMO / SYNTHETIC dan tiada data peribadi.
+                    Saya sahkan fail ini hanya mengandungi senario rekaan dan tiada data peribadi.
                   </label>
                   {predecessor && (
                     <>

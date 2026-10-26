@@ -1,12 +1,12 @@
 # National Drug Policy Collaborative Dashboard
 
-A governed, collaborative dashboard concept for monitoring Malaysia's five National Drug Policy pillars (**Teras**) and helping participating organisations move from fragmented data to shared analysis and accountable action.
+A governed, collaborative dashboard concept for monitoring Malaysia's four DDN 2.0 National Drug Policy pillars (**Teras**) and helping participating organisations move from fragmented data to shared analysis and accountable action.
 
 ## Current Status
 
-The **V1 local stakeholder prototype is implemented and passes its automated validation**, with acceptance evidence and remaining limitations recorded in `docs/VALIDATION.md` and `PLANS.md`. Full contract acceptance remains open, including manual screen-reader review and the explicitly partial requirements in `docs/REQUIREMENT_STATUS.md`. It runs on Next.js 16.3.4, React 19.2.8, strict TypeScript and PostgreSQL17/PostGIS3.6.2.
+The **V1 local stakeholder prototype is implemented and passes its automated validation**, with acceptance evidence and remaining limitations recorded in `docs/VALIDATION.md` and `PLANS.md`. Full contract acceptance remains open, including manual screen-reader review and the explicitly partial requirements in `docs/REQUIREMENT_STATUS.md`. It runs on Next.js 16.4.0, React 19.2.8, strict TypeScript and PostgreSQL17/PostGIS3.6.2.
 
-Scenario Semasa combines the executive overview and full strategic map in one page; old `/map` links redirect there with filters preserved. The five Teras, registry, catalogue, upload/review/publication workflow, actions, saved reports and scoped demo administration are available. The stakeholder refinement introduces compact disclosure, current-work views and isolated regression databases. Production identity and governance remain unconfigured. The workspace is Git-backed; source documents are preserved.
+Scenario Semasa combines the executive overview and full strategic map in one page; old `/map` links redirect there with filters preserved. The four current Teras (five preserved data domains), registry, catalogue, upload/review/publication workflow, actions, saved reports and scoped demo administration are available. The stakeholder refinement introduces compact disclosure, current-work views and isolated regression databases. Production identity and governance remain unconfigured. The workspace is Git-backed; source documents are preserved.
 
 The visual theme and mock AIDA assistant match the user-supplied Vercel reference. AIDA provides predefined local help and navigation; messages stay in memory for this browser session. See `docs/VERCEL_DESIGN_MATCH.md` for design provenance, validation and screenshots.
 
@@ -29,7 +29,7 @@ The value chain is:
 shared evidence -> shared interpretation -> accountable coordinated action
 ```
 
-## Five Teras
+## Original five policy domains (historical crosswalk below)
 
 | Page | Teras | Primary question |
 |---|---|---|
@@ -174,3 +174,18 @@ For the production-compiled local prototype: `npm run build`, then `npm run star
 ## Validation
 
 Run `npm run format:check`, `npm run lint`, `npm run typecheck`, `npm run test:unit`, and `npm run build`, then `npm run test:db` / `npm run test:e2e`. Database and browser tests provision disposable databases; browser tests launch their own server on3100 and require Microsoft Edge. They must not run directly against the demonstration on3000. `npm run qa:visual` captures the demo's13 major routes at1440,390 and320 CSS pixels. Reconciliation is in `docs/source-reconciliation.md`; refinement evidence is in `docs/DEMO_REFINEMENT.md` and formal acceptance limitations remain in `docs/VALIDATION.md`.
+
+## Approved DDN 2.0 restructuring — 26 October 2026
+
+The client reference images and explicit human approval replace the current navigation with four Teras. This is a presentation-policy mapping, not a retroactive change to DDN 2017 or stored resource permissions.
+
+| Current pillar | Approved title | Original domains |
+|---|---|---|
+| 1 | Pencegahan Pintar & Generasi Celik | 1: prevention |
+| 2 | Pemulihan Tingkah Laku & Kesihatan Awam | 2: treatment; 4: harm reduction |
+| 3 | Penguatkuasaan Proaktif dan Ramalan Risiko | 3: enforcement |
+| 4 | Kerjasama Antarabangsa & Tadbir Urus Inklusif | 5: international |
+
+Canonical routes are /ddn-2/teras/1..4. Legacy /teras/4 redirects to current pillar 2's harm subview; /teras/5 redirects to current pillar 4. Stored teras values and API v1 teras fields remain original domain identifiers (1–5). Treatment and harm grants remain separate. Original T4/T5 requirement and KPI identifiers retain their meanings; their current presentation locations are pillar 2/pillar 4 respectively. No original data, immutable publications or reports are renumbered.
+
+Titles do not authorize forecasting/predictive policing, new clinical definitions, expanded permissions or exclusive agency assignments. DDN 2017 responsibility statements remain historical; DDN 2.0 commencement and current authority require stakeholder validation. Prior ACC-024 dashboard-label exception and export/upload classification controls remain unchanged. See docs/superpowers/specs/2026-10-26-ddn2-restructuring-design.md and docs/DDN2_IMPACT_ASSESSMENT.md.

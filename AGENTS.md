@@ -115,7 +115,7 @@ Version 1.0 is a **governed collaborative dashboard prototype and stakeholder-va
 V1 must demonstrate:
 
 - an executive overview;
-- one page for each of the five Teras;
+- one page for each of the four DDN 2.0 Teras (with the original five data/access domains preserved);
 - a transparent Malaysia threat-map experience;
 - common filters and decision-oriented visuals;
 - controlled data submission, validation, approval and publication;
@@ -292,10 +292,25 @@ If a run fails, also report where it failed, why, what was attempted and what re
 
 <!-- BEGIN:nextjs-agent-rules -->
 
-# This is NOT the Next.js you know
+## This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
 
 This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
 
 <!-- END:nextjs-agent-rules -->
+
+## Approved DDN 2.0 restructuring — 26 October 2026
+
+The client reference images and explicit human approval replace the current navigation with four Teras. This is a presentation-policy mapping, not a retroactive change to DDN 2017 or stored resource permissions.
+
+| Current pillar | Approved title | Original domains |
+|---|---|---|
+| 1 | Pencegahan Pintar & Generasi Celik | 1: prevention |
+| 2 | Pemulihan Tingkah Laku & Kesihatan Awam | 2: treatment; 4: harm reduction |
+| 3 | Penguatkuasaan Proaktif dan Ramalan Risiko | 3: enforcement |
+| 4 | Kerjasama Antarabangsa & Tadbir Urus Inklusif | 5: international |
+
+Canonical routes are /ddn-2/teras/1..4. Legacy /teras/4 redirects to current pillar 2's harm subview; /teras/5 redirects to current pillar 4. Stored teras values and API v1 teras fields remain original domain identifiers (1–5). Treatment and harm grants remain separate. Original T4/T5 requirement and KPI identifiers retain their meanings; their current presentation locations are pillar 2/pillar 4 respectively. No original data, immutable publications or reports are renumbered.
+
+Titles do not authorize forecasting/predictive policing, new clinical definitions, expanded permissions or exclusive agency assignments. DDN 2017 responsibility statements remain historical; DDN 2.0 commencement and current authority require stakeholder validation. Prior ACC-024 dashboard-label exception and export/upload classification controls remain unchanged. See docs/superpowers/specs/2026-10-26-ddn2-restructuring-design.md and docs/DDN2_IMPACT_ASSESSMENT.md.

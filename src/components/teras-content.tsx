@@ -115,7 +115,7 @@ export function TerasContent({
         ) && (
           <EmptyState
             title="Tiada senario dalam skop ini"
-            description="Penapis atau peranan semasa tidak membenarkan senario rekaan. Pilih DEMO / SYNTHETIC dan organisasi demo yang dibenarkan."
+            description="Penapis atau peranan semasa tidak membenarkan senario rekaan. Pilih senario rekaan dan organisasi demo yang dibenarkan."
           />
         )}
       </Panel>

@@ -1452,3 +1452,268 @@
     transition: none;
   }
 }
+/* Interface review: readable controls, compact map canvas and unobstructed guidance. */
+@media screen {
+  .filter-bar > label,
+  .overview-page .filter-bar > label {
+    flex: 1 1 240px;
+    min-width: min(100%, 240px);
+  }
+  .expanded-filters > label {
+    min-width: min(100%, 260px);
+    flex: 1 1 260px;
+  }
+  .filter-scope-note {
+    margin: 0;
+    padding: 0 16px 14px;
+    color: var(--muted);
+  }
+  .map-workspace,
+  .full-map-panel .map-workspace {
+    align-items: start;
+    min-height: 0;
+  }
+  .map-canvas,
+  .full-map-panel .map-canvas,
+  .overview-map .map-canvas {
+    flex: none;
+    min-height: 0;
+    padding-block: 24px;
+  }
+  .malaysia-map {
+    min-height: 0;
+  }
+  .map-tooltip,
+  .map-tooltip.flip {
+    position: fixed;
+    z-index: 100;
+    transform: none;
+    width: 320px;
+    min-width: 0;
+    max-width: calc(100vw - 32px);
+    max-height: calc(100vh - 32px);
+    overflow: auto;
+    pointer-events: none;
+  }
+  .map-tooltip-facts {
+    margin: 8px 0;
+    font-size: 14px;
+  }
+  .map-tooltip-facts > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .map-tooltip-facts dd {
+    margin: 0;
+    text-align: right;
+  }
+  .map-tooltip-meta {
+    overflow-wrap: anywhere;
+  }
+  .topbar {
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .topbar .assistant-launcher {
+    position: static;
+    padding: 4px 10px 4px 4px;
+    border-radius: 12px;
+    box-shadow: none;
+    gap: 6px;
+    transform: none;
+  }
+  .topbar .assistant-launcher img {
+    width: 32px;
+    height: 32px;
+  }
+  .topbar .assistant-launcher small {
+    display: none;
+  }
+  .page-heading {
+    padding: 22px 28px;
+    min-height: 150px;
+  }
+  .page-heading-art > svg {
+    max-height: 120px;
+    width: auto;
+  }
+  .brand-mission {
+    padding: 14px;
+    margin-block: 12px;
+  }
+  .partner-label-leader {
+    stroke: var(--muted);
+    stroke-width: 1;
+    fill: none;
+    pointer-events: none;
+  }
+  .partner-map-canvas {
+    --pm-land: light-dark(#e4dbce, #40372f);
+    --pm-border: light-dark(#fff, #796a5e);
+  }
+  .partner-map-label {
+    font-size: 16px;
+    paint-order: stroke;
+    stroke: var(--surface);
+    stroke-width: 3px;
+  }
+  @media (max-width: 600px) {
+    .topbar .assistant-launcher {
+      padding: 4px;
+    }
+    .topbar .assistant-launcher > span {
+      display: none;
+    }
+    .topbar-actions {
+      gap: 6px;
+    }
+    .page-heading {
+      padding: 18px;
+      min-height: 0;
+    }
+    .region-label {
+      display: none;
+    }
+    .map-canvas,
+    .full-map-panel .map-canvas {
+      padding-block: 32px;
+    }
+  }
+}
+@media screen {
+  .map-workspace,
+  .full-map-panel .map-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .zone-detail {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  .zone-summary,
+  .zone-measures,
+  .zone-followup {
+    min-width: 0;
+  }
+  .zone-detail .zone-facts {
+    margin-top: 0;
+  }
+  .zone-detail .zone-context {
+    margin-top: 0;
+  }
+  .filter-bar .reset-filter {
+    margin-left: 0;
+    border-left: 0;
+  }
+  .brand-mission strong {
+    font-size: 1.125rem;
+    margin: 6px 0 10px;
+  }
+  @media (max-width: 900px) {
+    .zone-detail {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+}
+
+/* Keep overview and full-map details out of narrow map sidebars. */
+@media screen {
+  .threat-panel .map-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .threat-panel .zone-detail {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    width: auto;
+    min-width: 0;
+    gap: 24px;
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  .threat-panel .zone-detail > div:empty {
+    display: none;
+  }
+  .threat-panel .zone-detail-label {
+    flex-wrap: wrap;
+  }
+  .threat-panel .zone-facts > div {
+    gap: 12px;
+  }
+}
+
+/* Desktop map details: one readable sidebar; stack only on narrow screens. */
+@media screen and (min-width: 901px) {
+  .threat-panel .map-workspace {
+    grid-template-columns: minmax(0, 1fr) 300px;
+    align-items: start;
+  }
+  .threat-panel .zone-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    border-top: 0;
+    border-left: 1px solid var(--line);
+    padding: 20px;
+  }
+  .threat-panel .zone-detail > div {
+    width: 100%;
+  }
+  .threat-panel .zone-facts {
+    display: block;
+  }
+  .threat-panel .zone-facts > div {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .threat-panel .zone-facts strong {
+    white-space: nowrap;
+  }
+}
+
+/* DDN 2.0: four policy pillars; domain choices retain independent access. */
+.overview-teras-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.nav-item {
+  min-width: 0;
+  white-space: normal;
+}
+.nav-item span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.domain-tabs {
+  flex-wrap: wrap;
+}
+.domain-tabs a {
+  white-space: normal;
+}
+@media (max-width: 1100px) {
+  .overview-teras-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .overview-teras-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Long domain labels must not impose a native select intrinsic minimum on mobile. */
+.search-form,
+.search-form label {
+  min-width: 0;
+  max-width: 100%;
+}
+.search-form select {
+  min-width: 0;
+  max-width: 100%;
+  width: 100%;
+}

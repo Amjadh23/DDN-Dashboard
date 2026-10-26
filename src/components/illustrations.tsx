@@ -507,7 +507,7 @@ export function TerasCharacter({
 export function TerasEnsemble() {
   return (
     <div className="teras-ensemble" aria-hidden="true">
-      {([1, 2, 3, 4, 5] as const).map((n) => (
+      {([1, 2, 3, 5] as const).map((n) => (
         <Character key={n} persona={terasPersonas[n]} size={112} className={`ensemble-${n}`} />
       ))}
     </div>

@@ -1,9 +1,10 @@
+import { pillars, pillarIds } from '@/lib/domain/pillars';
 import Link from 'next/link';
 import { ArrowUpRight, ChevronDown } from 'lucide-react';
 import { getSession } from '@/lib/server/auth';
 import { getMapZones, getMetrics } from '@/lib/server/dal';
 import { getStateShapes } from '@/lib/server/geometry';
-import { parseFilters, filterQuery, isAnnualPeriod } from '@/lib/domain/filters';
+import { parseFilters, filterQuery, isAnnualPeriod, navigationHref } from '@/lib/domain/filters';
 import { stateNames } from '@/lib/domain/demo-identities';
 import { dateBM, formatNumber } from '@/lib/domain/types';
 import { PageHeading, Badge } from '@/components/ui';
@@ -11,13 +12,7 @@ import { FilterBar } from '@/components/filters';
 import { ThreatMap } from '@/components/threat-map';
 import { TerasCharacter, TerasEnsemble } from '@/components/illustrations';
 
-const teras = [
-  { n: 1, title: 'Pendidikan pencegahan', status: 'Konteks sumber & demo', accent: 'teal' },
-  { n: 2, title: 'Rawatan & pemulihan', status: 'Petikan sumber tersedia', accent: 'blue' },
-  { n: 3, title: 'Penguatkuasaan', status: 'Petikan sumber & demo', accent: 'amber' },
-  { n: 4, title: 'Pengurangan kemudaratan', status: 'Senario demo', accent: 'rose' },
-  { n: 5, title: 'Kerjasama antarabangsa', status: 'Senario demo', accent: 'violet' },
-];
+const teras = pillarIds.map((n) => ({ n, ...pillars[n], status: 'Sumber & domain dipelihara' }));
 
 export default async function ScenarioSemasa({
   searchParams,
@@ -196,17 +191,17 @@ export default async function ScenarioSemasa({
       </div>
       <section className="overview-teras" aria-labelledby="overview-teras-heading">
         <div className="overview-section-heading">
-          <h2 id="overview-teras-heading">Teroka lima teras</h2>
-          <span>Dasar Dadah Negara 2017</span>
+          <h2 id="overview-teras-heading">Teroka empat teras</h2>
+          <span>DDN 2.0 · Empat teras</span>
         </div>
         <div className="overview-teras-grid">
           {teras.map((t) => (
             <Link
               key={t.n}
-              href={'/teras/' + t.n + '?' + query}
+              href={navigationHref('/ddn-2/teras/' + t.n, filters)}
               className={'overview-teras-link accent-' + t.accent}
             >
-              <TerasCharacter n={t.n} size={84} className="overview-teras-art" />
+              <TerasCharacter n={t.n === 4 ? 5 : t.n} size={84} className="overview-teras-art" />
               <span className="overview-teras-number">0{t.n}</span>
               <div>
                 <h3>{t.title}</h3>

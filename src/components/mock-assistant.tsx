@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import { useSearchParams } from 'next/navigation';
@@ -73,35 +74,35 @@ export function MockAssistant() {
         text: 'Pilih negeri dan lapisan pada peta, kemudian gunakan Cipta tindakan bersama untuk membawa konteks tersebut ke ruang tindakan. Catat pemilik, tarikh akhir dan bukti susulan; kebenaran anda tetap terpakai.',
         link: { label: 'Buka tindakan bersama', href: `/actions?${query}` },
       };
-      nextChoices = ['Terangkan peta', 'Lima teras'];
+      nextChoices = ['Terangkan peta', 'Empat teras'];
     } else if (/peta|map|warna|kadar/.test(topic)) {
       reply = {
         role: 'assistant',
-        text: 'Pilih lapisan dan negeri. Hijau, kuning dan merah menunjukkan kadar relatif dalam paparan: julat kadar positif dibahagi tiga. Kaedah ini tersedia untuk senario DEMO / SYNTHETIC dan kadar beban sumber dibekalkan 2024–2025. Buka legenda untuk had dan versi kaedah. Ini bukan tahap ancaman rasmi. Keyakinan kekal pada skala biru; mod bilangan menggunakan saiz simbol.',
+        text: 'Pilih lapisan dan negeri. Hijau, kuning dan merah menunjukkan kadar relatif dalam paparan: julat kadar positif dibahagi tiga. Kaedah ini tersedia untuk senario senario rekaan dan kadar beban sumber dibekalkan 2024–2025. Buka legenda untuk had dan versi kaedah. Ini bukan tahap ancaman rasmi. Keyakinan kekal pada skala biru; mod bilangan menggunakan saiz simbol.',
         link: { label: 'Terokai peta strategik', href: `${scenario}#peta-strategik` },
       };
       nextChoices = ['Apa maksud disekat?', 'Cipta tindakan'];
     } else if (/sumber|data|laporan/.test(topic)) {
       reply = {
         role: 'assistant',
-        text: 'Scenario Semasa memisahkan petikan sumber dibekalkan daripada senario DEMO / SYNTHETIC. Pilih tempoh untuk laporan mingguan atau Buku Maklumat Dadah 2025. Buka Tentang angka ini, pemacu peta atau katalog untuk sumber, takrif dan batasan. Angka pentadbiran bukan ukuran prevalens atau bukti impak program.',
+        text: 'Scenario Semasa memisahkan petikan sumber dibekalkan daripada senario senario rekaan. Pilih tempoh untuk laporan mingguan atau Buku Maklumat Dadah 2025. Buka Tentang angka ini, pemacu peta atau katalog untuk sumber, takrif dan batasan. Angka pentadbiran bukan ukuran prevalens atau bukti impak program.',
         link: { label: 'Lihat katalog data', href: '/data/catalog' },
       };
-      nextChoices = ['Terangkan peta', 'Lima teras'];
+      nextChoices = ['Terangkan peta', 'Empat teras'];
     } else if (/teras/.test(topic)) {
       reply = {
         role: 'assistant',
-        text: 'Lima Teras ialah Pendidikan Pencegahan, Rawatan dan Pemulihan, Penguatkuasaan, Pengurangan Kemudaratan dan Kerjasama Antarabangsa. Setiap halaman memaparkan bukti yang tersedia dan batasan senario. Mulakan dengan Teras yang sepadan dengan persoalan anda.',
-        link: { label: 'Teroka lima teras', href: `${scenario}#overview-teras-heading` },
+        text: 'Empat Teras DDN 2.0 ialah Pencegahan Pintar & Generasi Celik; Pemulihan Tingkah Laku & Kesihatan Awam; Penguatkuasaan Proaktif dan Ramalan Risiko; Kerjasama Antarabangsa & Tadbir Urus Inklusif. Rawatan dan pengurangan kemudaratan kekal sebagai dua domain dalam Teras 2. Setiap halaman memaparkan bukti yang tersedia dan batasan senario. Mulakan dengan Teras yang sepadan dengan persoalan anda.',
+        link: { label: 'Teroka empat teras', href: `${scenario}#overview-teras-heading` },
       };
       nextChoices = ['Sumber data', 'Cipta tindakan'];
     } else if (/lawatan|mula|scenario|gambaran/.test(topic)) {
       reply = {
         role: 'assistant',
-        text: 'Mari mulakan dengan Scenario Semasa untuk melihat ringkasan bersumber. Seterusnya, terokai peta dan pilih Teras yang berkaitan. Anda mahu melihat Scenario Semasa atau mengenali lima Teras dahulu?',
+        text: 'Mari mulakan dengan Scenario Semasa untuk melihat ringkasan bersumber. Seterusnya, terokai peta dan pilih Teras yang berkaitan. Anda mahu melihat Scenario Semasa atau mengenali empat Teras dahulu?',
         link: { label: 'Lihat Scenario Semasa', href: scenario },
       };
-      nextChoices = ['Lima teras', 'Terangkan peta'];
+      nextChoices = ['Empat teras', 'Terangkan peta'];
     } else {
       reply = {
         role: 'assistant',
@@ -156,98 +157,104 @@ export function MockAssistant() {
           </small>
         </span>
       </button>
-      {open && (
-        <>
-          <div className="assistant-backdrop" aria-hidden="true" onClick={() => setOpen(false)} />
-          <section
-            ref={panel}
-            id="ddn-assistant"
-            className="assistant-panel"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="assistant-title"
-            onKeyDown={handleKeys}
-          >
-            <header className="assistant-header">
-              <Image src="/aida-avatar.svg" alt="Watak AIDA" width={58} height={58} />
-              <div>
-                <h2 id="assistant-title">AIDA</h2>
-                <p>Asisten Inteligen Dasar Antidadah</p>
-              </div>
-              <button className="icon-button" aria-label="Mulakan perbualan semula" onClick={reset}>
-                <RotateCcw size={17} />
-              </button>
-              <button
-                ref={closeButton}
-                className="icon-button"
-                aria-label="Tutup pembantu"
-                onClick={() => setOpen(false)}
-              >
-                <X size={20} />
-              </button>
-            </header>
-            <div
-              ref={conversation}
-              className="assistant-conversation"
-              role="log"
-              aria-label="Perbualan AIDA"
-              aria-live="polite"
-              aria-relevant="additions text"
+      {open &&
+        createPortal(
+          <>
+            <div className="assistant-backdrop" aria-hidden="true" onClick={() => setOpen(false)} />
+            <section
+              ref={panel}
+              id="ddn-assistant"
+              className="assistant-panel"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="assistant-title"
+              onKeyDown={handleKeys}
             >
-              {messages.map((message, index) => (
-                <div key={index} className={`assistant-message ${message.role}`}>
-                  <small>{message.role === 'user' ? 'ANDA' : 'AIDA'}</small>
-                  <p>{message.text}</p>
-                  {message.link && (
-                    <Link href={message.link.href} onClick={() => setOpen(false)}>
-                      {message.link.label}
-                      <ArrowUpRight size={13} />
-                    </Link>
-                  )}
+              <header className="assistant-header">
+                <Image src="/aida-avatar.svg" alt="Watak AIDA" width={58} height={58} />
+                <div>
+                  <h2 id="assistant-title">AIDA</h2>
+                  <p>Asisten Inteligen Dasar Antidadah</p>
                 </div>
-              ))}
-            </div>
-            <div className="assistant-choices" aria-label="Cadangan soalan">
-              {choices.map((choice) => (
-                <button key={choice} onClick={() => ask(choice)}>
-                  {choice}
-                  <ArrowUpRight size={13} />
+                <button
+                  className="icon-button"
+                  aria-label="Mulakan perbualan semula"
+                  onClick={reset}
+                >
+                  <RotateCcw size={17} />
                 </button>
-              ))}
-            </div>
-            <form
-              className="assistant-compose"
-              onSubmit={(event) => {
-                event.preventDefault();
-                ask(input);
-              }}
-            >
-              <label className="sr-only" htmlFor="assistant-input">
-                Soalan anda
-              </label>
-              <input
-                id="assistant-input"
-                maxLength={500}
-                placeholder="Tanya tentang dashboard…"
-                autoComplete="off"
-                value={input}
-                onChange={(event) => setInput(event.target.value)}
-              />
-              <button
-                type="submit"
-                aria-label="Hantar soalan"
-                aria-disabled={!input.trim()}
-                disabled={!input.trim()}
+                <button
+                  ref={closeButton}
+                  className="icon-button"
+                  aria-label="Tutup pembantu"
+                  onClick={() => setOpen(false)}
+                >
+                  <X size={20} />
+                </button>
+              </header>
+              <div
+                ref={conversation}
+                className="assistant-conversation"
+                role="log"
+                aria-label="Perbualan AIDA"
+                aria-live="polite"
+                aria-relevant="additions text"
               >
-                <Send size={18} />
-              </button>
-            </form>
-            <p className="assistant-privacy">
-              Mesej hanya dalam sesi ini. Elakkan maklumat peribadi.
-            </p>
-          </section>
-        </>
-      )}
+                {messages.map((message, index) => (
+                  <div key={index} className={`assistant-message ${message.role}`}>
+                    <small>{message.role === 'user' ? 'ANDA' : 'AIDA'}</small>
+                    <p>{message.text}</p>
+                    {message.link && (
+                      <Link href={message.link.href} onClick={() => setOpen(false)}>
+                        {message.link.label}
+                        <ArrowUpRight size={13} />
+                      </Link>
+                    )}
+                  </div>
+                ))}
+              </div>
+              <div className="assistant-choices" aria-label="Cadangan soalan">
+                {choices.map((choice) => (
+                  <button key={choice} onClick={() => ask(choice)}>
+                    {choice}
+                    <ArrowUpRight size={13} />
+                  </button>
+                ))}
+              </div>
+              <form
+                className="assistant-compose"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  ask(input);
+                }}
+              >
+                <label className="sr-only" htmlFor="assistant-input">
+                  Soalan anda
+                </label>
+                <input
+                  id="assistant-input"
+                  maxLength={500}
+                  placeholder="Tanya tentang dashboard…"
+                  autoComplete="off"
+                  value={input}
+                  onChange={(event) => setInput(event.target.value)}
+                />
+                <button
+                  type="submit"
+                  aria-label="Hantar soalan"
+                  aria-disabled={!input.trim()}
+                  disabled={!input.trim()}
+                >
+                  <Send size={18} />
+                </button>
+              </form>
+              <p className="assistant-privacy">
+                Mesej hanya dalam sesi ini. Elakkan maklumat peribadi.
+              </p>
+            </section>
+          </>,
+          document.body,
+        )}
     </>
   );
 }

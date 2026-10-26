@@ -5,15 +5,23 @@ const teras = process.argv.includes('--teras');
 const routes = foundation
   ? ['/', '/map']
   : teras
-    ? ['/teras/1', '/teras/2', '/teras/3', '/teras/4', '/teras/5', '/indicators', '/data/catalog']
+    ? [
+        '/ddn-2/teras/1',
+        '/ddn-2/teras/2',
+        '/ddn-2/teras/3',
+        '/ddn-2/teras/2?domain=harm',
+        '/ddn-2/teras/4',
+        '/indicators',
+        '/data/catalog',
+      ]
     : [
         '/',
         '/map',
-        '/teras/1',
-        '/teras/2',
-        '/teras/3',
-        '/teras/4',
-        '/teras/5',
+        '/ddn-2/teras/1',
+        '/ddn-2/teras/2',
+        '/ddn-2/teras/3',
+        '/ddn-2/teras/2?domain=harm',
+        '/ddn-2/teras/4',
         '/data/uploads',
         '/data/catalog',
         '/indicators',
@@ -59,7 +67,7 @@ for (const viewport of [
         ),
     );
     await page.screenshot({
-      path: `artifacts/screenshots/${viewport.name}-${route === '/' ? 'overview' : route.slice(1).replaceAll('/', '-')}.png`,
+      path: `artifacts/screenshots/${viewport.name}-${route === '/' ? 'overview' : route.slice(1).replaceAll('/', '-').replace(/[?=]/g, '-')}.png`,
       fullPage: true,
     });
     const overflow = await page.evaluate(() => ({

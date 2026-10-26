@@ -25,11 +25,11 @@ function DisclosedChart({
   return (
     <div className="chart">
       <p className="chart-caveat">
-        DEMO / SYNTHETIC · Sel kecil dan sel pelengkap disekat. Graf tidak dilukis supaya nilai
-        tidak boleh dibina semula.
+        senario rekaan · Sel kecil dan sel pelengkap disekat. Graf tidak dilukis supaya nilai tidak
+        boleh dibina semula.
       </p>
       <table>
-        <caption>{caption} · DEMO / SYNTHETIC</caption>
+        <caption>{caption} · senario rekaan</caption>
         <thead>
           <tr>
             <th>Kategori</th>
@@ -65,11 +65,11 @@ export function ChartDetails({
       <p>
         {source
           ? `${caption} · ${source} · ${unit}. Petikan sumber; bukan penerbitan rasmi platform.`
-          : `${caption} · DEMO / SYNTHETIC · ${unit}. Versi senario v1; sasaran dan pemilik rasmi belum disahkan. Nilai dihasilkan untuk menunjukkan bentuk analisis sahaja.`}
+          : `${caption} · senario rekaan · ${unit}. Versi senario v1; sasaran dan pemilik rasmi belum disahkan. Nilai dihasilkan untuk menunjukkan bentuk analisis sahaja.`}
       </p>
       <table>
         <caption className="sr-only">
-          {caption} · {source ?? 'DEMO / SYNTHETIC'}
+          {caption} · {source ?? 'senario rekaan'}
         </caption>
         <thead>
           <tr>
@@ -110,7 +110,7 @@ export function Bars({
       <div
         className={horizontal ? 'horizontal-bars' : 'vertical-bars'}
         role="img"
-        aria-label={`${caption}. ${source ?? 'DEMO / SYNTHETIC'}. ${data.map((d) => `${d.label}: ${formatNumber(d.value, source ? 2 : 0)} ${unit}`).join('; ')}`}
+        aria-label={`${caption}. ${source ?? 'senario rekaan'}. ${data.map((d) => `${d.label}: ${formatNumber(d.value, source ? 2 : 0)} ${unit}`).join('; ')}`}
       >
         {data.map((d, i) => (
           <div className="bar-row" key={d.label}>
@@ -160,7 +160,7 @@ export function LineChart({
         className="line-chart"
         viewBox="0 0 560 210"
         role="img"
-        aria-label={`${caption}. ${source ?? 'DEMO / SYNTHETIC'}; ${unit}.`}
+        aria-label={`${caption}. ${source ?? 'senario rekaan'}; ${unit}.`}
       >
         <defs>
           <linearGradient id={`area-${caption.replaceAll(' ', '-')}`} x1="0" y1="0" x2="0" y2="1">
@@ -229,7 +229,7 @@ export function Funnel({
       <div
         className="funnel"
         role="img"
-        aria-label={`${caption}. DEMO / SYNTHETIC. ${data.map((d) => `${d.label} ${d.value}`).join('; ')}`}
+        aria-label={`${caption}. senario rekaan. ${data.map((d) => `${d.label} ${d.value}`).join('; ')}`}
       >
         {data.map((d, i) => (
           <div className="funnel-stage" key={d.label}>
@@ -276,11 +276,11 @@ export function Matrix({
     <div
       className="matrix-wrap"
       role="region"
-      aria-label={`${caption} · DEMO / SYNTHETIC`}
+      aria-label={`${caption} · senario rekaan`}
       tabIndex={0}
     >
       <table className="matrix">
-        <caption>{caption} · DEMO / SYNTHETIC</caption>
+        <caption>{caption} · senario rekaan</caption>
         <thead>
           <tr>
             <th>Skop</th>

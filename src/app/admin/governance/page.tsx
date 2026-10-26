@@ -1,3 +1,4 @@
+import { domainLabel } from '@/lib/domain/pillars';
 import Link from 'next/link';
 import { LockKeyhole, ArrowUpRight } from 'lucide-react';
 import { getSession } from '@/lib/server/auth';
@@ -129,7 +130,7 @@ export default async function GovernancePage() {
         {data.access.length > 0 && (
           <Disclosure
             title="Versi skop terkini"
-            meta={`${data.access.length} profil · DEMO / SYNTHETIC`}
+            meta={`${data.access.length} profil · senario rekaan`}
           >
             <div className="table-scroll">
               <table>
@@ -146,7 +147,7 @@ export default async function GovernancePage() {
                     <tr key={a.actor}>
                       <td>{actorName(a.actor)}</td>
                       <td>{a.geographies.map(geographyName).join(', ')}</td>
-                      <td>{a.teras.join(', ')}</td>
+                      <td>{a.teras.map(domainLabel).join('; ')}</td>
                       <td>{dateBM(a.effective)}</td>
                     </tr>
                   ))}
@@ -158,7 +159,7 @@ export default async function GovernancePage() {
         {admin && (
           <Disclosure
             title="Sejarah rujukan demo"
-            meta={`${data.references.length} rekod · DEMO / SYNTHETIC`}
+            meta={`${data.references.length} rekod · senario rekaan`}
           >
             {data.references.length ? (
               <div className="table-scroll">

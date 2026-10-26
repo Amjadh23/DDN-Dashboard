@@ -9,7 +9,7 @@ test('annual figures use the existing overview and keep state clicks on that pag
   const snapshot = page.getByRole('region', { name: 'Data dibekalkan' });
   for (const n of ['76,769', '67,408', '9,361']) await expect(snapshot).toContainText(n);
   await expect(snapshot).toContainText('2025 · Tahunan');
-  await expect(page.locator('.overview-teras a')).toHaveCount(5);
+  await expect(page.locator('.overview-teras a')).toHaveCount(4);
   await expect(page.getByRole('link', { name: /Buka data tahunan|BMD Tahunan/ })).toHaveCount(0);
   await page.getByRole('button', { name: 'Paparan jadual' }).click();
   await page.getByRole('button', { name: 'Johor', exact: true }).click();
@@ -23,7 +23,9 @@ test('annual treatment keeps existing source setting links and scoped profiles',
   page,
 }) => {
   await page.goto('/teras/2?period=2025&setting=RPDK');
-  await expect(page.locator('.perspective-tabs a')).toHaveCount(5);
+  await expect(
+    page.getByRole('navigation', { name: 'Perspektif indikator' }).getByRole('link'),
+  ).toHaveCount(5);
   await expect(page.locator('.source-evidence')).toContainText('67,408');
   await page.getByRole('link', { name: 'Institusi / PUSPEN', exact: true }).click();
   await expect(page.locator('.source-evidence')).toContainText('9,361');

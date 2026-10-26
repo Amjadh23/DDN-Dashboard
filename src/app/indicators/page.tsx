@@ -1,3 +1,4 @@
+import { pillarForDomain, pillarIds, pillars, domainLabel } from '@/lib/domain/pillars';
 import Link from 'next/link';
 import { ArrowUpRight, Search } from 'lucide-react';
 import { EmptyState, Badge, DemoBadge, PageHeading, Panel } from '@/components/ui';
@@ -45,10 +46,15 @@ export default async function IndicatorRegistry({
   const query = (first(params.q) ?? '').trim().toLocaleLowerCase('ms-MY');
   const requestedTeras = first(params.teras) ?? '';
   const teras = /^[1-5]$/.test(requestedTeras) ? Number(requestedTeras) : null;
+  const requestedPillar = first(params.pillar) ?? '';
+  const pillar = /^[1-4]$/.test(requestedPillar) ? Number(requestedPillar) : null;
   const session = await getSession();
   const registry = await getRegistry(session);
   const definitions = registry.filter(
-    (definition) => (!teras || definition.teras === teras) && matches(definition, query),
+    (definition) =>
+      (pillar
+        ? pillarForDomain(definition.teras) === pillar
+        : !teras || definition.teras === teras) && matches(definition, query),
   );
 
   return (
@@ -81,11 +87,14 @@ export default async function IndicatorRegistry({
           </label>
           <label>
             Teras
-            <select name="teras" defaultValue={requestedTeras}>
+            <select
+              name="pillar"
+              defaultValue={requestedPillar || (teras ? (pillarForDomain(teras) ?? '') : '')}
+            >
               <option value="">Semua teras</option>
-              {[1, 2, 3, 4, 5].map((value) => (
+              {pillarIds.map((value) => (
                 <option key={value} value={value}>
-                  Teras {value}
+                  Teras {value} · {pillars[value].title}
                 </option>
               ))}
             </select>
@@ -121,7 +130,7 @@ export default async function IndicatorRegistry({
 
       {definitions.length ? (
         <RecordList
-          key={`${requestedTeras}-${query}`}
+          key={`${requestedPillar}-${requestedTeras}-${query}`}
           label="indikator"
           size={8}
           className="registry-list"
@@ -136,7 +145,7 @@ export default async function IndicatorRegistry({
               meta={
                 <>
                   <span>
-                    Teras {definition.teras} · {definition.unit}
+                    {domainLabel(definition.teras)} · {definition.unit}
                   </span>
                   {definition.origin === 'synthetic' && <DemoBadge />}
                   <Badge tone={evidenceTone(definition)}>{definition.evidence}</Badge>
@@ -184,7 +193,7 @@ export default async function IndicatorRegistry({
                         <tr>
                           <th scope="row">Sumber</th>
                           <td>
-                            {definition.source}
+                            {displayLabel(definition.source)}
                             {definition.sourcePage ? ` · halaman ${definition.sourcePage}` : ''}
                           </td>
                         </tr>

@@ -10,10 +10,11 @@ for (const teras of [1, 2, 3, 4, 5])
     for (const perspective of ['process', 'outcomes', 'cost', 'satisfaction']) {
       await page.goto(`/teras/${teras}?perspective=${perspective}`);
       await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-      await expect(page.locator(`.perspective-tabs a[aria-current="page"]`)).toHaveAttribute(
-        'href',
-        new RegExp(`perspective=${perspective}`),
-      );
+      await expect(
+        page
+          .getByRole('navigation', { name: 'Perspektif indikator' })
+          .locator('a[aria-current="page"]'),
+      ).toHaveAttribute('href', new RegExp(`perspective=${perspective}`));
       await page.setViewportSize({ width: 320, height: 800 });
       const audit = await new AxeBuilder({ page })
         .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])

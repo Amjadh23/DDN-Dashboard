@@ -33,7 +33,7 @@ export function Responsibility({ teras }: { teras?: number }) {
           </dd>
         </div>
         <div>
-          <dt>Teras 4 & 5</dt>
+          <dt>Domain kemudaratan & antarabangsa (DDN 2017: Teras 4 & 5)</dt>
           <dd>
             Tanggungjawab bersama entiti kesihatan, sosial, penguatkuasaan dan hal ehwal
             antarabangsa mengikut skop · pemilik khusus perlu pengesahan.
@@ -41,7 +41,9 @@ export function Responsibility({ teras }: { teras?: number }) {
         </div>
       </dl>
       <p className="chart-caveat">
-        {info && `${displayLabel(info.responsibility)} · ${info.source}. `}Rujukan DDN 2017.
+        {info && `${displayLabel(info.responsibility)} · ${info.source}. `}Rujukan DDN 2017. DDN 2.0
+        menggabungkan domain rawatan dan kemudaratan dalam Teras 2; JRP tidak ditetapkan sebagai
+        pemilik eksklusif domain kemudaratan. Domain antarabangsa kini dipaparkan dalam Teras 4.
         Hierarki semasa mesti disahkan terhadap jentera penyelarasan 2024 sebelum penetapan kuasa
         rasmi. Paparan ini tidak memberikan hak akses.
       </p>

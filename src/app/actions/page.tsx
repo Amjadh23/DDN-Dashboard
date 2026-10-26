@@ -1,3 +1,10 @@
+import {
+  pillarIds,
+  pillars,
+  domainLabel,
+  POLICY_MAPPING_VERSION,
+  pillarForDomain,
+} from '@/lib/domain/pillars';
 import { getSession } from '@/lib/server/auth';
 import { getActions } from '@/lib/server/dal';
 import { getNotes, parseDecisionContext } from '@/lib/server/collaboration';
@@ -29,7 +36,9 @@ export default async function ActionsPage({
   const [all, notes] = await Promise.all([getActions(session), getNotes(session, context)]),
     actions = all.filter(
       (a) =>
-        a.teras === context.teras &&
+        (p.mapping === POLICY_MAPPING_VERSION
+          ? pillarForDomain(a.teras) === pillarForDomain(context.teras)
+          : a.teras === context.teras) &&
         a.context.period === context.period &&
         (context.geography === 'MY' || a.geography === context.geography),
     );
@@ -50,13 +59,20 @@ export default async function ActionsPage({
         <DemoBadge />
       </PageHeading>
       <form action="/actions" className="search-form">
+        {p.mapping === POLICY_MAPPING_VERSION && (
+          <input type="hidden" name="mapping" value={POLICY_MAPPING_VERSION} />
+        )}
         <label>
           Teras
           <select name="teras" defaultValue={context.teras}>
-            {[1, 2, 3, 4, 5].map((n) => (
-              <option key={n} value={n}>
-                Teras {n}
-              </option>
+            {pillarIds.map((id) => (
+              <optgroup key={id} label={`Teras ${id} · ${pillars[id].title}`}>
+                {pillars[id].domains.map((domain) => (
+                  <option key={domain} value={domain}>
+                    {domainLabel(domain)}
+                  </option>
+                ))}
+              </optgroup>
             ))}
           </select>
         </label>
